@@ -1,0 +1,47 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[includeheadfoot, margin=1in]{geometry}
+\usepackage{fancyhdr}
+\fancyhf{}
+\pagestyle{fancy}
+\rhead{Václav Luňák}
+\lhead{Domácí úkol na 10. 4. 2018}
+\cfoot{\thepage}
+\begin{document}
+\section*{Příklad 1}
+Vyjádříme inverzní funkci ve tvaru $x = y^3$, jelikož výchozí funkce je prostá. Objem se pak bude rovnat
+\begin{equation*}
+V = \pi \int_1^2 x^2 dy =\pi \int_1^2 y^6 dy =\pi \left[ \frac{y^7}{7} \right]_1^2 =
+\pi\left(\frac{128}{7} - \frac{1}{7}\right) = \frac{127}{7}\pi
+\end{equation*}
+
+\section*{Příklad 2}
+\begin{align*}
+ & \left(\frac{1}{x}\right)' = \frac{-1}{x^2} 
+ & \left(\left(\frac{1}{x}\right)'\right)^2 = \left(\frac{-1}{x^2}\right)^2 = \frac{1}{x^4} \\
+\end{align*}
+Dosadíme do vzorce pro povrch rotačního tělesa
+\begin{equation*}
+S = 2\pi \int_1^\infty \frac{1}{x} ds = 2\pi \int_1^\infty \frac{1}{x}\sqrt{1+\frac{1}{x^4}} dx = 2\pi \int_1^\infty \frac{1}{x^3} \sqrt{x^4+1} dx
+\end{equation*}
+$
+\int_1^\infty \frac{\sqrt{x^4+1}}{x^3} dx 
+$
+konverguje právě tehdy, když pro $a_k = \frac{\sqrt{k^4+1}}{k^3}, k\in N$ konverguje $\sum_1^\infty a_k$. Jelikož $\sum_1^\infty a_k \geq \sum_1^\infty \frac{\sqrt{k^4}}{k^3} = \sum_1^\infty \frac{1}{k}$ a harmonická řada diverguje, ze srovnávacího kritéria diverguje i $\sum_1^\infty a_k$, tudíž z integrálního kritéria diverguje i $\int_1^\infty \frac{\sqrt{x^4+1}}{x^3} dx$, respektive jakýkoliv jeho reálný nenulový násobek. Protože integrovaný výraz je vždy kladný, ve výsledku dostáváme
+\begin{equation*}
+S = 2\pi \int_1^\infty \frac{1}{x^3} \sqrt{x^4+1} dx = \infty
+\end{equation*}
+
+\section*{Příklad 3}
+\begin{equation*}
+\int_\frac{1}{a}^a \frac{\log x }{x} dx =[subst.: t = \log x, dt = \frac{1}{x}dx]
+= \int_{-\log a}^{\log a} t dt =
+\left[ \frac{t^2}{2} \right]_{-\log a}^{\log a} = \frac{\log^2 a - (-\log)^2 a}{2} = 0
+\end{equation*}
+
+\end{document}

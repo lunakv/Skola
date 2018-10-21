@@ -1,0 +1,49 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Václav Luňák}
+\lhead{ADS I - Internet}
+\cfoot{\thepage}
+\begin{document}
+\part*{Internet}
+\section{Popis řešení}
+Vytvoříme graf následujícím způsobem:
+\begin{itemize}
+\item 
+$n$ vrcholů budou tvořit jednotlivé domy
+\item
+jeden vrchol bude reprezentovat přímé připojení k internetu
+\item
+domy A a B budou spojeny hranou ohodnocenou $c(A, B)$
+\item
+dům A bude s internetem spojený hranou ohodnocenou $\mathcal{C}(A)$
+\end{itemize}
+
+Na takto vytvořeném grafu pak spustíme algoritmus na nalezení minimální kostry, např. Kruskalův. Optickým kabelem pak propojíme ty domy, které jsou spojeny hranou v minimální kostře a k internetu připojíme ty, jež jsou s ním v minimální kostře spojeny hranou. 
+\section{Pseudokód}
+\begin{verbatim}
+A = null;
+foreach (v in V) Make-Set(V);
+foreach((u,v) in setříděné E podle vah)
+   if (Set(u)!=Set(v)){
+      A = A + (u,v);
+      Union(u,v);
+   }
+return A;
+\end{verbatim}
+\section{Důkaz správnosti}
+Z podstaty zadání můžeme předpokládat, že každá hrana má kladné ohodnocení. Minimální kostra tedy představuje souvislý podgraf s minimálním součtem ohodnocení. Takto vytvořený graf zároveň přesně odpovídá problému; každý dům lze spojit s internetem i se všemi ostatními domy a hledáme nejlevnější připojení všech domů.\\
+
+Protože Kruskalův algoritmus nevyžaduje unikátní hrany, bude tento postup fungovat pro obě varianty zadání, přičemž pro variantu (a) budou z internetu vést hrany ohodnocené $\mathcal{C}$. 
+\section{Časová složitost}
+Použili jsme Kruskalův algoritmus na hledání minimální kostry, tedy složitost algoritmu je $O(m \log m)$.
+\section{Prostorová složitost}
+O každém vrcholu i hraně si pamatujeme konstantní množství informací, tedy prostorová složitost algoritmu je $O(n+m)$.
+\end{document}

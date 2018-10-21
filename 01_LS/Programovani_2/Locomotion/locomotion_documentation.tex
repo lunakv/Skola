@@ -1,0 +1,114 @@
+\documentclass[11pt,a4paper]{scrreprt}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\begin{document}
+\title{Locomotion}
+\author{Václav Luňák\\ Matematicko-fyzikální fakulta\\ Univerzita Karlova}
+\date{12. července 2018}
+\maketitle
+
+\begin{abstract}
+Tento projekt má za cíl reprodukovat hru Locomotion, která byla vydána roku 1985 firmou Mastertronic na osobním počítači Sinclair ZX Spectrum. Snahou projektu je napodobit jak mechaniky a ovládání hry, tak i její estetiku a celkový dojem. Program byl vytvořen v jazyce C\# za použití technologie Windows Forms.
+\end{abstract}
+
+\tableofcontents
+
+\chapter{Tvůrčí rozhodnutí}
+Při tvorbě tohoto programu bylo učiněno několik rozhodnutí, jež jsou povahou spíše kreativní než vývojářská. Jelikož tato rozhodnutí příliš nesouvisí se samotným fungováním programu, je jim věnována tato zvláštní kapitola.
+
+\section{Reprodukce}
+Jedná se o napodobeninu téměř třicet let staré hry, rozhodl jsem se tedy, že se pokusím zůstat co nejvěrnější originálu. Můj program tedy funkčností takřka přesně odpovídá původní verzi - významnější odlišnosti jsou rozebrány níže. Rovněž ilustrace, přestože jsou ručně vyrobeny, byly významně inspirovány originálem. Velice podobné bylo ponecháno taktéž rozložení herních prvků a jednotlivé herní úrovně dokonce přesně odpovídají těm z roku 1985 \footnote{https://maps.speccy.cz/map.php?id=Locomotion}. Zachována byla rovněž jednoduchost a snadná pochopitelnost hry.
+
+\section{Instrukce}
+Za zmínku určitě stojí, že samotný program neobsahuje žádný návod ke hře, instrukce nebo vysvětlivky. Důvodů je k tomuto několik. Předně jsem se domníval, že princip hry je dostatečně intuitivní na to, aby kdokoliv snadno pochopil její fungování bez nutnosti vysvětlení. Tato domněnka se potvrdila při testování. \\
+
+Zároveň je estetika celého projektu volena spíše minimalisticky, tedy byla vzata v potaz snaha vyvarovat se jakýmkoliv rušivým elementům, které by mohly odvracet pozornost. Stejně tak bylo rozhodnutí založeno na faktu že originál neobsahuje žádnou formu dokumentace.\footnote{https://www.worldofspectrum.org/infoseekid.cgi?id=0002910}\\
+
+V neposlední řadě jsem toho názoru, že absence návodu přivede hráče k vlastnímu objevování a obohatí tak zážitek ze hry. Pro úplnost je však popis ovládání a všech herních mechanik detailně popsán v druhé kapitole.
+
+\section{Odlišnosti}
+Přestože hra ve většině ohledů odpovídá svému předchůdci, můžeme mezi nimi nalézt několik rozdílů. Některé z nich jsou čistě estetické. Barevná paleta je celkově o něco světlejší, změnily se proporce některých prvků, časovač je digitální, nikoliv analogový. Tyto změny byly učiněny spíše z časových a implementačních důvodů.\\
+
+Pravděpodobně největší změnou je pohyb lokomotivy. Na rozdíl od původní hry, kde~vlak jel po kolejích víceméně plynule, zde je znázorněn přesunem mezi poli v diskrétních intervalech. Diskrétní pohyb, ač méně přirozený, se mnohem snáze implementuje v rámci Windows Forms. Přitom s ním odpadá nejasnost ohledně toho, s jakými poli se dá bezpečně pohybovat, kterou jsem objevil v originálu.
+
+\chapter{Popis hry a vysvětlivky}
+Hra obsahuje devět úrovní, jež musí hráč úspěšně projít pro dokončení hry. Každá úroveň má formu traťového systému některého z hlavních evropských měst. Aby se hráč dostal do další úrovně, musí dopravit lokomotivu skrz tento systém bezpečně zpět do stanice, ze které vyjela.\\
+
+Herní plán se skládá z 56 polí, z nichž právě jedno je vždy prázdné a ostatní tvoří koleje. Posouváním kolejí do prázdného pole pomocí směrových šipek je možné vytvořit průjezdnou trasu pro vlak. Pokud však vlak narazí na prázdné pole nebo na kolej, která není napojená z daného směru, exploduje, hráč ztrácí život a úroveň začíná od začátku. Po ztrátě třetího životu hra končí.\\
+
+V průběhu hry je možné lokomotivu až na 60 sekund zastavit a získat tím čas navíc k~přesouvání kolejí. Vlak se zastavuje, respektive rozjíždí stisknutím klávesy Tab. Zbývající čas použitelný k zastavení je zobrazen v pravém dolním rohu.\\
+
+Pokaždé, když vlak přijede na pole, na kterém se dosud neobjevil, přičtou se hráči dva body. Po dokončení každé úrovně se pak přičte další bod za každé projeté pole.\\
+
+Na plánu se mohou náhodně objevit některá speciální pole. Jedno z takových polí je pole nebezpečí. Toto pole je znázorněno červenou barvou a mávajícím panáčkem. Na~takové pole se nedá vjet z žádného směru a jakýkoliv pokus o to skončí ztrátou životu. Dalším speciálním polem je pole zásob, vyznačené světle modrou barvou. Při projetí takového pole obdrží hráč čtrnáct bodů namísto dvou. Posledním typem speciálního pole je pole zastávky. Takové pole nelze nijak odlišit od běžného pole, ovšem když se na něm vlak objeví, změní barvu místo žluté na fialovou a přidá šest bodů. Toto pole na rozdíl od ostatních může přidat body za projetí až třikrát.
+
+\chapter{Objektový návrh}
+Při návrhu hry jsem se snažil najít takové řešení, které dobře rozdělí jednotlivé úlohy, ale zároveň se vyvaruje přehnanému rozdrobení tříd. Výsledkem jsou následující třídy.
+
+\section{Interface}
+Samotný formulář. Stará se o zobrazení začátku a konce hry a zpracovává uživatelské vstupy.
+
+\section{Game}
+Obsluha hry. Tato třída zpracovává většinu herních operací, implementuje logiku hry a stará se o vykreslování herních prvků do přiděleného panelu. Vytváří a obsluhuje všechny ostatní herní prvky.
+
+\section{Track}
+Syn PictureBoxu. Reprezentuje jednu kolej na hrací ploše. Každá kolej má vlastní typ, podle kterého určuje, ze kterých stran je přístupná. Udává, kolikrát je daná kolej navštívitelná a kolik bodů se získá navštívením. Speciální vlastnosti určuje náhodný generátor hry, pod kterou kolej spadá. \\
+
+\section{Train}
+Syn PictureBoxu. Třída znázorňující lokomotivu pohybující se po hře. Určuje pozici a~orientaci vlaku a zařizuje jeho pohyb. Obstarává navštěvování kolejí.
+
+\section{Data}
+Toto není jedna třída, nýbrž soubor obsahující tři statické třídy, které mají na starost data související se hrou. Jmenovitě jsou to třídy \textbf{Maps} obstarávající herní plány jednotlivých měst, \textbf{Directions} sloužící k získání a převodu směrů a souřadnic a \textbf{Images}, která poskytuje kolejím a vlakům vhodné obrázky.
+
+\chapter{Průběh hry}
+
+\section{Inicializace}
+Při spuštění programu se vytvoří nový formulář \textbf{Interface}, který zobrazí úvodní nápisy a tlačítko pro začátek hry. Zároveň vytvoří nový objekt \textbf{Game} a přiřadí mu panel, ve~kterém se budou vyskytovat herní prvky. \textbf{Game} pak v konstruktoru vytvoří stavové labely, nastaví časovače, inicializuje herní pole, reprezentované jako dvourozměrné pole \textbf{Track}, a generátor náhodných čísel. Nakonec vytvoří fixní koleje, tj. koleje stejné pro každou úroveň, se kterými se nedá pohybovat. Panel s těmito prvky však zůstává dosud skrytý.
+
+\section{Začátek a konec hry}
+Na začátku hry se spustí funkce \textit{Start}. Ta nastaví životy, úroveň a skóre, spustí první úroveň a zobrazí panel obsahující herní prvky.\\
+
+Pokaždé, když se má začít nová úroveň, zavolá se funkce \textit{StartLevel}. Tato funkce vytvoří pole herní plán. Dále nastaví souřadnice volného políčka, vytvoří nový vlak na odpovídající pozici a aktualizuje stavové labely. Nakonec spustí časovač herní smyčky.\\
+
+Neúspěšný konec úrovně zpracovává funkce \textit{Crash}. Tato funkce zastaví časovač, upraví životy, Zlikviduje vlak a herní plán a začne úroveň od začátku (funkcí \textit{StartLevel}).\\
+
+Pokud nemá hráč žádné životy nebo dokončil poslední úroveň, hra končí. To má na starost funkce \textit{EndTheGame}, která bere za parametr boolový argument podle toho, zda byla hra vyhrána. Fuknce zlikviduje herní plán a ukryje panel s herními prvky. Nato musí dát vědět \textbf{Interface}, že hra skončila, aby mohl zobrazit vhodné informace. K tomuto účelu slouží vlastní event třídy \textbf{Interface} s názvem GameEnded. Argumenty k tomuto eventu obsahují skóre, se kterým hra skončila a informaci o tom, zda šlo o výhru či o prohru. \\
+
+\textbf{Interface} pak zachytí tento event a zobrazí výsledné skóre, radostnou / žalostnou zprávu a možnost ukončit hru či začít od začátku.
+
+\section{Hlavní herní smyčka}
+Herní smyčka je v tomto programu implementovaná pomocí eventů. Třída \textbf{Game} na začátku hry spustí časovač, který vyvolá event každých 750 ms. Tento event pak zpracuje funkce \textit{Iterate}, jež se pokusí pohnout vlakem a adekvátně zareaguje na výsledek posunutí.\\
+
+Ve chvíli, kdy vlak dostane instrukci posunout se, nejprve se zeptá hry, zda je pohyb možný. Když je, nastaví si adekvátně nové souřadnice a pole, na kterém se nachází. Také upraví svůj směr a informuje danou kolej o tom, že byla navštívena. Nakonec si dle aktuálních informací upraví obrázek a vrátí volajícímu informaci o tom, jak dopadl pokus o pohyb.\\
+
+Pokud vlak není schopný se pohnout, zastaví se časovač herní smyčky, hráč ztratí život, aktualizují se stavové labely a celý level se zruší a začne znovu. Pokud vlak dojede na~konec úrovně, zvýší se úroveň, přičtou se body za prošlá pole, načež se zlikviduje současná úroveň a načte nová. Pokud se vlak pohnul, ale není na konci úrovně, hra pokračuje dále.
+
+
+
+\section{Ovládání hry}
+I zpracování vstupu uživatele je zařízeno pomocí eventů. Při stisknutí klávesy zachytí \textbf{Interface} danou událost a ze stisknuté klávesy vyhodnotí vhodnou akci a zavolá odpovídající funkci třídy \textbf{Game}. Abychom se vyvarovali opakovanému spouštění událostí při dlouhém stisku klávesy, obsluha tohoto přerušení se při stisku odebere, dokud klávesa není opět puštěna.
+
+\section{Pozastavení}
+Při stisknutí klávesy Tab se zavolá funkce \textit{PauseTrain}. Ta zastaví časovač herní smyčky a spustí nový časovač s intervalem 200 ms. Zbývající čas v milisekundách je uložen jako Tag labelu zobrazujícího zbývající čas. Událost uplynutí časovače zpracuje funkce \textit{TickPause}. Tato funkce sníží o 200 ms zbývající čas a aktualizuje text labelu. Pokud je klávesa Tab stisknuta znovu nebo časovač doběhne na nulu, spustí se funkce \textit{PauseTrain} znovu, zastaví běžící časovač a opět spustí časovač herní smyčky.
+
+\chapter{Postřehy}
+\section{Co zbývá}
+Program v současné podobě je ve víceméně kompletním stavu. Imituje takřka ve všech ohledech původní hru. Kdybych na něm měl přesto dále pracovat, je několik věcí, které bych mohl implementovat. \\
+
+Jedna možnost by byla vytvořit náhodný generátor map. Plně náhodné mapy lze vytvářet poměrně snadno, ovšem narazili bychom na problém, že spousta z nich nebude řešitelných. Garantovaně řešitelné mapy vyžadují řádově složitější implementaci. Proto - a protože nebyly součástí originálu - nejsou v této hře.\\
+
+Dále by se dal například přidat multiplayer, jediná chybějící součást původní hry. Vzhledem k tomu, že mód více hráčů spočíval jednoduše v tom, že se jednotliví hráči střídali v hraní, nepřijde mi to jako něco, co hra potřebuje.\\
+
+V originálu se též rozlišuje více druhů speciálních polí, nicméně ta, která jsem byl schopen otestovat, se lišila pouze obrázkem, nikoliv funkčností, tedy jedná se čistě o~otázku vytváření další grafiky.
+
+\section{Ohlédnutí se}
+Kdybych začínal od začátku, stálo by za to zamyslet se, zda nevytvořit vlastní třídu pro vykreslování prvků oddělenou od herní logiky. Přestože si myslím, že současné řešení je v pořádku, třída \textbf{Game} působí v porovnání s ostatními poněkud přetíženě.\\
+
+Jinak se jednalo o vcelku zábavný projekt na zápočtový program, při kterém jsem si spoustu věcí osvěžil a něco nového se naučil. Myslím, že téma bylo dobře zvolené a splnilo svůj účel.
+
+\end{document}

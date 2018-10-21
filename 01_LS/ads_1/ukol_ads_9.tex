@@ -1,0 +1,26 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Václav Luňák}
+\lhead{ADS I - Kabely}
+\cfoot{\thepage}
+\begin{document}
+\part*{Kabely}
+\section{Popis řešení}
+Nejprve připojíme k napětí první polovinu kabelů ze vstupu. Na výstupu pak rozdělíme kabely na poloviny podle toho, jestli do nich jde napětí. Na takto vytvořené poloviny pak postup rekurzivně opakujeme, až se dostaneme k částem velikosti 1.
+
+\section{Důkaz správnosti}
+Po první iteraci jsou poloviny rozdělené tak, že každý kabel je ve stejné polovině na vstupu i na výstupu. V druhé iteraci jsou takto rozdělené čtvrtiny. S každou iterací se zmenšuje velikost skupiny kabelů, až při jednotkové skupině odpovídá každý kabel na vstupu sám sobě na výstupu. 
+
+\section{Časová složitost}
+V každé iteraci půlíme velikost skupiny, tedy provedeme $\log n$ iterací. Při každé iteraci změříme / připojíme každý kabel právě jednou. Výsledná časová složitost je $\theta (n\log n)$. 
+\section{Prostorová složitost}
+U každého kabelu si pamatujeme pouze jeho aktuální pozici, tedy složitost je $\theta (n)$
+\end{document}

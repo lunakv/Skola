@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Locomotion", "Locomotion\Locomotion.csproj", "{05874832-500C-4FA4-AE7B-C3B31B656084}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05874832-500C-4FA4-AE7B-C3B31B656084}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05874832-500C-4FA4-AE7B-C3B31B656084}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05874832-500C-4FA4-AE7B-C3B31B656084}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05874832-500C-4FA4-AE7B-C3B31B656084}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9D0A7098-7382-4998-9A73-C9AC3A3AA568}
+	EndGlobalSection
+EndGlobal

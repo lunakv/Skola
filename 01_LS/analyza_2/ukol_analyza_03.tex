@@ -1,0 +1,116 @@
+\documentclass{scrreprt}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\pagestyle{myheadings}
+\usepackage[\headerline]{scrlayer-scrpage}
+\ihead{test test}
+\ohead{asdfasdf}
+
+\begin{document}
+\section*{Příklad 1}
+$$
+\int \frac{1}{\sin^2 x + \tan^2 x} dx
+$$
+Tento předpis je definován na $\bigcup_{k \in Z} (k\frac{\pi}{2}, (k+1)\frac{\pi}{2})$, neboť na těchto intervalech je jmenovatel nenulový.
+$$
+\int \frac{1}{\sin^2 x + \tan^2 x} dx = \int \frac{\cos^2x}{\sin^2x(1+\cos^2x)} dx = 
+\int \frac{1}{\tan^2x} \cdot \frac{1}{1+\cos^2 x} dx =
+$$
+$$
+= \int \frac{1}{\tan^2 x} \cdot \frac{1}{\sin^2x + 2\cos^2x} dx  
+= \int \frac{1}{\tan^2 x} \cdot \frac{\frac{1}{\cos^2 x}}{\tan^2 x + 2} dx =
+$$
+\begin{flushright}
+[substituce (1): $t = \tan x, dt = \frac{1}{\cos^2 x} dx$]  
+\end{flushright}
+$$
+= \int \frac{1}{t^2} \cdot \frac{1}{t^2+2} dt = \int \left(\frac{At+B}{t^2} + \frac{Ct+D}{t^2+2} \right) dt = 
+$$
+\begin{flushright}
+[$A = 0$, $B = 0.5$, $C = 0$, $D = -0.5$] 
+\end{flushright}
+$$
+= \int \frac{1}{2t^2} dt - \int \frac{1}{2(t^2+2)} dt = -\frac{1}{2t} - \frac{1}{4} \int \frac{1}{(\frac{t}{\sqrt{2}})^2 + 1} dt =
+$$
+\begin{flushright}
+[substituce (1): $s = \frac{t}{\sqrt{2}}$, $ds = \frac{1}{\sqrt{2}} dt$]
+\end{flushright}
+$$
+= -\frac{1}{2t} - \frac{\sqrt{2}}{4} \int \frac{1}{s^2+1} ds = -\frac{1}{2t} - \frac{\sqrt{2}}{4} \arctan s + c = -\frac{1}{2t} - \frac{\sqrt{2}}{4} \arctan \frac{t}{\sqrt{2}} + c =
+$$
+$$
+= -\frac{1}{2 \tan x} -\frac{\sqrt{2}}{4} \arctan \frac{\tan x}{\sqrt{2}} + c, c \in R
+$$
+Výsledný výraz platí na celém definičním oboru původního výrazu (úpravami nevznikly žádné podmínky navíc).
+
+\section*{Příklad 2} 
+$$
+\int \vert \sin x+\cos x \vert dx 
+$$
+Definiční obor tohoto výrazu je $R$. Tento výraz si rozdělíme na dva intervaly: 
+\begin{enumerate}
+\item[(a)] 
+$(\sin x + \cos x)$ na $\bigcup_{k \in Z}(-\frac{\pi}{4} + 2k\pi, \frac{3\pi}{4} + 2k\pi)$
+\item[(b)]
+$-(\sin x + \cos x)$ na $\bigcup_{k \in Z} (\frac{3\pi}{4} + 2k\pi, \frac{7\pi}{4} + 2k\pi)$
+\end{enumerate}
+
+\begin{description}
+\item[(a)]
+$$
+\int \left( \sin x + \cos x \right) dx = -\cos x + \sin x + c_1
+$$
+\item[(b)]
+$$
+\int -\left( \sin x + \cos x \right) dx = \cos x - \sin x + c_2
+$$
+\end{description}
+Abychom zajistili spojitost primitivní funkce, musíme zvolit vhodné aditivní konstanty. Obě funkce jsou na daných intervalech rostoucí a nabývají hodnot (při zanedbání konstanty) od $-\sqrt{2}$ do $\sqrt{2}$. Aby se tedy v krajních bodech rovnaly hodnoty obou funkcí, musí být např. v bodě $x=\frac{3\pi}{4}$ funkce (b) posunutá o $2\sqrt{2}$ vůči funkci (a). V bodě $x=\frac{7\pi}{4}$ pak musí funkce (a) být posunuta o $2\sqrt{2}$ vůči funkci (b), tedy o $4\sqrt{2}$ vůči (a) na předchozím intervalu, atd.\\
+
+Obecně pro $k \in Z$ má primitivní funkce $\vert \sin x + \cos x \vert$ výsledný tvar
+\begin{equation*}
+F = \begin{cases}
+	-\cos x + \sin x + k\cdot 4\sqrt{2}+c, & x \in \bigcup_{k \in Z} (-\frac{\pi}{4}+2k\pi, \frac{3\pi}{4} + 2k\pi]\\
+	\cos x - \sin x + (k+1)\cdot 4\sqrt{2} + c, & x \in \bigcup_{k \in Z} (\frac{3\pi}{4}+2k\pi, \frac{7\pi}{4} + 2k\pi]
+	\end{cases}
+	,c \in R
+\end{equation*}
+Tato funkce je tedy spojitá a definovaná na $R$. 
+
+\section*{Příklad 3}
+$$
+\int \frac{8+6x-2x^2}{x^4-4x+3} dx 
+$$
+Výraz je definován na $R \backslash \{1\}$
+$$
+\int \frac{8+6x-2x^2}{x^4-4x+3} \text{d}x = \int \frac{8+6x-2x^2}{(x-1)^2(x^2+2x+3)} dx 
+= \int \left(\frac{A}{x-1} + \frac{B}{(x-1)^2} + \frac{Cx+D}{x^2+2x+3} \right) dx =
+$$
+\begin{flushright}
+[$A = -1$, $B = 2$, $C = 1$, $D = -1$]
+\end{flushright}
+$$
+= \int \frac{-1}{x-1} dx + \int \frac{2}{(x-1)^2} dx + \int \frac{x-1}{x^2+2x+3} dx 
+= -\log \vert x-1 \vert + \frac{1}{x-1} + \int \frac{x-1}{x^2+2x+3} dx =
+$$
+$$
+= -\log \vert x-1 \vert + \frac{1}{x-1} + \frac{1}{2} \int \frac{2x+2-4}{x^2+2x+3}dx= 
+$$
+\begin{flushright}
+[substituce (1): $t = x^2+2x+3$, $dt = 2x+2$]
+\end{flushright}
+$$
+= -\log \vert x-1 \vert + \frac{1}{x-1} + \frac{1}{2} \left( \int \frac{1}{t} dt - \int\frac{4}{x^2+2x+3} dx \right) =
+$$
+$$
+= -\log \vert x-1 \vert + \frac{1}{x-1} + \frac{1}{2} \log (x^2+2x+3) - 2 \int \frac{1}{(x+1)^2+1} dx =
+$$
+$$
+= -\log \vert x-1 \vert + \frac{1}{x-1} + \frac{1}{2} \log (x^2+2x+3) - 2 \arctan(x+1) + c, c \in R
+$$
+Primitivní funkce je definovaná na celém definičním oboru původní funkce.
+\end{document}

@@ -1,0 +1,30 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Václav Luňák}
+\lhead{ADS I - Příklad 10b}
+\cfoot{\thepage}
+\begin{document}
+\part*{Příklad 10b}
+\section{Popis řešení}
+Na nalezení kostry s minimálním součinem použijeme stejný algoritmus jako na nalezení běžné minimální kostry, například Kruskalův algoritmus.
+\section{Pseudokód}
+Identický jako v úkolu \textsc{Internet}.
+\section{Důkaz správnosti}
+Vytvořme nový graf, který bude stejný jako graf původní s rozdílem, že váhy hran nového grafu budou logaritmy vah z hran původních. Máme ostře kladné hrany, tedy logaritmus je vždy definován. Na takovémto grafu spustíme algoritmus pro hledání minimální kostry. Dostaneme kostru s ohodnocením $\sum_{i \in E(T)} \log i = \log \left( \prod_{i \in E(T)} i \right)$. \\
+
+Logaritmus je rostoucí funkce, tedy minimalizovat logaritmus součinu nutně znamená minimalizovat součin. Odtud nám už vyplývá rovnost minimálních koster v obou grafech.\\
+
+Jelikož jsme schopni takto dokázat, že se rovná minimální kostra v novém grafu a minimální kostra grafu původního (resp. množiny min. koster pro neunikátní ohodnocení), není třeba nový graf vytvářet a lze známý algoritmus spustit rovnou na původním grafu.
+\section{Časová složitost}
+Uvedený Kruskalův algoritmus má časovou složitost $O(m\log m)$.
+\section{Prostorová složitost}
+Prostorová složitost Kruskalova algoritmu je $O(n+m)$.
+\end{document}

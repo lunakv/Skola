@@ -1,0 +1,5 @@
+      5 opakování
+      3 znak
+      3 alespoň
+      2 řetězce
+      2 z

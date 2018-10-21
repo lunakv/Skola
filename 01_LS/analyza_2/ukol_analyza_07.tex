@@ -1,0 +1,48 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[includeheadfoot, margin=1in]{geometry}
+\usepackage{fancyhdr}
+\fancyhf{}
+\pagestyle{fancy}
+\rhead{Václav Luňák}
+\lhead{Domácí úkol na 17. 4. 2018}
+\cfoot{\thepage}
+\begin{document}
+\section*{Příklad 1}
+Podíl polynomů je vždy na definičním oboru spojitý, tedy i $\frac{2x^2y}{x^4+y^2}$ je na celém definičním oboru spojitý. Definiční obor funkce je $R^2 \setminus \{(0,0)\}$\\
+
+Ukážeme, že v bodě $(0,0)$ nelze funkci spojitě dodefinovat. Pokud se například k tomuto bodu budeme blížit po přímce $y = x$, dostaneme
+\begin{equation*}
+\lim_{x \to 0} \frac{2x^3}{x^4+x^2} = \lim_{x \to 0} \frac{12x}{12x^2+2} =
+\frac{0}{2} = 0 \text{ (z L'Hospitalova pravidla)}
+\end{equation*}
+
+Pokud se ovšem budeme pohybovat na křivce $y = x^2$, dojdeme k limitě
+\begin{equation*}
+\lim_{x \to 0} \frac{2x^4}{2x^4} = 1
+\end{equation*}
+
+Jelikož pro spojitost se musí funkční hodnota rovnat limitě, nemůžeme tuto funkci dodefinovat tak, aby byla spojitá na celém $R^n$.
+
+\section*{Příklad 2}
+$\sin x$ je spojitá funkce a podíl spojitých funkcí je spojitý, tedy i funkce 
+$\frac{\sin x + \sin y}{x+y}$ je na definičním oboru spojitá. Definiční obor této funkce je $D_f = R^2 \setminus \{(x, -x) \vert x \in R\}$
+
+\section*{Příklad 3}
+Chceme dokázat, že množina M je otevřená, tedy pro všechny body množiny existuje nenulové $\delta$-okolí, jehož body všechny náleží M.\\
+Zároveň ze spojitosti víme, že $\forall \epsilon > 0 \exists \delta > 0$ takové, že pro body vzdálené nejvýše o $\delta$ se funkční hodnoty změní nejvýše o $\epsilon$.\\
+
+Pokud pro každý bod $x \in M$ zvolíme $\delta$-okolí splňující podmínku spojitosti pro $\epsilon < -f(x)$, budou se funkční hodnoty všech bodů $y$ v tomto okolí lišit o méně než $-f(x)$, tedy dostaneme 
+\begin{align*}
+\vert f(x) - f(y) \vert < -f(x) \\
+f(x) - f(y) > f(x)  && \wedge && f(x) - f(y) < -f(x)\\
+f(y) < 0 \\
+y \in M,
+\end{align*}
+tedy $M$ je otevřená množina. 
+\end{document}

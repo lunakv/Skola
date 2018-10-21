@@ -1,0 +1,13 @@
+.                   .                    libovolný znak
+[a-fxyz]            [a-fxyz]             jeden znak z množiny
+[^a-z]              [^a-z]               jeden znak mimo množinu
+*                   *                    libovolný počet opakování (i 0x)
+                    +                    alespoň jedno opakování
+                    ?                    nejvýše jedno opakování
+\{n,\}              {n,}                 alespoň n opakování
+\{n,m\}             {n,m}                alespoň n a nejvýš m opakování
+\(...\)             (...)                skupina znaků
+\2                  \2                   obsah 2. zapamatované skupiny
+                    ab|cd|ef             jedna z alternativ
+^                   ^                    začátek řetězce
+$                   $                    konec řetězce

@@ -1,0 +1,97 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[includeheadfoot, margin=1in]{geometry}
+\usepackage{fancyhdr}
+\fancyhf{}
+\pagestyle{fancy}
+\rhead{Václav Luňák}
+\lhead{Domácí úkol na 3. 4. 2018}
+\cfoot{\thepage}
+\begin{document}
+\section*{Příklad 1}
+Vyjdeme z obecného tvaru elipsy: $\frac{x^2}{a^2}+\frac{y^2}{b^2} = 1$. Odtud dostáváme $y^2 = \frac{a^2b^2 - b^2x^2}{a^2}$. Uvážíme pouze tu část elipsy, pro kterou $x, y \geq 0$, přičemž výsledný obsah bude čtyřnásobkem obsahu tohoto útvaru. Můžeme pak vyjádřit $y = \frac{\sqrt{a^2b^2-b^2x^2}}{a}$ a spočíst obsah jako
+\begin{equation*}
+\int_0^a \frac{\sqrt{a^2b^2-b^2x^2}}{a} dx =
+\int_0^a \frac{b}{a} \cdot \sqrt{a^2-x^2} dx =
+\frac{b}{a} \int_0^a \sqrt{a^2-x^2} dx 
+\end{equation*}
+Použijeme substituci $x = a\cos t$, $dx = -a\sin t dt$ a přepočítáme integrační meze.
+\begin{equation*}
+\frac{b}{a} \int_\frac{\pi}{2}^0 \sqrt{a^2-a^2\cos^2 t}(-a\sin t) dt = 
+-ab \int_\frac{\pi}{2}^0 \sqrt{1-cos^2 t} \cdot \sin t dt = 
+-ab \int_\frac{\pi}{2}^0 \sin^2 t dt
+\end{equation*}
+Vypočteme primitivní funkci $\sin^2 t$ za použití per partes.
+\begin{equation*}
+\int \sin^2t dt = -\sin t \cos t + \int \cos^2 t dt = 
+-\sin t \cos t + \int (1-\sin^2 t) dt = -\sin t \cos t + t - \int \sin^2 t dt
+\end{equation*}
+Odtud dostáváme $\int \sin^2 t dt = \frac{t-\sin t \cos t}{2} + c$ a můžeme dosadit do výpočtu
+\begin{equation*}
+-ab \left[\frac{t-\sin t \cos t}{2}\right]_\frac{\pi}{2}^0 =
+-ab \left(\frac{0-0}{2} - \frac{\frac{\pi}{2}-0}{2}\right) =
+ab\frac{\pi}{4}
+\end{equation*} 
+Výsledný obsah elipsy je tedy roven $ab\pi$
+
+\section*{Příklad 2}
+Nejprve spočteme derivaci $y$.
+\begin{equation*}
+y' = \frac{a}{2}\left(\frac{1}{a} e^\frac{x}{a} - \frac{1}{a} e^{-\frac{x}{a}}\right) = \frac{1}{2} \left(e^\frac{x}{a} - e^\frac{-x}{a}\right)
+\end{equation*}
+Odtud
+\begin{equation*}
+(y')^2 = \frac{\left( e^\frac{x}{a} - e^\frac{-x}{a} \right)^2}{4} =
+\frac{e^\frac{2x}{a} - 2 e^\frac{x}{a} e^\frac{-x}{a} + e^\frac{-2x}{a}}{4} =
+\frac{e^\frac{2x}{a} + e^\frac{-2x}{a} - 2}{4}
+\end{equation*}
+Dosadíme do vzorce na výpočet délky křivky.
+\begin{equation*}
+l = \int_0^\gamma \sqrt{1+ \frac{e^\frac{2x}{a} + e^\frac{-2x}{a} - 2}{4}} dx =
+\int_0^\gamma \sqrt{\frac{e^\frac{2x}{a} + e^\frac{-2x}{a} + 2}{4}} dx =
+\int_0^\gamma \frac{\sqrt{\left( e^\frac{x}{a} + e^\frac{-x}{a} \right)^2 }}{2} dx =
+\end{equation*}
+\begin{equation*}
+= \frac{1}{2} \int_0^\gamma e^\frac{x}{a} + e^\frac{-x}{a} dx = 
+\frac{1}{2} \left[ ae^\frac{x}{a} - ae^\frac{-x}{a} \right]_0^\gamma = 
+\frac{a}{2} (e^\frac{\gamma}{2} - e^\frac{-\gamma}{2} - e^0 + e^{-0}) =
+\frac{a}{2} \left( e^\frac{\gamma}{2} - e^{-\frac{\gamma}{2}} \right)
+\end{equation*}
+
+\section*{Příklad 3}
+Kružnice, jejíž rotací vznikne anuloid, má tvar $x^2 + (y-R)^2 = r^2$. Horní část této kružnice se dá vyjádřit jako $y = R + \sqrt{r^2-x^2}$ a spodní část jako
+$y = R - \sqrt{r^2-x^2}$. Objem anuloidu můžeme spočíst jako rozdíl mezi objemem tělesa vzniklého rotací horní půlkružnice a objemem tělesa vzniklého rotací spodní půlkružnice. Po dosazení do vzorce dostáváme tvar
+\begin{equation*}
+V = \pi \int_{-r}^r \left( R+\sqrt{r^2-x^2} \right)^2 dx - \pi \int_{-r}^r \left( R - \sqrt{r^2-x^2} \right)^2 dx = 
+\end{equation*}
+\begin{equation*}
+=
+\pi \int_{-r}^r \left(R+\sqrt{r^2-x^2}\right)^2 - \left(R-\sqrt{r^2-x^2}\right)^2 dx 
+\end{equation*}
+Díky symetrii podle osy $y$ můžeme zjednodušit na
+\begin{equation*}
+2\pi \int_0^r \left(R+\sqrt{r^2-x^2}\right)^2 - \left(R-\sqrt{r^2-x^2}\right)^2 dx =
+\end{equation*}
+\begin{equation*}
+=2\pi \int_0^r R^2 + 2R\sqrt{r^2-x^2} + r^2-x^2 - R^2 + 2R\sqrt{r^2-x^2} -r^2+x^2 dx = 
+2\pi \int_0^r 4R\sqrt{r^2-x^2} dx =
+\end{equation*} 
+\begin{equation*}
+= 8\pi R \int_0^r\sqrt{r^2-x^2} dx
+\end{equation*}
+Použijeme substituci $x = r\cos t$, $dx = -r\sin t dt$ a přepočítáme integrační meze.
+\begin{equation*}
+8\pi R \int_\frac{\pi}{2}^0 \sqrt{r^2-r^2\cos^2 t}\cdot (-r\sin t) dt =
+-8\pi r^2R \int_\frac{\pi}{2}^0 \sin^2 t dt
+\end{equation*}
+Použijeme výpočet primitivní funkce $\sin^2 t$ z příkladu 1 a dosadíme.
+\begin{equation*}
+-4\pi r^2R [ t - \sin t \cos t ]_\frac{\pi}{2}^0 =
+-4\pi r^2R (0-0-\frac{\pi}{2} + 0) = 2\pi^2r^2R
+\end{equation*}
+\end{document}

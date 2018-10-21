@@ -1,0 +1,65 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[includeheadfoot, margin=1in]{geometry}
+\usepackage{fancyhdr}
+\fancyhf{}
+\pagestyle{fancy}
+\rhead{Václav Luňák}
+\lhead{Domácí úkol na 27. 3. 2018}
+\cfoot{\thepage}
+\begin{document}
+\section*{Příklad 2}
+$$
+\int_0^\infty x^n e^{-x} dx =
+$$
+\begin{flushright}
+[per partes: $u = x^n, v' = e^{-x}$]
+\end{flushright}
+$$
+= \left[ nx^{n-1}(-e^{-x}) \right]_0^\infty + n\int_0^\infty x^{n-1}e^{-x} dx =
+$$
+Všimneme si, že $\lim_{x \to \infty} (x^{n-1}(-e^{-x})) = 0$ a $0^{n-1}(-e^{-x}) = 0$ pro všechna $n$, tedy levý člen můžeme zanedbat. Induktivně provádíme per partes, přičemž v každém kroku před integrálem přibude multiplikativní konstanta, až se dostaneme k výrazu
+$$
+= n(n-1)(n-2)\cdots2 \cdot 1 \int_0^\infty e^{-x} dx = n!\left( \left[ -e^{-x} \right]_0^\infty \right)=n!\left( \lim_{x \to \infty} (-e^{-x}) - (-e^0) \right)=
+$$
+$$
+= n!( 0 - (-1)) = n!
+$$
+
+\section*{Příklad 3}
+$$
+\int_0^a \vert \cos x \vert dx \text{, kde } a = \frac{49\pi}{6}
+$$
+Z linearity integrálu vůči mezím můžeme tento integrál rozepsat jako
+$$
+\int_0^{\frac{\pi}{2}} \vert \cos x \vert dx +
+\int_{\frac{\pi}{2}}^{\frac{3\pi}{2}} \vert \cos x \vert dx +
+\int_{\frac{3\pi}{2}}^{\frac{5\pi}{2}} \vert \cos x \vert dx \cdots + 
+\int_{\frac{13\pi}{2}}^{\frac{15\pi}{2}} \vert \cos x \vert dx + 
+\int_{\frac{15\pi}{2}}^a \vert \cos x \vert dx
+$$
+Protože $\vert \cos x \vert$ je $\pi$-periodická funkce, budou se hodnoty všech integrálů kromě prvního a posledního rovnat, můžeme tedy integrál zjednodušit na
+$$
+\int_0^\frac{\pi}{2} \vert \cos x \vert dx + 
+7\int_\frac{\pi}{2}^\frac{3\pi}{2} \vert \cos x \vert dx +
+\int_{\frac{15\pi}{2}}^a \vert \cos x \vert dx 
+=
+\int_0^\frac{\pi}{2} \cos x dx + 
+7\int_\frac{\pi}{2}^\frac{3\pi}{2} -\cos x dx +
+\int_{\frac{15\pi}{2}}^a \cos x dx =
+$$
+$$
+= 
+\left[ \sin x \right]_0^{\frac{\pi}{2}} +
+7\left[-\sin x\right]_\frac{\pi}{2}^\frac{3\pi}{2} +
+\left[ \sin x \right]_\frac{15\pi}{2}^a 
+=
+(1-0)+7(1-(-1))+(\frac{1}{2}-(-1))
+= \frac{33}{2}
+$$
+\end{document}

@@ -1,0 +1,93 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\begin{document}
+\begin{flushright}
+Václav Luňák
+\end{flushright}
+
+\part*{Domácí úkol na 13. 3. 2018}
+
+\section*{1}
+$$
+\int \frac{x^{17}-5}{x-1} dx = 
+\int (x^{16}+x^{15}+x^{14}+x^{13}+x^{12}+x^{11}+x^{10}+x^9+x^8+x^7+x^6+x^5+x^4+x^3+x^2+x+1-\frac{4}{x-1}) dx = \\
+$$
+
+$$
+= \frac{x^{17}}{17} + \frac{x^{16}}{16} + \frac{x^{15}}{15} + \frac{x^{14}}{14} + \frac{x^{13}}{13} + \frac{x^{12}}{12} + \frac{x^{11}}{11} + \frac{x^{10}}{10} + 
+\frac{x^9}{9} + \frac{x^8}{8} + \frac{x^7}{7} + \frac{x^6}{6} + \frac{x^5}{5} + \frac{x^4}{4} + \frac{x^3}{3} + \frac{x^2}{2} + x - 4\int \frac{1}{x-1} dx = 
+$$
+
+$$
+= \sum_{k=1}^{17} \frac{x^k}{k} - 4 \log \vert x-1 \vert + c, c \in R    
+$$
+\begin{flushright}
+na $(-\infty, 1)$ a na $(1, \infty)$
+\end{flushright}
+
+\section*{2}
+$$
+\int \log (x+\sqrt{1+x^2}) dx =  
+$$
+\begin{flushright}
+[per partes: $u = \log (x+\sqrt{1+x^2})$, $v' = 1$]
+\end{flushright}
+$$
+=
+x\log (x+\sqrt{1+x^2}) - \int x\frac{1+\frac{x}{\sqrt{1+x^2}}}{x+\sqrt{1+x^2}} dx =
+x\log (x+\sqrt{1+x^2}) - \int \frac{x}{\sqrt{1+x^2}} dx = 
+$$
+\begin{flushright}
+[substituce: $t = 1+x^2$, $dt = 2x dx$]
+\end{flushright}
+$$
+=
+x\log (x+\sqrt{1+x^2}) -\frac{1}{2}\int \frac{1}{\sqrt{t}} dt =  
+x\log (x+\sqrt{1+x^2}) -\frac{1}{2}\int t^{-\frac{1}{2}} dt = x\log (x+\sqrt{1+x^2}) - \frac{1}{2} \frac{t^{\frac{1}{2}}}{\frac{1}{2}} + c = 
+$$
+$$
+= 
+x\log (x+\sqrt{1+x^2}) - t^{\frac{1}{2}} + c=
+ x\log (x+\sqrt{1+x^2}) - \sqrt{1+x^2} + c, c \in R
+$$
+\begin{flushright}
+na $R$ (logaritmus je vždy definován, protože má všude kladný argument)
+\end{flushright}
+
+\section*{3}
+$$
+\int \frac{\cos^2 x}{\sin x (1 - \cos x)} dx = 
+$$
+\begin{flushright}
+[substituce: $t = \tan \frac{x}{2}$, $dx = \frac{2}{1+t^2} dt$, $\sin x = \frac{2t}{1+t^2}$, $\cos x = \frac{1-t^2}{1+t^2}$]
+\end{flushright}
+$$
+= \int \frac{ (\frac{1-t^2}{1+t^2})^2 }{ \frac{2t}{1+t^2} (1-\frac{1-t^2}{1+t^2})}
+\cdot \frac{2}{1+t^2} dt
+= \int \frac{ (1-t^2)^2}{ t(1+t^2)\cdot(1+t^2-1+t^2) } dt 
+= \frac{1}{2} \int \frac{ (1-t^2)^2}{ (1+t^2) t^3 } dt 
+= \frac{1}{2} \int \frac{ 1-2t^2+t^4 }{ (1+t^2) t^3 } dt =
+$$  
+
+$$
+=\frac{1}{2} \int( \frac{A}{t} + \frac{B}{t^2} + \frac{C}{t^3} + \frac{Dt+E}{1+t^2} ) dt 
+=\frac{1}{2} \int( \frac{-3}{t} + \frac{0}{t^2} + \frac{1}{t^3} + \frac{4t+0}{1+t^2} ) dt
+=\int \frac{2t}{1+t^2} dt + \frac{1}{2} \int t^{-3} dt - \frac{3}{2} \int \frac{1}{t} dt = 
+$$
+\begin{flushright}
+[první integrál substitucí za $s = 1+t^2$, druhé dva přímo]
+\end{flushright}
+$$
+= \log \vert1+t^2\vert + \frac{t^{-2}}{-4} - \frac{3}{2} \log \vert t \vert + c
+= \log \vert 1+\tan^2(\frac{x}{2}) \vert - \frac{1}{4 \tan^2(\frac{x}{2})} - \frac{3}{2} \log \vert \tan(\frac{x}{2}) \vert + c, c \in R
+$$
+\begin{flushright}
+na $\bigcup_{k \in Z} (k\pi, (k+1)\pi)$, jelikož $\tan \frac{x}{2}$ se nesmí rovnat nule.
+\end{flushright}
+\end{document}
