@@ -51,5 +51,17 @@
         Z každého vrcholu $N$ vede $\binom{b}{a}$ hran do vrcholů $M$. Tyto hrany totiž odpovídají všem podmnožinám velikosti $a$ z množiny velikosti $b$. Pokud $\vert N \vert \leq \vert M \vert$, vrcholy v $M$ mají stupně stejné nebo menší než $\binom{b}{a}$. Z libovolné množiny $J \subseteq N$ pak vede $\vert J \vert \cdot \binom{b}{a}$ hran. Z nižších stupňů vrcholů v $M$ ovšem dostáváme $\vert N(J) \vert \geq \frac{\binom{b}{a} \cdot \vert J \vert}{\binom{b}{a}}$, tudíž je splněna Hallova podmínka a $G_{n,a,b}$ má SRR. Pro $\vert N \vert \geq \vert M \vert$ je argument stejný, pouze vyměníme partity.\\
 
         $G_{n,a,b}$ tedy má SRR a velikost jeho největšího párování je rovna $\text{min}\{\binom{n}{b},\binom{n}{a}\}$
-                
-    \end{document}
+        
+    \section{}
+        Mějme dvě maximální párování, $X$ a $Y$. Jelikož $X$ je párování, musí platit, že každá hrana z $Y \backslash X$ sousedí nejvýše se dvěma hranami z $X \backslash Y$. V opačném případě bychom měli dvě hrany $X$ končící ve stejném bodě.\\
+        
+        Zároveň víme, že každá hrana z $X \backslash Y$ sousedí s alespoň jednou hranou z $Y \backslash X$. Kdyby to pro nějakou hranu neplatilo, dala by se přidat do $Y$, což je spor s jeho maximalitou.\\
+
+        Z předchozích dvou pozorování tedy dostáváme, že $\vert X \backslash Y \vert \leq 2 \cdot \vert Y \backslash X \vert$. Dále pak úpravami:
+
+        \begin{align*}
+            \vert X \vert = \vert X \cap Y \vert + \vert X \backslash Y \vert \leq \vert X \cap Y \vert + 2 \cdot \vert Y \backslash X \vert \leq 2 \cdot \vert Y \cap X \vert + 2 \cdot \vert Y \backslash X \vert = 2 \cdot \vert Y \vert
+        \end{align*}
+
+        Z čehož nám vyplývá, že $\vert X \vert \leq 2 \cdot \vert Y \vert$ pro libovolná dvě maximální párování. Pokud za $X$ dosadíme nějaké největší párování grafu $G$, pak pro libovolné $Y$ maximální párování tohoto grafu dostáváme $\frac{ \mu (G)}{2} \leq \vert Y \vert$.
+    \end{document}   
