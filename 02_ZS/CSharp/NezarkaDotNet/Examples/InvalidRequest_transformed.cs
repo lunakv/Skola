@@ -1,7 +1,7 @@
 Console.Writeline("<!DOCTYPE html>");
-Console.Writeline("<html lang="en" xmlns="http://www.w3.org/1999/xhtml">");
+Console.Writeline("<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\">");
 Console.Writeline("<head>");
-Console.Writeline("	<meta charset="utf-8" />");
+Console.Writeline("	<meta charset=\"utf-8\" />");
 Console.Writeline("	<title>Nezarka.net: Online Shopping for Books</title>");
 Console.Writeline("</head>");
 Console.Writeline("<body>");
