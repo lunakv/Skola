@@ -4,7 +4,7 @@ using System.Text;
 
 using System.IO;
 
-namespace NezarkaBookstore
+namespace NezarkaDotNet
 {
 	//
 	// Model
@@ -45,7 +45,7 @@ namespace NezarkaBookstore
 					switch (tokens[0]) {
 						case "BOOK":
 							store.books.Add(new Book {
-								Id = int.Parse(tokens[1]), Title = tokens[2], Author = tokens[3], Price = decimal.Parse(tokens[4])
+								Id = int.Parse(tokens[1]), Title = tokens[2], Author = tokens[3], Price = int.Parse(tokens[4])
 							});
 							break;
 						case "CUSTOMER":
@@ -81,7 +81,7 @@ namespace NezarkaBookstore
 		public int Id { get; set; }
 		public string Title { get; set; }
 		public string Author { get; set; }
-		public decimal Price { get; set; }
+		public int Price { get; set; }
 	}
 
 	class Customer {
@@ -112,5 +112,10 @@ namespace NezarkaBookstore
 	class ShoppingCart {
 		public int CustomerId { get; set; }
 		public List<ShoppingCartItem> Items = new List<ShoppingCartItem>();
+
+        public ShoppingCartItem GetItem(int bookID)
+        {
+            return Items.Find(i => i.BookId == bookID);
+        }
 	}
 }
