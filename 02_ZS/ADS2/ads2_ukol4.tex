@@ -1,0 +1,35 @@
+\documentclass{scrartcl}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+
+\cohead[ADS 2]{ADS 2}
+\lohead[Minimální vrcholové pokrytí]
+        {Minimální vrcholové pokrytí}
+\rohead[Václav Luňák (Vašek)]
+        {Václav Luňák (Vašek)}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+\section{Popis řešení}
+Nejprve graf doplníme na síť. Přidáme ke grafu dva vrcholy, zdroj a stok. Všechny vrcholy jedné partity připojíme hranami ke zdroji, všechny vrcholy druhé partity ke stoku. Hrany mezi partitami zorientujeme tak, aby vedly vždy z první partity do druhé. Všem hranám nastavíme kapacitu 1. \\
+
+Následně nalezneme maximální tok v této síti. Po nalezení tohoto toku nalezneme minimální $st$-řez odpovídající tomuto toku. (Tento řez můžeme nalézt jako elementární řez množiny vrcholů, do kterých vede zlepšující cesta ze zdroje.) \\
+
+Pokud nějaká hrana řezu vede mezi partitami, vyměníme ji za hranu, která vede z vrcholu druhé partity do stoku. (\textit{Pozn.: je možné ekvivalentně použít hranu ze zdroje do vrcholu první partity.}) Minimální pokrytí grafu pak tvoří právě ty vrcholy, jejichž hrany do zdroje (resp. stoku) jsou součástí řezu.
+
+\section{Důkaz správnosti}
+Nejprve si rozmyslíme, že záměna hran nám neporuší minimalitu $st$-řezu. To je vidět snadno, neboť po záměně hrany jsme zachovali počet hran řezu a cesta blokovaná původní hranou zůstává zablokována vyměněnou hranou. \\
+
+Dále si můžeme uvědomit, že každé vrcholové pokrytí nám dá vrcholový řez grafu, jelikož po odebrání vrcholů pokrytí nám zbude nezávislá množina. Když pak vybereme hrany vedoucí mezi vrcholy pokrytí a zdrojem (resp. stokem), dostaneme řez dané sítě. Řečeno jinými slovy, každá hrana obsahuje alespoň jeden vrchol vrcholového pokrytí, tedy odříznutím pokrytí od sítě jsme alespoň z jedné strany odřízli každou hranu původního grafu. \\
+
+Zároveň platí i opačná implikace, tedy že z každého řezu neobsahujícího hrany mezi partitami dostaneme vrcholové pokrytí původního bipartitního grafu, když vezmeme právě vrcholy náležící těmto hranám. Kdyby existovala hrana, jež by nenáležela takovémuto vrcholu pokrytí, musely by existovat i dva vrcholy této hrany, které nejsou součástí pokrytí, tudíž z jeho konstrukce nejsou odříznuty od zdroje a stoku. Z toho nám ale vyplývá, že existuje cesta mezi zdrojem a stokem, což je spor s předpokladem, že jsme měli $st$-řez. \\
+
+Z předchozího tedy dostáváme, že z minimálního řezu sítě jsme schopni dostat minimální vrcholové pokrytí. Z prvního ročníku pak víme, že velikost maximálního toku je rovna velikosti minimálního řezu a že tento minimální řez se dá z maximálního toku nalézt výše popsaným způsobem. Algoritmus tedy korektně nachází minimální vrcholová pokrytí.
+
+\section{Složitost}
+Nechť $N$ je počet vrcholů grafu a $M$ počet jeho hran. Doplnění grafu na síť zvládneme v čase $O(N + M)$. Na nalezení maximálního toku můžeme použít např. Dinitzův algoritmus, který spotřebuje čas $O(N^2 \cdot M)$. Hledání množiny elementárního řezu je modifikované BFS, tedy potrvá $O(N + M)$. Nalezení samotných hran řezu, jejich případnou výměnu a určení samotných vrcholů pokrytí zvládneme taktéž v čase $O(N + M)$. Celkově tedy algoritmus poběží v čase $O(N^2 \cdot M)$. \\
+
+Ke každé hraně a vrcholu potřebujeme znát pouze konstantní množství informací. Celková prostorová složitost algoritmu tedy bude $O(N + M)$.
+
+\end{document}
