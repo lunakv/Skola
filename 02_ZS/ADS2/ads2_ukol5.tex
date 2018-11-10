@@ -13,4 +13,19 @@
 \begin{document}
 \section{Popis řešení}
 
+Vytvoříme bipartitní graf. V každé partitě budou všechna nezakázaná políčka šachovnice. Hrany povedou z každého políčka levé partity do políček, která s ním sousedí hranou. Tento graf doplníme standardním způsobem na síť s kapacitou 1 na všech hranách. \\
+
+Spustíme Dinicův algoritmus a najdeme maximální tok v této síti. Pokud budou všechny hrany ze zdroje a do stoku nasycené tokem, dá se tato šachovnice zaplnit kostkami domina. Kostky pak umístíme na dvojice, které jsou v maximálním toku spojeny hranou. Nebudou-li takto nasycené hrany, šachovnici nelze celou pokrýt.
+
+\section{Důkaz správnosti}
+
+Najdeme-li perfektní párování mezi sousedními políčky, můžeme ho převést na řešení úlohy tak, že políčka položíme na napárované dvojice. Pokud naopak najdeme řešení úlohy, můžeme ho převést na perfektní párování takovéhoto grafu, když za párovací hrany označíme hrany mezi políčky též kostce. Úloha je tedy ekvivalentní k nalezení perfektního párování na námi vytvořeném grafu. \\
+
+Zároveň víme, že maximální tok na doplněné síti nám nalezne maximální párování v původním grafu, přičemž toto párování je perfektní právě tehdy, když jsou zaplněny tokem buď všechny hrany vedoucí ze zdroje, nebo všechny hrany vedoucí do stoku (\textit{pro graf se stejně velkými partitami jsou tyto situace ekvivalentní}). Algoritmus tedy produkuje korektní řešení úlohy.
+
+\section{Složitost}
+Nechť $N$ značí počet povolených políček. Určitě platí, že $N \in O(r \cdot s)$. Každý vrchol sítě mimo zdroje a stoku náleží nejvýše pěti hranám, tedy počet hran ($M$) je $O(N)$. Dinicův algoritmus pro jednotkové kapacity běží v čase $O(N \cdot M) = O(N^2)$. Všechny ostatní operace zvládneme lineárně, tudíž je toto i výsledná časová složitost celého algoritmu. \\
+
+Pro každý vrchol i hranu potřebujeme jen konstantní množství informací, tudíž prostorová složitost algoritmu je $O(N)$.
+
 \end{document}
