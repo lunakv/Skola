@@ -11,7 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace HuffmanTrees
 {
-    internal class Program
+    internal static class Program
     {
         public static void Main(string[] args)
         {
