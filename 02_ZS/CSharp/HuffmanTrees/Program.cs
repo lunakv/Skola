@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
+using System.Linq;
+using System.Runtime;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -18,18 +20,20 @@ namespace HuffmanTrees
 
         static void Run(string[] args)
         {
-            
+            /**/
             if (args.Length != 1)
             {
                 ThrowArgumentError();
                 return;
             }
-
-            FileStream reader = null;
+            /**/
             
+            FileStream inputStream = null;
+            FileStream outputStream = null;
             try
             {
-                reader = new FileStream(args[0], FileMode.Open);
+                inputStream = new FileStream(args[0], FileMode.Open);
+                outputStream = new FileStream(args[0] + ".huff", FileMode.OpenOrCreate);
             }
             catch (Exception e)
             {
@@ -39,15 +43,16 @@ namespace HuffmanTrees
                     ThrowFileError();
                     return;
                 }
-                
                 throw;
             }
-
+            
+            var reader = new FileStreamInput(inputStream);
+            var writer = new FileStreamOutput(outputStream);
             var analyzer = new FrequencyAnalyzer();
             var creator = new HuffmanTreeCreator();
-            var writer = new HuffmanTreeWriter(Console.Out);
             
-            var algorithm = new HuffmanAlgorithm(reader, analyzer, creator, writer);
+            var algorithm = new HuffmanAlgorithm(analyzer, creator);
+            algorithm.Encode(reader, writer);
         }
 
         static void ThrowArgumentError()
@@ -64,27 +69,40 @@ namespace HuffmanTrees
     /// <summary>
     /// Creates and immediately runs an instance of an algorithm to create and write a Huffman tree
     /// </summary>
-    class HuffmanAlgorithm
+    public class HuffmanAlgorithm
     {
-        public HuffmanAlgorithm(Stream reader, ISymbolAnalyzer analyzer, ITreeCreator creator, ITreeWriter writer)
+        private ISymbolAnalyzer _analyzer;
+        private ITreeCreator _creator;
+        
+        public HuffmanAlgorithm(ISymbolAnalyzer analyzer, ITreeCreator creator)
+        {
+            _analyzer = analyzer;
+            _creator = creator;
+        }
+
+        public void Encode(IFileInput input, IFileOutput output)
         {
             int symbol;
 
-            while ((symbol = reader.ReadByte()) != -1)
+            while ((symbol = input.ReadByte()) != -1)
             {
-                analyzer.ProcessSymbol(symbol);
+                _analyzer.ProcessSymbol(symbol);
             }
 
-            long[] data = analyzer.GetAnalysis();
-            BinaryNode root = creator.CreateTree(data);
-            writer.WriteTree(root);
+            long[] data = _analyzer.GetAnalysis();
+            BinaryNode root = _creator.CreateTree(data);
+            var encoder = new HuffmanEncoder(output, root);
+            
+            input.GoToStart();
+            encoder.Encode(input);
+            encoder.Finish();
         }
     }
     
     /// <summary>
     /// Counts the frequency of given symbols
     /// </summary>
-    class FrequencyAnalyzer : ISymbolAnalyzer
+    public class FrequencyAnalyzer : ISymbolAnalyzer
     {
         #region properties
         
@@ -116,7 +134,7 @@ namespace HuffmanTrees
         #endregion
     }
 
-    class HuffmanTreeCreator : ITreeCreator
+    public class HuffmanTreeCreator : ITreeCreator
     {
         HuffmanPriorityQueue _processingNodes = new HuffmanPriorityQueue();
         
@@ -154,7 +172,7 @@ namespace HuffmanTrees
     /// <summary>
     /// Writes a representation of a Huffman tree in prefix notation
     /// </summary>
-    class HuffmanTreeWriter : ITreeWriter
+   /* public class HuffmanTreeWriter : ITreeWriter
     {
         private TextWriter _output;
         private bool _firstWrite;
@@ -185,8 +203,125 @@ namespace HuffmanTrees
             else
             {
                 _output.Write(root.Weight);
-                WriteTree(root.LeftSon);
-                WriteTree(root.RightSon);
+                WriteTree(root.Left);
+                WriteTree(root.Right);
+            }
+        }
+    }*/
+
+    public class HuffmanEncoder
+    {
+        private IFileOutput _output;
+        private BinaryNode _tree;
+        private bool[][] _paths = new bool[256][];
+        private Queue<bool> _buffer;
+        
+        public HuffmanEncoder(IFileOutput output, BinaryNode huffmanTree)
+        {
+            _output = output;
+            _tree = huffmanTree;
+        }
+
+        public void Encode(IFileInput input)
+        {
+            _buffer = new Queue<bool>(520);
+            WriteEncodingHeader();
+            WriteTree(_tree);
+            _output.Write(new byte[8], 0, 8);
+            CreatePaths(_tree, new bool[0], 0);
+
+            int c;
+            while ((c = input.ReadByte()) != -1)
+            {
+                EncodeByte((byte) c);
+            }
+        }
+
+        void WriteEncodingHeader()
+        {
+            byte[] header = new byte[]{0x7B, 0x68, 0x75, 0x7C, 0x6D, 0x7D, 0x66, 0x66};
+            _output.Write(header, 0, header.Length);
+        }
+
+        internal void WriteTree(BinaryNode current)
+        {
+            if (current == null) return;
+            
+            ulong encoded, key;
+            ulong weight = (((ulong) current.Weight) << 9) >> 8;
+            
+            if (current.isLeaf())
+            {
+                encoded = 1;
+                key = ((ulong) current.Key) << 56;
+            }
+            else
+            {
+                encoded = 0;
+                key = 0;
+            }
+
+            encoded = encoded | weight | key;
+            byte[] output = BitConverter.GetBytes(encoded);
+            _output.Write(output, 0, output.Length);
+            
+            WriteTree(current.Left);
+            WriteTree(current.Right);
+        }
+
+        void CreatePaths(BinaryNode current, bool[] soFar, int depth)
+        {
+            if (current.isLeaf())
+            {
+                _paths[current.Key] = soFar;
+                return;
+            }
+            
+            bool[] child = new bool[depth+1];
+            Array.Copy(soFar, child, soFar.Length);
+            child[depth] = false;
+            CreatePaths(current.Left, child, depth+1);
+
+
+            child = new bool[depth + 1];
+            Array.Copy(soFar, child, soFar.Length);
+            child[depth] = true;
+            CreatePaths(current.Right, child, depth+1);
+        }
+
+        void EncodeByte(byte value)
+        {
+            bool[] path = _paths[value];
+            for (int i = 0; i < path.Length; i++)
+            {
+                _buffer.Enqueue(path[i]);
+            }
+
+            while (_buffer.Count >= 8)
+            {
+                WriteByteFromBuffer();
+            }
+        }
+
+        void WriteByteFromBuffer()
+        {
+            uint value = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                if (_buffer.Count != 0 && _buffer.Dequeue())
+                {
+                    value = value | (uint) (1 << i);
+                }
+            }
+            
+            _output.WriteByte((byte) value);
+        }
+
+        public void Finish()
+        {
+            while (_buffer.Count > 0)
+            {
+                WriteByteFromBuffer();
             }
         }
     }
@@ -194,32 +329,37 @@ namespace HuffmanTrees
     /// <summary>
     /// Represents one node of a binary tree.
     /// </summary>
-    class BinaryNode
+    public class BinaryNode
     {
         public int Key;
         public long Weight;
-        public BinaryNode LeftSon;
-        public BinaryNode RightSon;
+        public BinaryNode Left;
+        public BinaryNode Right;
 
-        public BinaryNode(int key, long weight, BinaryNode leftSon, BinaryNode rightSon)
+        public BinaryNode(int key, long weight, BinaryNode left, BinaryNode right)
         {
             Key = key;
             Weight = weight;
-            LeftSon = leftSon;
-            RightSon = rightSon;
+            Left = left;
+            Right = right;
         }
 
-        public BinaryNode(BinaryNode leftSon, BinaryNode rightSon)
+        public BinaryNode(BinaryNode left, BinaryNode right)
         {
-            LeftSon = leftSon;
-            RightSon = rightSon;
+            Left = left;
+            Right = right;
+        }
+
+        public bool isLeaf()
+        {
+            return Left == null;
         }
     }
     
     /// <summary>
     /// A priority queue for Huffman tree nodes. Prioritizes by weight of the node.
     /// </summary>
-    class HuffmanPriorityQueue : IPriorityQueue<BinaryNode>
+    public class HuffmanPriorityQueue : IPriorityQueue<BinaryNode>
     {
         private LinkedList<BinaryNode> NodeQueue = new LinkedList<BinaryNode>();
         public int Count => NodeQueue.Count;
@@ -256,25 +396,77 @@ namespace HuffmanTrees
             return result;
         }
     }
+
+    public class FileStreamInput : IFileInput
+    {
+        private FileStream _stream;
+        
+        public FileStreamInput(FileStream stream)
+        {
+            _stream = stream;
+        }
+        
+        public int ReadByte()
+        {
+            return _stream.ReadByte();
+        }
+
+        public void GoToStart()
+        {
+            _stream.Position = 0;
+        }
+    }
+
+    public class FileStreamOutput : IFileOutput
+    {
+        private FileStream _stream;
+
+        public FileStreamOutput(FileStream stream)
+        {
+            _stream = stream;
+        }
+
+        public void WriteByte(byte value)
+        {
+            _stream.WriteByte(value);
+        }
+
+        public void Write(byte[] array, int offset, int count)
+        {
+            _stream.Write(array, offset, count);
+        }
+    }
     
-    interface IPriorityQueue<T>
+    public interface IFileInput
+    {
+        int ReadByte();
+        void GoToStart();
+    }
+
+    public interface IFileOutput
+    {
+        void WriteByte(byte output);
+        void Write(byte[] array, int offset, int count);
+    }
+    
+    public interface IPriorityQueue<T>
     {
         void Add(T value);
         T ExtractMin();
     }
 
-    interface ISymbolAnalyzer
+    public interface ISymbolAnalyzer
     {
         void ProcessSymbol(int symbol);
         long[] GetAnalysis();
     }
 
-    interface ITreeCreator
+    public interface ITreeCreator
     {
         BinaryNode CreateTree(long[] data);
     }
 
-    interface ITreeWriter
+    public interface ITreeWriter
     {
         void WriteTree(BinaryNode root);
     }
