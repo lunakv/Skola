@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.IO;
-using System.Linq;
-using System.Runtime;
-using System.Runtime.InteropServices;
 using System.Security;
-using System.Security.Cryptography.X509Certificates;
 
-namespace HuffmanTrees
+namespace HuffmanTreess
+
 {
     internal static class Program
     {
@@ -178,8 +173,13 @@ namespace HuffmanTrees
     {
         private IFileOutput _output;
         private Node _tree;
-        private bool[][] _paths = new bool[256][];    // bit paths of each leaf in the tree (false = left edge, true = right)
-        private Queue<bool> _buffer;                  // bits waiting to be written to output
+        private byte[][] _paths = new byte[256][]; // bit paths of each leaf in the tree (0 = left edge, 1 = right)
+                                                   // unspecified for inner nodes
+        private int[] _pathLengths = new int[256]; // length (in bits) of each path to leaf in the tree
+                                                   // unspecified for inner nodes
+        private byte[] _buffer;                  // bits waiting to be written to output
+        private const int BUFFER_LENGTH = 4000;
+        private int _bufferIndex;
         
         public HuffmanEncoder(IFileOutput output, Node huffmanTree)
         {
@@ -190,12 +190,12 @@ namespace HuffmanTrees
         public void Encode(IFileInput input)
         {
             // Initialization and encoding the tree
-            _buffer = new Queue<bool>(520);
+            _buffer = new byte[BUFFER_LENGTH + 1];
             WriteEncodingHeader();
             WriteTree(_tree);
             _output.Write(new byte[8], 0, 8);
             
-            CreatePaths(_tree, new bool[0], 0);
+            CreatePaths(_tree, new byte[0], 0);
 
             int c;
             while ((c = input.ReadByte()) != -1)
@@ -244,62 +244,65 @@ namespace HuffmanTrees
         /// Recursively searches the tree and fills the <code>_paths</code> array with bit paths to each leaf.
         /// </summary>
         /// <param name="current"> Currently processed node. </param>
-        /// <param name="soFar"> Bit path to <paramref name="current"/> node (use empty array for root). </param>
+        /// <param name="soFar"> Intermediate path to currently processed node. </param>
         /// <param name="depth"> Depth of <paramref name="current"/> node in Huffman tree (use 0 for root). </param>
-        void CreatePaths(Node current, bool[] soFar, int depth)
+        void CreatePaths(Node current, byte[] soFar, int depth)
         {
             if (current.isLeaf())
             {
                 _paths[current.Key] = soFar;
+                _pathLengths[current.Key] = depth;
                 return;
             }
             
-            bool[] child = new bool[depth+1];
-            Array.Copy(soFar, child, soFar.Length);
-            child[depth] = false;
-            CreatePaths(current.Left, child, depth+1);
+            byte[] _pathToLeftSon = new byte[depth/8 + 1];    // path length of sons is depth+1
+            soFar.CopyTo(_pathToLeftSon, 0); 
+            // last bit is 0 by default -> no need to alter left son 
+            CreatePaths(current.Left, _pathToLeftSon, depth+1);
+            
+            byte[] _pathToRightSon = new byte[depth/8 + 1];
+            soFar.CopyTo(_pathToRightSon, 0);
+            _pathToRightSon[depth/8] |= (byte) (1 << (depth % 8));
+            // last bit is 1 -> bit at last index (=depth) must be altered
+            
+            CreatePaths(current.Right, _pathToRightSon, depth+1);
 
-
-            child = new bool[depth + 1];
-            Array.Copy(soFar, child, soFar.Length);
-            child[depth] = true;
-            CreatePaths(current.Right, child, depth+1);
         }
 
         void EncodeByte(byte value)
         {
-            bool[] path = _paths[value];
-            for (int i = 0; i < path.Length; i++)
+            byte[] path = _paths[value];
+
+            for (int i = 0; i < path.Length; i++)    // iterating through each byte of path
             {
-                _buffer.Enqueue(path[i]);
+                int bufferByteIndex = _bufferIndex / 8 + i;    
+                _buffer[bufferByteIndex] |= (byte) (path[i] << (_bufferIndex % 8)); // lower part of byte fits in current byte
+                _buffer[bufferByteIndex + 1] |= (byte) (path[i] >> 8 - _bufferIndex % 8); // upper part of byte goes to the next byte
             }
 
-            while (_buffer.Count >= 8)
-            {
-                WriteByteFromBuffer();
-            }
+            _bufferIndex += _pathLengths[value];
+            
+            if (_bufferIndex / 8 >= BUFFER_LENGTH - 32)
+                WriteBuffer();
         }
 
-        void WriteByteFromBuffer()
+        void WriteBuffer()
         {
-            uint value = 0;
-            for (int i = 0; i < 8; i++)
+            int byteCount = _bufferIndex / 8;
+            _output.Write(_buffer, 0, byteCount);
+            _buffer[0] = _buffer[byteCount];
+
+            for (int i = 1; i <= byteCount; i++)
             {
-                if (_buffer.Count != 0 && _buffer.Dequeue())
-                {
-                    value = value | (uint) (1 << i);
-                }
+                _buffer[i] = 0;
             }
-            
-            _output.WriteByte((byte) value);
+
+            _bufferIndex = _bufferIndex % 8;
         }
 
         public void Finish()
         {
-            while (_buffer.Count > 0)
-            {
-                WriteByteFromBuffer();
-            }
+            _output.Write(_buffer, 0, (_bufferIndex-1)/8 + 1);
         }
     }
     
@@ -314,7 +317,7 @@ namespace HuffmanTrees
         public Node Right;
 
         public Node(int key, long weight, Node left, Node right)
-        {
+        {var
             Key = key;
             Weight = weight;
             Left = left;
@@ -395,6 +398,11 @@ namespace HuffmanTrees
         {
             _stream.Position = 0;
         }
+
+        public void Dispose()
+        {
+            _stream?.Dispose();
+        }
     }
 
     /// <summary>
@@ -418,15 +426,20 @@ namespace HuffmanTrees
         {
             _stream.Write(array, offset, count);
         }
+
+        public void Dispose()
+        {
+            _stream?.Dispose();
+        }
     }
     
-    public interface IFileInput
+    public interface IFileInput : IDisposable
     {
         int ReadByte();
         void GoToStart();
     }
 
-    public interface IFileOutput
+    public interface IFileOutput : IDisposable
     {
         void WriteByte(byte output);
         void Write(byte[] array, int offset, int count);
