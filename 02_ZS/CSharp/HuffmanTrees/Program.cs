@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security;
+using System.Collections.Generic;
 
-namespace HuffmanTreess
+namespace HuffmanTrees
 
 {
     internal static class Program
@@ -74,6 +74,8 @@ namespace HuffmanTreess
             _analyzer = analyzer;
             _creator = creator;
         }
+        
+        
 
         /// <summary>
         /// Reads the input stream and encodes it to the output stream.
@@ -317,7 +319,7 @@ namespace HuffmanTreess
         public Node Right;
 
         public Node(int key, long weight, Node left, Node right)
-        {var
+        {
             Key = key;
             Weight = weight;
             Left = left;
@@ -341,8 +343,8 @@ namespace HuffmanTreess
     /// </summary>
     public class HuffmanPriorityQueue : IPriorityQueue<Node>
     {
-        private LinkedList<Node> NodeQueue = new LinkedList<Node>();
-        public int Count => NodeQueue.Count;
+        private LinkedList<Node> _nodeQueue = new LinkedList<Node>();
+        public int Count => _nodeQueue.Count;
 
         /// <summary>
         /// Adds an item to the appropriate place in the queue. 
@@ -350,17 +352,17 @@ namespace HuffmanTreess
         /// <param name="value">The node to be added.</param>
         public void Add(Node value)
         {
-            var currentNode = NodeQueue.Last;
+            var currentNode = _nodeQueue.Last;
             while (currentNode != null && currentNode.Value.Weight > value.Weight)
                 currentNode = currentNode.Previous;
 
             if (currentNode == null)
             {
-                NodeQueue.AddFirst(value);
+                _nodeQueue.AddFirst(value);
             }
             else
             {
-                NodeQueue.AddAfter(currentNode, value);
+                _nodeQueue.AddAfter(currentNode, value);
             }
         }
 
@@ -370,9 +372,9 @@ namespace HuffmanTreess
         /// <returns>The item with the highest priority in the queue, or null, if the queue is empty.</returns>
         public Node ExtractMin()
         {
-            Node result = NodeQueue.First?.Value;
+            Node result = _nodeQueue.First?.Value;
             
-            NodeQueue.RemoveFirst();
+            _nodeQueue.RemoveFirst();
             return result;
         }
     }
