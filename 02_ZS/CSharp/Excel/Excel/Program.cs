@@ -9,7 +9,7 @@ namespace Excel
 	/// <summary>
 	/// Describes whether the cell has a correct value or contains some kind of error.
 	/// </summary>
-	public enum Status
+	public enum Status : byte
 	{
 		CORRECT,
 		INVVAL,
@@ -18,12 +18,12 @@ namespace Excel
 		CYCLE,
 		FORMULA,
 		MISSOP
-	}
+	} 
 
 	/// <summary>
 	/// Describes the stage of the evaluation process of a cell. 
 	/// </summary>
-	public enum Evaluation
+	public enum Evaluation : byte
 	{
 		Evaluated,
 		Evaluating, 
@@ -362,12 +362,7 @@ namespace Excel
 			while (_cellStack.Count != 0)		// traversing the dependency tree with a DFS search 
 			{
 				Cell currentCell = _cellStack.Peek();
-				if (currentCell == null)			// should never happen
-				{
-					_cellStack.Pop();
-					continue;
-				}
-
+				
 				bool addedToStack = false;			
 				foreach (var position in currentCell.DependentOn)	// looking for undiscovered dependencies
 				{
@@ -402,7 +397,7 @@ namespace Excel
 		{
 			toEvaluate.Evaluation = Evaluation.Evaluated;
 			if (toEvaluate.Status != Status.CORRECT) return;	// wrong status -> don't care about value
-			if (toEvaluate.DependentOn.Length < 2) return;		// correct status -> no dependencies
+			if (toEvaluate.DependentOn.Length < 2) return;		// correct status -> no dependencies to evaluate
 
 			Position pos1 = toEvaluate.DependentOn[0];
 			Cell dependency1 = _sheet[pos1.Row]?[pos1.Column];
@@ -447,7 +442,7 @@ namespace Excel
 		{
 			// there is no need to retain cycle members on the stack
 			// we don't need any other dependencies to get their status, 
-			// and all unevaluated cells dependent on them will be evaluated later in the main cycle of EvaluateSheet.
+			// and all their unevaluated dependencies will be evaluated later in the main cycle of EvaluateSheet.
 			
 			Cell inCycleCell = _cellStack.Pop();
 			while (inCycleCell != lastMember)
@@ -543,7 +538,6 @@ namespace Excel
 			for (int i = 1; i <= sheet.RowCount; i++)
 			{
 				Row row = sheet[i];
-				
 				for (int j = 1; j <= row.Count; j++)
 				{
 					Cell cell = row[j];
