@@ -1,0 +1,20 @@
+\documentclass{scrartcl}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+
+\cohead[ADS 2]{ADS 2}
+\lohead[NAME]
+        {NAME}
+\rohead[Václav Luňák (Vašek)]
+        {Václav Luňák (Vašek)}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+\section{}
+$x = (1,0,1,0,...,1,0)$
+\begin{align*}
+    y_j = \sum_{k=0}^{n-1} x_k \omega^{jk} = \sum_{k=0}^{n-1} \omega^{jk} = \sum_{k=0}^{n/2 -1} (\omega^{2j})^k = \frac{(\omega^{2j})^{n/2}-1}{\omega^{2j}-1} = \frac{(\omega^n)^j - 1}{\omega^{2j}-1} = 0 
+\end{align*}
+pro všechny členy krom těch, kde $\omega^{2j} = 1$, tj. pro všechny krom $y_0$ a $y_{n/2}$. V těch má $y$ snadno hodnotu $n/2$. Výsledný obraz je tedy $y = (n/2,0,0,...,n/2,0,0,...,0)$.  
+\end{document}
