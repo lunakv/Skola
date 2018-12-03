@@ -1,25 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Text;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Excel_tests")]
 namespace Excel
 {
-	/// <summary>
-	/// Describes whether the cell has a correct value or contains some kind of error.
-	/// </summary>
-	public enum Status : byte
-	{
-		CORRECT,
-		INVVAL,
-		ERROR,
-		DIV0,
-		CYCLE,
-		FORMULA,
-		MISSOP
-	} 
-
 	/// <summary>
 	/// Describes the stage of the evaluation process of a cell. 
 	/// </summary>
@@ -73,45 +60,48 @@ namespace Excel
 	}
 
 	/// <summary>
-	/// Key class representing one cell of a sheet.
+	/// Represents one cell with a formula to be evaluated.
 	/// </summary>
-	internal class Cell
+	internal class FormulaCell : Cell
 	{
-		public Status Status { get; set; }				// see Status enum summary
-		public Position Coord { get; private set; }		// position of the cell in a sheet, indexed from one in both axes. 
 		public Evaluation Evaluation { get; set; } = Evaluation.NotEvaluated;	// see Evaluation enum summary
+		public Position[] DependentOn { get; set; } = new Position[0]; 	// all positions cell's value depend on
+		public char Operator { get; set; }		// operator in cell's formula. can be '+', '-', '*', or '/'
+	}
+
+	/// <summary>
+	/// Represents a cell containing just value and status information.
+	/// </summary>
+	class ValueCell : Cell
+	{
+		
+	}
+
+	/// <summary>
+	/// Abstract class representing one cell of a sheet.
+	/// </summary>
+	abstract class Cell
+	{
 		public int Value { get; set; }					// numerical value of cell. only defined if Status == CORRECT
-		public Position[] DependentOn { get; private set; } = new Position[0]; 	// all positions cell's value depend on
-		public char Operator { get; private set; }		// operator in cell's formula. can be '+', '-', '*', or '/'
-
-		private Cell() { } // private constructor. use GenerateNew to create cells.
-
-		/// <summary>
-		/// Creates a new cell based on the specified parameters.
-		/// </summary>
-		/// <param name="argument"> String representation of the cell read from input. </param>
-		/// <param name="row"> Row the cell should be put on, indexed from one. </param>
-		/// <param name="column"> Column the cell should be put on, indexed from one. </param>
-		/// <returns> A new Cell corresponding to the specified values. </returns>
-		public static Cell GenerateNew(string argument, int row, int column)
+		public string Status { get; set; }				// status identifying correctness of the cell
+		public static Cell GenerateNew(string argument)
 		{
-			if (argument == "[]") return null; // no need to store empty cells;
-			if (argument[0] != '=')			   // argument is not a formula
+			if (argument == "[]") return null; 			// no need to store empty cells;
+			if (argument[0] != '=')			   			// argument is not a formula
 			{
 				bool correct = int.TryParse(argument, out int result);
 				if (correct)
-					return new Cell {Coord = new Position(row, column), Value = result};
+					return new ValueCell {Value = result, Status = "#CORRECT"};
 				
-				return new Cell {Status = Status.INVVAL};
+				return new ValueCell {Status = "#INVVAL"};
 			}
 
 			// creating a cell from a parsed formula.
-			Status stat = ArgumentParser.ProcessArgument(argument, out Position[] dependent, out char op);
-			return new Cell
+			string stat = ArgumentParser.ProcessArgument(argument, out Position[] dependent, out char op);
+			return new FormulaCell
 			{
 				Operator = op, 
 				Status = stat, 
-				Coord = new Position(row, column), 
 				DependentOn = dependent
 			};
 		}
@@ -131,25 +121,25 @@ namespace Excel
 		/// <param name="operands"> Array containing, in order, positions of both operands in <paramref name="argument"/>,
 		/// 						or an empty array[0] if the formula is incorrect. </param>
 		/// <param name="op"> The operator separating the two operands, or 0 if the formula is incorrect.</param>
-		/// <returns> Status.MISSOP if formula contains no operator, Status.FORMULA if formula is otherwise incorrect,
-		/// 		  Status.Correct otherwise. </returns>
-		public static Status ProcessArgument(string argument, out Position[] operands, out char op)
+		/// <returns> "#MISSOP" if formula contains no operator, "#FORMULA" if formula is otherwise incorrect,
+		/// 		  "#CORRECT" otherwise. </returns>
+		public static string ProcessArgument(string argument, out Position[] operands, out char op)
 		{
 			operands = new Position[0]; // default values for out parameters
 			op = (char) 0;
 			
 			string[] operandStrings = argument.Split('+', '-', '*', '/');
-			if (operandStrings.Length == 1) return Status.MISSOP;
-			if (operandStrings.Length != 2) return Status.FORMULA;
+			if (operandStrings.Length == 1) return "#MISSOP";
+			if (operandStrings.Length != 2) return "#FORMULA";
 
 			if (ParseOperand(operandStrings[0], out Position firstOp) && ParseOperand(operandStrings[1], out Position secondOp))
 			{
 				operands = new[] {firstOp, secondOp};
 				op = GetOperator(argument);
-				return Status.CORRECT;
+				return "#CORRECT";
 			}
 
-			return Status.FORMULA;
+			return "#FORMULA";
 		}
 
 		/// <summary>
@@ -160,7 +150,7 @@ namespace Excel
 		/// <returns> True if conversion succeeded, false if it failed. </returns>
 		static bool ParseOperand(string operand, out Position opPosition)
 		{
-			opPosition = null;		// default value for out parameters
+			opPosition = new Position();		 // default value for out parameters
 			if (string.IsNullOrEmpty(operand)) return false;
 			
 			int column = 0;
@@ -172,7 +162,7 @@ namespace Excel
 				i++;
 			}
 
-			if (column == 0)	// no column characters were read -> wrong format
+			if (column == 0)				// no column characters were read -> wrong format
 				return false;
 
 			int row = 0;
@@ -182,7 +172,7 @@ namespace Excel
 				i++;
 			}
 
-			if (row == 0)	// no numbers were read -> wrong format
+			if (row == 0)					// no numbers were read -> wrong format
 				return false;
 			if (i + 1 < operand.Length)		// characters remaining after last number -> wrong format
 				return false;
@@ -221,7 +211,7 @@ namespace Excel
 	/// <summary>
 	/// Represents the position of a cell in a sheet
 	/// </summary>
-	class Position
+	struct Position
 	{
 		public int Row { get; }
 		public int Column { get; }
@@ -231,8 +221,6 @@ namespace Excel
 			Row = row;
 			Column = column;
 		}
-		
-		
 	}
 
 	/// <summary>
@@ -258,7 +246,7 @@ namespace Excel
 		/// <param name="argument"> Argument (value or formula) representing the cell read from input. </param>
 		public void AddCell(string argument)
 		{
-			var newCell = Cell.GenerateNew(argument, _index, _cells.Count + 1);
+			Cell newCell = FormulaCell.GenerateNew(argument);
 			_cells.Add(newCell);
 		}
 	}
@@ -324,8 +312,8 @@ namespace Excel
 	/// </summary>
 	class SheetEvaluator
 	{
-		private Sheet _sheet;				// sheet to be evaluated
-		private Stack<Cell> _cellStack;		// stack of cells, used to traverse dependencies
+		private Sheet _sheet;						// sheet to be evaluated
+		private Stack<FormulaCell> _cellStack;		// stack of cells, used to traverse dependencies
 		
 		public SheetEvaluator(Sheet sheet)
 		{
@@ -337,7 +325,7 @@ namespace Excel
 		/// </summary>
 		public void EvaluateSheet()
 		{
-			_cellStack = new Stack<Cell>();
+			_cellStack = new Stack<FormulaCell>();
 			
 			for (int i = 1; i <= _sheet.RowCount; i++)
 			{
@@ -345,8 +333,10 @@ namespace Excel
 				for (int j = 1; j <= r.Count; j++)
 				{
 					Cell c = r[j];
-					if (c?.Evaluation == Evaluation.NotEvaluated) // null cells are [] by design -> no need to evaluate
-						SolveDependencies(c);
+					if (!(c is FormulaCell)) continue;				// only FormulaCells need evaluation
+					var fc = (FormulaCell) c;
+					if (fc.Evaluation == Evaluation.NotEvaluated) 
+						SolveDependencies(fc);
 				}
 			}
 		}
@@ -354,64 +344,66 @@ namespace Excel
 		/// <summary>
 		/// Searches through and evaluates all dependencies a cell has (including recursive ones), then evaluates the cell.
 		/// </summary>
-		/// <param name="cell"> Cell to be evaluated. </param>
-		private void SolveDependencies(Cell cell)
+		/// <param name="cell"> FormulaCell to be evaluated. </param>
+		private void SolveDependencies(FormulaCell cell)
 		{
 			_cellStack.Push(cell);
 			
 			while (_cellStack.Count != 0)		// traversing the dependency tree with a DFS search 
 			{
-				Cell currentCell = _cellStack.Peek();
+				FormulaCell currentCell = _cellStack.Peek();
 				
 				bool addedToStack = false;			
-				foreach (var position in currentCell.DependentOn)	// looking for undiscovered dependencies
+				foreach (var position in currentCell.DependentOn)			// looking for undiscovered dependencies
 				{
 					Cell dependency = _sheet[position.Row]?[position.Column];
-					if (dependency == null) continue;				// [] is always independent and evaluated -> no need to push it
-					
-					if (dependency.Evaluation == Evaluation.NotEvaluated)	// new dependency found -> push it on the stack
+					if (!(dependency is FormulaCell)) continue;				// value cells and nulls don't need to be pushed -> no need to push it
+
+					var fDependency = (FormulaCell) dependency;
+					if (fDependency.Evaluation == Evaluation.NotEvaluated)	// new dependency found -> push it on the stack
 																			// and stop searching neighbours
 					{
-						dependency.Evaluation = Evaluation.Evaluating;
-						_cellStack.Push(dependency);
+						fDependency.Evaluation = Evaluation.Evaluating;
+						_cellStack.Push(fDependency);
 						addedToStack = true;
 						break;
 					}
-					if (dependency.Evaluation == Evaluation.Evaluating)		// dependency still on stack -> cycle found
+					if (fDependency.Evaluation == Evaluation.Evaluating)	// dependency still on stack -> cycle found
 					{
-						MarkCycle(dependency);
+						MarkCycle(fDependency);
 					}
 				}
 
-				if (addedToStack) continue; 	// we added some neighbours, so we can't pop current cell yet.
-
-				EvaluateCell(_cellStack.Pop());
+				if (!addedToStack)	// no dependencies left to evaluate -> we can evaluate the top cell on the stack
+				{
+					EvaluateCell(_cellStack.Pop());					
+				}
 			}
 		}
 
 		/// <summary>
 		/// Generates the value of a cell, assuming all dependencies are already evaluated.
 		/// </summary>
-		/// <param name="toEvaluate"> Cell which gains evaluation. </param>
-		private void EvaluateCell(Cell toEvaluate)
+		/// <param name="toEvaluate"> FormulaCell which gains evaluation. </param>
+		private void EvaluateCell(FormulaCell toEvaluate)
 		{
 			toEvaluate.Evaluation = Evaluation.Evaluated;
-			if (toEvaluate.Status != Status.CORRECT) return;	// wrong status -> don't care about value
-			if (toEvaluate.DependentOn.Length < 2) return;		// correct status -> no dependencies to evaluate
+			if (toEvaluate.Status != "#CORRECT") return;		// wrong status -> don't care about value
+			if (toEvaluate.DependentOn.Length < 2) return;		// combined with correct status -> no dependencies to evaluate
 
 			Position pos1 = toEvaluate.DependentOn[0];
 			Cell dependency1 = _sheet[pos1.Row]?[pos1.Column];
 			Position pos2 = toEvaluate.DependentOn[1];
 			Cell dependency2 = _sheet[pos2.Row]?[pos2.Column];
 
-			if ((dependency1 != null && dependency1.Status != Status.CORRECT) ||	// >=1 dependency has incorrect status
-			    (dependency2 != null && dependency2.Status != Status.CORRECT))
+			if ((dependency1 != null && dependency1.Status != "#CORRECT") ||	// >=1 dependency has incorrect status
+			    (dependency2 != null && dependency2.Status != "#CORRECT"))
 			{
-				toEvaluate.Status = Status.ERROR;
+				toEvaluate.Status = "#ERROR";
 				return;
 			}
 
-			int value1 = dependency1?.Value ?? 0;	// nulls are [] or unspecified cells, which have value 0
+			int value1 = dependency1?.Value ?? 0;	// nulls are [] or unspecified cells, which both have value 0
 			int value2 = dependency2?.Value ?? 0;
 			
 			switch (toEvaluate.Operator)
@@ -427,7 +419,7 @@ namespace Excel
 					return;
 				case '/':
 					if (value2 == 0)
-						toEvaluate.Status = Status.DIV0;
+						toEvaluate.Status = "#DIV0";
 					else
 						toEvaluate.Value = value1 / value2;
 					return;
@@ -438,21 +430,21 @@ namespace Excel
 		/// Takes all members of a found cycle and labels them accordingly. 
 		/// </summary>
 		/// <param name="lastMember"> The last member of the cycle on the stack. </param>
-		private void MarkCycle(Cell lastMember)
+		private void MarkCycle(FormulaCell lastMember)
 		{
 			// there is no need to retain cycle members on the stack
 			// we don't need any other dependencies to get their status, 
 			// and all their unevaluated dependencies will be evaluated later in the main cycle of EvaluateSheet.
 			
-			Cell inCycleCell = _cellStack.Pop();
+			FormulaCell inCycleCell = _cellStack.Pop();
 			while (inCycleCell != lastMember)
 			{
-				inCycleCell.Status = Status.CYCLE;
+				inCycleCell.Status = "#CYCLE";
 				inCycleCell.Evaluation = Evaluation.Evaluated;
 				inCycleCell = _cellStack.Pop();
 			}
 
-			inCycleCell.Status = Status.CYCLE;				// last member of the cycle
+			inCycleCell.Status = "#CYCLE";				// last member of the cycle
 			inCycleCell.Evaluation = Evaluation.Evaluated;
 		}
 	}
@@ -543,10 +535,10 @@ namespace Excel
 					Cell cell = row[j];
 					if (cell == null)
 						_output.Write("[]");
-					else if (cell.Status == Status.CORRECT)
+					else if (cell.Status == "#CORRECT")
 						_output.Write(cell.Value);
 					else
-						_output.Write("#" + cell.Status);
+						_output.Write(cell.Status);
 
 					_output.Write(j == row.Count ? "\n" : " ");
 				}
