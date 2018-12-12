@@ -1,0 +1,41 @@
+\documentclass{scrartcl}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+
+\cohead[ADS 2]{ADS 2}
+\lohead[Hard-wired net]
+        {Hard-wired net}
+\rohead[Václav Luňák (Vašek)]
+        {Václav Luňák (Vašek)}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+\section{Popis řešení}
+Nejprve si permutaci rozdělíme na cykly. Snadno si všimneme, že když hodnota $x_i$ existuje v nějakém cyklu, existuje v něm také hodnota ležící na $i$-tém vodiči (dokonce hned jako následující prvek cyklu). Není tedy třeba přidávat komparátory mimo cyklus. \\
+
+Hodnoty v každém cyklu si pak rozdělíme na poloviny podle velikosti na velké a malé. V cyklu najdeme souvislý úsek velkých hodnot a označíme poslední hodnotu tohoto úseku jako $x_v$. Takovémuto úseku bude následovat souvislý úsek malých hodnot. Poslední hodotu tohoto úseku označíme $x_m$.\\
+
+Umístíme komparátor mezi $x_v$-tý a $x_m$-tý vodič. Takto umístíme komparátory pro všechny úseky velkých čísel ve všech cyklech. Na nově vytvořené permutaci pak postup v další vrstvě opakujeme, dokud posloupnost není setřízená.
+
+\section{Důkaz správnosti}
+Již jsme si rozmysleli, že si vystačíme pouze s komparátory mezi prvky téhož cyklu. Také můžeme pozorovat, že $x_m$ a $x_v$ jsou korektně definovány, jelikož v cyklu následuje za úsekem velkých hodnot vždy malá hodnota a naopak. \\
+
+Dále je vidět, že námi zavedené komparátory vždy prohodí své vstupy. Z definice je totiž $x_v$ velká hodnota, ale na $x_v$-tém vodiči leží hodnota malá (protože za $x_v$ následuje malé číslo). Obdobně je $x_m$ malá hodnota, ovšem na $x_m$-tém vodiči leží velká hodnota. Vodiče jsou seřazeny v opačném pořadí než jejich hodnoty, tedy musí při komparaci dojít k prohození.\\
+
+Podívejme se, co nám porovnání udělá s cykly. Představme si cyklus permutace jako orientovaný graf, kde hrana vede vždy z hodnoty $x_i$ na hodnotu na $x_i$-tém vodiči. Když si vrcholy přeznačíme pomocí toho, zda jsou malé, nebo velké, dostaneme cyklus ve tvaru $$v_1\rightarrow v_2\rightarrow ...\rightarrow v_k\rightarrow m_1\rightarrow m_2\rightarrow ...\rightarrow m_k\rightarrow v_{k+1}\rightarrow ...\rightarrow v_1$$.\\
+
+Komparátor vymění vodiče $v_k$ a $m_k$, tedy hodnoty $m_1$ a $v_{k+1}$ Z hrany $v_k\rightarrow m_1$ se stane hrana $v_k\rightarrow v_{k+1}$ a hrana $m_k\rightarrow v_{k+1}$ se změní na hranu $m_k\rightarrow m_1$. Z hodnot $m_1 ... m_k$ se tedy stane nový cyklus, zatímco hodnoty $v_1 ... v_k$ se napojí na následující úsek veklých čísel.\\
+
+Po provedení téhož pro všechny úseky velkých čísel v cyklu se tedy každý úsek malých čísel stane vlastním cyklem, zatímco všechna velká čísla skončí v jednom společném cyklu. (\textit{Pozn.: Pokud bychom začínali úseky malých čísel a k nim hledali následující úseky velkých čísel, byl by výsledek opačný. Postupy jsou ekvivalentní.})\\
+
+V každé vrstvě se tedy zvyšuje počet cyklů permutace. Jelikož setřízená permutace je ekvivalentní té s právě $n$ cykly, síť má konečnou hloubku a vydá správné řešení.
+
+\section{Složitost}
+Pokud jsme v jednom cyklu použili $k$ komparátorů, z jednoho cyklu se stalo $k+1$ cyklů, tedy každý komparátor přidává jeden cyklus. Síť musí vyrobit $n$ cyklů, tedy počet komparátorů sítě je $O(n)$.\\
+
+Podívejme se na délku největšího cyklu v každé vrstvě. Po rozpadnutí jednoho cyklu ve vrstvě se nejdelší cyklus může buď ze všech velkých prvků cyklu, nebo z některých malých prvků cyklu. Jak velké, tak malé prvky ovšem tvoří nejvýše polovinu cyklu. Má-li tedy největší cyklus v $i$-té vrstvě $l$ prvků, ve vrstvě $i+1$ bude mít délku nejvýše $l/2$. (\textit{Z cyklu s $< l$ prvky nemůže vzejít větší cyklus, jelikož alespoň na polovinu jsou zmenšeny všechny cykly.})\\
+
+Původní permutace má cyklus velikosti nejvýše $n$ a výsledná velikosti $1$. Počet vrstev sítě je tedy $O(\text{log }n)$
+
+\end{document}
