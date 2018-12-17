@@ -3,7 +3,7 @@ namespace PrefixExpressions
     public abstract class UnaryOpNode : OperatorNode
     {
         public override int Arity => 1;
-        public INode Son { get; set; }
+        public INode Son { get; private set; }
 
         public override bool AddSon(INode son)
         {

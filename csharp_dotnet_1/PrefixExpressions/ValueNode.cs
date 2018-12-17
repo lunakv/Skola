@@ -6,6 +6,9 @@ namespace PrefixExpressions
         public abstract double DoubleEvaluate(IDoubleAlgorithm alg);
     }
 
+    /// <summary>
+    /// Node representing a constant number literal
+    /// </summary>
     public class ConstantNode : ValueNode
     {
         public int Value { get; set; }

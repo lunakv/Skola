@@ -1,5 +1,8 @@
 namespace PrefixExpressions
 {
+    /// <summary>
+    /// Visitor used to evaluate nodes as integers
+    /// </summary>
     public class IntEvaluator : IntAlgorithm
     {
         public int Call(PlusOpNode caller)
@@ -42,6 +45,9 @@ namespace PrefixExpressions
         }
     }
     
+    /// <summary>
+    /// Visitor used to evaluate nodes as floating point numbers
+    /// </summary>
     public class DoubleEvaluator : IDoubleAlgorithm
     {
         public double Call(PlusOpNode caller)
