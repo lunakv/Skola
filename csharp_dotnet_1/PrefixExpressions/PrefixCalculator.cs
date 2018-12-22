@@ -8,10 +8,11 @@ namespace PrefixExpressions
     /// </summary>
     public class PrefixCalculator
     {
-        public INodeParser Parser { get; set; }                            // parser used for making new formulas
-        private IntAlgorithm _intEvaler = new IntEvaluator();              // algorithm for integer evaluation
-        private IDoubleAlgorithm _doubleEvaler = new DoubleEvaluator();    // algorithm for double evaluation
-        private INode _formula;                                            // last processed formula
+        public INodeParser Parser { get; set; }                                    // parser used for making new formulas
+        private readonly IVisitor<int> _intEvaler = new IntEvaluator();            // algorithm for integer evaluation
+        private readonly IVisitor<double> _doubleEvaler = new DoubleEvaluator();   // algorithm for double evaluation
+        private readonly IVisitor<bool> _fullInfixWriter = new FullInfixWriter();
+        private INode _formula;                                                    // last processed formula
         
         /// <summary>
         /// Main processing function. Reads through the input and computes all the compatible operations.
@@ -56,6 +57,14 @@ namespace PrefixExpressions
             {
                 EvalAsDouble();
             }
+            else if (inputLine == "p")
+            {
+                PrintFullInfix();
+            }
+            else if (inputLine == "P")
+            {
+                Console.WriteLine("simplified parsing not implemented");
+            }
             else if (inputLine[0] == '=')
             {
                 ParseNewFormula(inputLine);
@@ -80,7 +89,7 @@ namespace PrefixExpressions
                 throw new MissingMemberException("Trying to evaluate formula, but none is specified.");
             }
 
-            int result = _formula.IntEvaluate(_intEvaler);
+            int result = _formula.Accept(_intEvaler);
             Console.WriteLine(result);
         }
 
@@ -96,8 +105,22 @@ namespace PrefixExpressions
                 throw new MissingMemberException("Trying to evaluate formula, but none is specified.");
             }
 
-            double result = _formula.DoubleEvaluate(_doubleEvaler);
+            double result = _formula.Accept(_doubleEvaler);
             Console.WriteLine(result.ToString("f05"));
+        }
+
+        /// <summary>
+        /// Writes the buffered formula in infix notation with all parentheses.
+        /// </summary>
+        /// <exception cref="MissingMemberException">No valid formula is currently buffered.</exception>
+        private void PrintFullInfix()
+        {
+            if (_formula == null)
+            {
+                throw new MissingMemberException();
+            }
+            _formula.Accept(_fullInfixWriter);
+            Console.WriteLine();
         }
 
         /// <summary>

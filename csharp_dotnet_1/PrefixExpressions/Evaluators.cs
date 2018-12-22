@@ -3,43 +3,43 @@ namespace PrefixExpressions
     /// <summary>
     /// Visitor used to evaluate nodes as integers
     /// </summary>
-    public class IntEvaluator : IntAlgorithm
+    public class IntEvaluator : IVisitor<int>
     {
-        public int Call(PlusOpNode caller)
+        public int Visit(PlusOpNode caller)
         {
-            int left = caller.LeftSon.IntEvaluate(this);
-            int right = caller.RightSon.IntEvaluate(this);
+            int left = caller.LeftSon.Accept(this);
+            int right = caller.RightSon.Accept(this);
             return checked(left + right);
         }
 
-        public int Call(MinusOpNode caller)
+        public int Visit(MinusOpNode caller)
         {
-            int left = caller.LeftSon.IntEvaluate(this);
-            int right = caller.RightSon.IntEvaluate(this);
+            int left = caller.LeftSon.Accept(this);
+            int right = caller.RightSon.Accept(this);
             return checked(left - right);
         }
 
-        public int Call(MultiplyOpNode caller)
+        public int Visit(MultiplyOpNode caller)
         {
-            int left = caller.LeftSon.IntEvaluate(this);
-            int right = caller.RightSon.IntEvaluate(this);
+            int left = caller.LeftSon.Accept(this);
+            int right = caller.RightSon.Accept(this);
             return checked(left * right);
         }
 
-        public int Call(DivideOpNode caller)
+        public int Visit(DivideOpNode caller)
         {
-            int left = caller.LeftSon.IntEvaluate(this);
-            int right = caller.RightSon.IntEvaluate(this);
+            int left = caller.LeftSon.Accept(this);
+            int right = caller.RightSon.Accept(this);
             return left / right;
         }
 
-        public int Call(NegateOpNode caller)
+        public int Visit(NegateOpNode caller)
         {
-            int son = caller.Son.IntEvaluate(this);
+            int son = caller.Son.Accept(this);
             return checked(-son);
         }
 
-        public int Call(ConstantNode caller)
+        public int Visit(ConstantNode caller)
         {
             return caller.Value;
         }
@@ -48,43 +48,43 @@ namespace PrefixExpressions
     /// <summary>
     /// Visitor used to evaluate nodes as floating point numbers
     /// </summary>
-    public class DoubleEvaluator : IDoubleAlgorithm
+    public class DoubleEvaluator : IVisitor<double>
     {
-        public double Call(PlusOpNode caller)
+        public double Visit(PlusOpNode caller)
         {
-            double left = caller.LeftSon.DoubleEvaluate(this);
-            double right = caller.RightSon.DoubleEvaluate(this);
+            double left = caller.LeftSon.Accept(this);
+            double right = caller.RightSon.Accept(this);
             return left + right;        
         }
 
-        public double Call(MinusOpNode caller)
+        public double Visit(MinusOpNode caller)
         {
-            double left = caller.LeftSon.DoubleEvaluate(this);
-            double right = caller.RightSon.DoubleEvaluate(this);
+            double left = caller.LeftSon.Accept(this);
+            double right = caller.RightSon.Accept(this);
             return left - right;
         }
 
-        public double Call(MultiplyOpNode caller)
+        public double Visit(MultiplyOpNode caller)
         {
-            double left = caller.LeftSon.DoubleEvaluate(this);
-            double right = caller.RightSon.DoubleEvaluate(this);
+            double left = caller.LeftSon.Accept(this);
+            double right = caller.RightSon.Accept(this);
             return left * right;        
         }
 
-        public double Call(DivideOpNode caller)
+        public double Visit(DivideOpNode caller)
         {
-            double left = caller.LeftSon.DoubleEvaluate(this);
-            double right = caller.RightSon.DoubleEvaluate(this);
+            double left = caller.LeftSon.Accept(this);
+            double right = caller.RightSon.Accept(this);
             return left / right;        
         }
 
-        public double Call(NegateOpNode caller)
+        public double Visit(NegateOpNode caller)
         {
-            double son = caller.Son.DoubleEvaluate(this);
+            double son = caller.Son.Accept(this);
             return -son;
         }
 
-        public double Call(ConstantNode caller)
+        public double Visit(ConstantNode caller)
         {
             return caller.Value;
         }

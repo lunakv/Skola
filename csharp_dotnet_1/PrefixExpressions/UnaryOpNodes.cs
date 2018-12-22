@@ -15,15 +15,10 @@ namespace PrefixExpressions
     public class NegateOpNode : UnaryOpNode
     {
         public override char Operator => '~';
-        
-        public override int IntEvaluate(IntAlgorithm alg)
-        {
-            return alg.Call(this);
-        }
 
-        public override double DoubleEvaluate(IDoubleAlgorithm alg)
+        public override T Accept<T>(IVisitor<T> visitor)
         {
-            return alg.Call(this);
+            return visitor.Visit(this);
         }
     }
 }
