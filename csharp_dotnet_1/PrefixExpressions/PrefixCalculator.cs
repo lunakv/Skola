@@ -11,12 +11,14 @@ namespace PrefixExpressions
         public INodeParser Parser { get; set; }                                    // parser used for making new formulas
         private readonly IVisitor<int> _intEvaler = new IntEvaluator();            // algorithm for integer evaluation
         private readonly IVisitor<double> _doubleEvaler = new DoubleEvaluator();   // algorithm for double evaluation
-        private readonly IVisitor<bool> _fullInfixWriter = new FullInfixWriter();  // full parentheses infix writer
-        private readonly IVisitor<bool> _minInfixWriter = new SimpleInfixWriter(); // minimal parentheses infix writer
+        private readonly IVisitor<string> _fullInfixWriter = new FullInfixWriter();  // full parentheses infix writer
+        private readonly IVisitor<string> _minInfixWriter = new SimpleInfixWriter(); // minimal parentheses infix writer
         private INode _formula;                                                    // last processed formula
         private int bufferedIntValue;
         private double bufferedDoubleValue;
-        private bool isIntBuffered, isDoubleBuffered;
+        private string bufferedFullInfix;
+        private string bufferedMinInfix;
+        private bool isIntBuffered, isDoubleBuffered, isFullInfixBuffered, isMinInfixBuffered;
         
         /// <summary>
         /// Main processing function. Reads through the input and computes all the compatible operations.
@@ -135,12 +137,21 @@ namespace PrefixExpressions
         /// <exception cref="MissingMemberException">No valid formula is currently buffered.</exception>
         private void PrintFullInfix(INode formula)
         {
+            if (isFullInfixBuffered)
+            {
+                Console.WriteLine(bufferedFullInfix);
+                return;
+            }
+            
             if (formula == null)
             {
                 throw new MissingMemberException("No valid formula specified");
             }
-            formula.Accept(_fullInfixWriter);
-            Console.WriteLine();
+            
+            string result = formula.Accept(_fullInfixWriter);
+            bufferedFullInfix = result;
+            isFullInfixBuffered = true;
+            Console.WriteLine(bufferedFullInfix);
         }
 
         /// <summary>
@@ -149,13 +160,21 @@ namespace PrefixExpressions
         /// <exception cref="MissingMemberException">No valid formula is currently buffered.</exception>
         private void PrintSimpleInfix(INode formula)
         {
+            if (isMinInfixBuffered)
+            {
+                Console.WriteLine(bufferedMinInfix);
+                return;
+            }
+            
             if (formula == null)
             {
                 throw new MissingMemberException("No valid formula specified");
             }
 
-            formula.Accept(_minInfixWriter);
-            Console.WriteLine();
+            string result = formula.Accept(_minInfixWriter);
+            bufferedMinInfix = result;
+            isMinInfixBuffered = true;
+            Console.WriteLine(bufferedMinInfix);
         }
 
         /// <summary>
@@ -167,7 +186,10 @@ namespace PrefixExpressions
         {
             isIntBuffered = false;
             isDoubleBuffered = false;
+            isFullInfixBuffered = false;
+            isMinInfixBuffered = false;
             _formula = null;     
+            
             var splitLine = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (splitLine.Length == 1) throw new FormatException("Formula without any argument encountered");
             

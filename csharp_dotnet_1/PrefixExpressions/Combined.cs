@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace PrefixExpressions
 {
@@ -367,162 +368,174 @@ namespace PrefixExpressions
     }
     
     /// <summary>
-    /// Writes formulas in infix notation fully parenthesized. Always returns true.
+    /// Writes formulas in infix notation fully parenthesized.
     /// </summary>
-    public class FullInfixWriter : IVisitor<bool>
+    public class FullInfixWriter : IVisitor<string>
     {
-        public bool Visit(PlusOpNode visited)
+        public string Visit(PlusOpNode visited)
         {
-            Console.Write("(");
-            visited.LeftSon.Accept(this);
-            Console.Write("+");
-            visited.RightSon.Accept(this);
-            Console.Write(")");
-            return true;
+            var sb = new StringBuilder();
+            sb.Append("(");
+            sb.Append(visited.LeftSon.Accept(this));
+            sb.Append("+");
+            sb.Append(visited.RightSon.Accept(this));
+            sb.Append(")");
+            return sb.ToString();
         }
 
-        public bool Visit(MinusOpNode visited)
+        public string Visit(MinusOpNode visited)
         {
-            Console.Write("(");
-            visited.LeftSon.Accept(this);
-            Console.Write("-");
-            visited.RightSon.Accept(this);
-            Console.Write(")");
-            return true;
-
-        }
-
-        public bool Visit(MultiplyOpNode visited)
-        {
-            Console.Write("(");
-            visited.LeftSon.Accept(this);
-            Console.Write("*");
-            visited.RightSon.Accept(this);
-            Console.Write(")");
-            return true;
+            var sb = new StringBuilder();
+            sb.Append("(");
+            sb.Append(visited.LeftSon.Accept(this));
+            sb.Append("-");
+            sb.Append(visited.RightSon.Accept(this));
+            sb.Append(")");
+            return sb.ToString();
 
         }
 
-        public bool Visit(DivideOpNode visited)
+        public string Visit(MultiplyOpNode visited)
         {
-            Console.Write("(");
-            visited.LeftSon.Accept(this);
-            Console.Write("/");
-            visited.RightSon.Accept(this);
-            Console.Write(")");
-            return true;
+            var sb = new StringBuilder();
+            sb.Append("(");
+            sb.Append(visited.LeftSon.Accept(this));
+            sb.Append("*");
+            sb.Append(visited.RightSon.Accept(this));
+            sb.Append(")");
+            return sb.ToString();
+
         }
 
-        public bool Visit(NegateOpNode visited)
+        public string Visit(DivideOpNode visited)
         {
-            Console.Write("(");
-            Console.Write("-");
-            visited.Son.Accept(this);
-            Console.Write(")");
-            return true;
+            var sb = new StringBuilder();
+            sb.Append("(");
+            sb.Append(visited.LeftSon.Accept(this));
+            sb.Append("/");
+            sb.Append(visited.RightSon.Accept(this));
+            sb.Append(")");
+            return sb.ToString();
         }
 
-        public bool Visit(ConstantNode visited)
+        public string Visit(NegateOpNode visited)
         {
-            Console.Write(visited.Value);
-            return true;
+            var sb = new StringBuilder();
+            sb.Append("(");
+            sb.Append("-");
+            sb.Append(visited.Son.Accept(this));
+            sb.Append(")");
+            return sb.ToString();
+        }
+
+        public string Visit(ConstantNode visited)
+        {
+            return visited.Value.ToString();
         }
     }
 
     /// <summary>
-    /// Writes formulas in infix notation with minimum number of parentheses. Always returns true.
+    /// Writes formulas in infix notation with minimum number of parentheses.
     /// </summary>
-    public class SimpleInfixWriter : IVisitor<bool>
+    public class SimpleInfixWriter : IVisitor<string>
     {
         readonly IVisitor<int> priorityGetter = new OpPriorityFinder();
         
-        public bool Visit(PlusOpNode visited)
+        public string Visit(PlusOpNode visited)
         {
+            var sb = new StringBuilder();
             // + has lowest priority and is associative - no need for parentheses around either child
-            visited.LeftSon.Accept(this); 
-            Console.Write("+");
-            visited.RightSon.Accept(this);
-            return true;
+            sb.Append(visited.LeftSon.Accept(this)); 
+            sb.Append("+");
+            sb.Append(visited.RightSon.Accept(this));
+            return sb.ToString();
         }
 
-        public bool Visit(MinusOpNode visited)
+        public string Visit(MinusOpNode visited)
         {
+            var sb = new StringBuilder();
+
             // - has lowest priority - no need for parentheses around left child
-            visited.LeftSon.Accept(this);
-            Console.Write("-");
+            sb.Append(visited.LeftSon.Accept(this));
+            sb.Append("-");
             
             // - is not associative - parentheses needed if right child has same priority
             int thisPriority = visited.Accept(priorityGetter);
             int rightSonPriority = visited.RightSon.Accept(priorityGetter);
             
-            if (rightSonPriority <= thisPriority) Console.Write("(");
-            visited.RightSon.Accept(this);
-            if (rightSonPriority <= thisPriority) Console.Write(")");
+            if (rightSonPriority <= thisPriority) sb.Append("(");
+            sb.Append(visited.RightSon.Accept(this));
+            if (rightSonPriority <= thisPriority) sb.Append(")");
 
-            return true;
+            return sb.ToString();
         }
 
-        public bool Visit(MultiplyOpNode visited)
+        public string Visit(MultiplyOpNode visited)
         {
+            var sb = new StringBuilder();
+
             // parentheses might be needed around children with lower priorities
             int thisPriority = visited.Accept(priorityGetter);
             int sonPriority = visited.LeftSon.Accept(priorityGetter);
             
-            if (sonPriority < thisPriority) Console.Write("(");
-            visited.LeftSon.Accept(this);
-            if (sonPriority < thisPriority) Console.Write(")");
+            if (sonPriority < thisPriority) sb.Append("(");
+            sb.Append(visited.LeftSon.Accept(this));
+            if (sonPriority < thisPriority) sb.Append(")");
             
-            Console.Write("*");
+            sb.Append("*");
             sonPriority = visited.RightSon.Accept(priorityGetter);
             
             // * is associative - no need for parentheses when RightSon has same priority
-            if (sonPriority < thisPriority) Console.Write("(");
-            visited.RightSon.Accept(this);
-            if (sonPriority < thisPriority) Console.Write(")");
+            if (sonPriority < thisPriority) sb.Append("(");
+            sb.Append(visited.RightSon.Accept(this));
+            if (sonPriority < thisPriority) sb.Append(")");
 
-            return true;
+            return sb.ToString();
         }
 
-        public bool Visit(DivideOpNode visited)
+        public string Visit(DivideOpNode visited)
         {
+            var sb = new StringBuilder();
+
             // parentheses might be needed around children with lower priorities
             int thisPriority = visited.Accept(priorityGetter);
             int sonPriority = visited.LeftSon.Accept(priorityGetter);
             
-            if (sonPriority < thisPriority) Console.Write("(");
-            visited.LeftSon.Accept(this);
-            if (sonPriority < thisPriority) Console.Write(")");
+            if (sonPriority < thisPriority) sb.Append("(");
+            sb.Append(visited.LeftSon.Accept(this));
+            if (sonPriority < thisPriority) sb.Append(")");
             
-            Console.Write("/");
+            sb.Append("/");
             sonPriority = visited.RightSon.Accept(priorityGetter);
             
             // "/" is not associative - same priority right sons need parentheses
-            if (sonPriority <= thisPriority) Console.Write("(");
-            visited.RightSon.Accept(this);
-            if (sonPriority <= thisPriority) Console.Write(")");
+            if (sonPriority <= thisPriority) sb.Append("(");
+            sb.Append(visited.RightSon.Accept(this));
+            if (sonPriority <= thisPriority) sb.Append(")");
 
-            return true;
+            return sb.ToString();
         }
 
-        public bool Visit(NegateOpNode visited)
+        public string Visit(NegateOpNode visited)
         {
-            Console.Write("-");
+            var sb = new StringBuilder();
+
+            sb.Append("-");
 
             int thisPriority = visited.Accept(priorityGetter);
             int sonPriority = visited.Son.Accept(priorityGetter);
             
             //everything except value nodes needs parentheses
-            if (sonPriority < thisPriority) Console.Write("(");
-            visited.Son.Accept(this);
-            if (sonPriority < thisPriority) Console.Write(")");
+            if (sonPriority < thisPriority) sb.Append("(");
+            sb.Append(visited.Son.Accept(this));
+            if (sonPriority < thisPriority) sb.Append(")");
 
-            return true;
+            return sb.ToString();
         }
 
-        public bool Visit(ConstantNode visited)
+        public string Visit(ConstantNode visited)
         {
-            Console.Write(visited.Value);
-            return true;
+            return visited.Value.ToString();
         }
     }
 
@@ -570,9 +583,14 @@ namespace PrefixExpressions
         public INodeParser Parser { get; set; }                                    // parser used for making new formulas
         private readonly IVisitor<int> _intEvaler = new IntEvaluator();            // algorithm for integer evaluation
         private readonly IVisitor<double> _doubleEvaler = new DoubleEvaluator();   // algorithm for double evaluation
-        private readonly IVisitor<bool> _fullInfixWriter = new FullInfixWriter();  // full parentheses infix writer
-        private readonly IVisitor<bool> _minInfixWriter = new SimpleInfixWriter(); // minimal parentheses infix writer
+        private readonly IVisitor<string> _fullInfixWriter = new FullInfixWriter();  // full parentheses infix writer
+        private readonly IVisitor<string> _minInfixWriter = new SimpleInfixWriter(); // minimal parentheses infix writer
         private INode _formula;                                                    // last processed formula
+        private int bufferedIntValue;
+        private double bufferedDoubleValue;
+        private string bufferedFullInfix;
+        private string bufferedMinInfix;
+        private bool isIntBuffered, isDoubleBuffered, isFullInfixBuffered, isMinInfixBuffered;
         
         /// <summary>
         /// Main processing function. Reads through the input and computes all the compatible operations.
@@ -644,13 +662,21 @@ namespace PrefixExpressions
         /// <exception cref="OverflowException">Propagated exception from evaluation.</exception>
         private void EvalAsInt(INode formula)
         {
+            if (isIntBuffered)
+            {
+                Console.WriteLine(bufferedIntValue);
+                return;
+            }
+            
             if (formula == null)
             {
                 throw new MissingMemberException("Trying to evaluate formula, but none is specified.");
             }
 
             int result = formula.Accept(_intEvaler);
-            Console.WriteLine(result);
+            bufferedIntValue = result;
+            isIntBuffered = true;
+            Console.WriteLine(bufferedIntValue);
         }
 
         /// <summary>
@@ -660,13 +686,21 @@ namespace PrefixExpressions
         /// <exception cref="FormatException">Propagated exception from evaluation.</exception>
         private void EvalAsDouble(INode formula)
         {
+            if (isDoubleBuffered)
+            {
+                Console.WriteLine(bufferedDoubleValue.ToString("f05"));
+                return;
+            }
+            
             if (formula == null)
             {
                 throw new MissingMemberException("Trying to evaluate formula, but none is specified.");
             }
 
             double result = formula.Accept(_doubleEvaler);
-            Console.WriteLine(result.ToString("f05"));
+            bufferedDoubleValue = result;
+            isDoubleBuffered = true;
+            Console.WriteLine(bufferedDoubleValue.ToString("f05"));
         }
 
         /// <summary>
@@ -675,12 +709,21 @@ namespace PrefixExpressions
         /// <exception cref="MissingMemberException">No valid formula is currently buffered.</exception>
         private void PrintFullInfix(INode formula)
         {
+            if (isFullInfixBuffered)
+            {
+                Console.WriteLine(bufferedFullInfix);
+                return;
+            }
+            
             if (formula == null)
             {
                 throw new MissingMemberException("No valid formula specified");
             }
-            formula.Accept(_fullInfixWriter);
-            Console.WriteLine();
+            
+            string result = formula.Accept(_fullInfixWriter);
+            bufferedFullInfix = result;
+            isFullInfixBuffered = true;
+            Console.WriteLine(bufferedFullInfix);
         }
 
         /// <summary>
@@ -689,13 +732,21 @@ namespace PrefixExpressions
         /// <exception cref="MissingMemberException">No valid formula is currently buffered.</exception>
         private void PrintSimpleInfix(INode formula)
         {
+            if (isMinInfixBuffered)
+            {
+                Console.WriteLine(bufferedMinInfix);
+                return;
+            }
+            
             if (formula == null)
             {
                 throw new MissingMemberException("No valid formula specified");
             }
 
-            formula.Accept(_minInfixWriter);
-            Console.WriteLine();
+            string result = formula.Accept(_minInfixWriter);
+            bufferedMinInfix = result;
+            isMinInfixBuffered = true;
+            Console.WriteLine(bufferedMinInfix);
         }
 
         /// <summary>
@@ -705,7 +756,12 @@ namespace PrefixExpressions
         /// <exception cref="FormatException">empty formula, wrong number of tokens</exception>
         private void ParseNewFormula(string line)
         {
+            isIntBuffered = false;
+            isDoubleBuffered = false;
+            isFullInfixBuffered = false;
+            isMinInfixBuffered = false;
             _formula = null;     
+            
             var splitLine = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (splitLine.Length == 1) throw new FormatException("Formula without any argument encountered");
             
