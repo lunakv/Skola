@@ -14,6 +14,9 @@ namespace PrefixExpressions
         private readonly IVisitor<bool> _fullInfixWriter = new FullInfixWriter();  // full parentheses infix writer
         private readonly IVisitor<bool> _minInfixWriter = new SimpleInfixWriter(); // minimal parentheses infix writer
         private INode _formula;                                                    // last processed formula
+        private int bufferedIntValue;
+        private double bufferedDoubleValue;
+        private bool isIntBuffered, isDoubleBuffered;
         
         /// <summary>
         /// Main processing function. Reads through the input and computes all the compatible operations.
@@ -85,13 +88,21 @@ namespace PrefixExpressions
         /// <exception cref="OverflowException">Propagated exception from evaluation.</exception>
         private void EvalAsInt(INode formula)
         {
+            if (isIntBuffered)
+            {
+                Console.WriteLine(bufferedIntValue);
+                return;
+            }
+            
             if (formula == null)
             {
                 throw new MissingMemberException("Trying to evaluate formula, but none is specified.");
             }
 
             int result = formula.Accept(_intEvaler);
-            Console.WriteLine(result);
+            bufferedIntValue = result;
+            isIntBuffered = true;
+            Console.WriteLine(bufferedIntValue);
         }
 
         /// <summary>
@@ -101,13 +112,21 @@ namespace PrefixExpressions
         /// <exception cref="FormatException">Propagated exception from evaluation.</exception>
         private void EvalAsDouble(INode formula)
         {
+            if (isDoubleBuffered)
+            {
+                Console.WriteLine(bufferedDoubleValue.ToString("f05"));
+                return;
+            }
+            
             if (formula == null)
             {
                 throw new MissingMemberException("Trying to evaluate formula, but none is specified.");
             }
 
             double result = formula.Accept(_doubleEvaler);
-            Console.WriteLine(result.ToString("f05"));
+            bufferedDoubleValue = result;
+            isDoubleBuffered = true;
+            Console.WriteLine(bufferedDoubleValue.ToString("f05"));
         }
 
         /// <summary>
@@ -146,6 +165,8 @@ namespace PrefixExpressions
         /// <exception cref="FormatException">empty formula, wrong number of tokens</exception>
         private void ParseNewFormula(string line)
         {
+            isIntBuffered = false;
+            isDoubleBuffered = false;
             _formula = null;     
             var splitLine = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             if (splitLine.Length == 1) throw new FormatException("Formula without any argument encountered");
