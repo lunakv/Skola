@@ -11,7 +11,8 @@ namespace PrefixExpressions
         public INodeParser Parser { get; set; }                                    // parser used for making new formulas
         private readonly IVisitor<int> _intEvaler = new IntEvaluator();            // algorithm for integer evaluation
         private readonly IVisitor<double> _doubleEvaler = new DoubleEvaluator();   // algorithm for double evaluation
-        private readonly IVisitor<bool> _fullInfixWriter = new FullInfixWriter();
+        private readonly IVisitor<bool> _fullInfixWriter = new FullInfixWriter();  // full parentheses infix writer
+        private readonly IVisitor<bool> _minInfixWriter = new SimpleInfixWriter(); // minimal parentheses infix writer
         private INode _formula;                                                    // last processed formula
         
         /// <summary>
@@ -51,19 +52,19 @@ namespace PrefixExpressions
             }
             if (inputLine == "i")
             {
-                EvalAsInt();
+                EvalAsInt(_formula);
             }
             else if (inputLine == "d")
             {
-                EvalAsDouble();
+                EvalAsDouble(_formula);
             }
             else if (inputLine == "p")
             {
-                PrintFullInfix();
+                PrintFullInfix(_formula);
             }
             else if (inputLine == "P")
             {
-                Console.WriteLine("simplified parsing not implemented");
+                PrintSimpleInfix(_formula);
             }
             else if (inputLine[0] == '=')
             {
@@ -82,14 +83,14 @@ namespace PrefixExpressions
         /// <exception cref="FormatException">Propagated exception from evaluation.</exception>
         /// <exception cref="DivideByZeroException">Propagated exception from evaluation.</exception>
         /// <exception cref="OverflowException">Propagated exception from evaluation.</exception>
-        private void EvalAsInt()
+        private void EvalAsInt(INode formula)
         {
-            if (_formula == null)
+            if (formula == null)
             {
                 throw new MissingMemberException("Trying to evaluate formula, but none is specified.");
             }
 
-            int result = _formula.Accept(_intEvaler);
+            int result = formula.Accept(_intEvaler);
             Console.WriteLine(result);
         }
 
@@ -98,14 +99,14 @@ namespace PrefixExpressions
         /// </summary>
         /// <exception cref="MissingMemberException">No valid formula is currently buffered.</exception>
         /// <exception cref="FormatException">Propagated exception from evaluation.</exception>
-        private void EvalAsDouble()
+        private void EvalAsDouble(INode formula)
         {
-            if (_formula == null)
+            if (formula == null)
             {
                 throw new MissingMemberException("Trying to evaluate formula, but none is specified.");
             }
 
-            double result = _formula.Accept(_doubleEvaler);
+            double result = formula.Accept(_doubleEvaler);
             Console.WriteLine(result.ToString("f05"));
         }
 
@@ -113,13 +114,28 @@ namespace PrefixExpressions
         /// Writes the buffered formula in infix notation with all parentheses.
         /// </summary>
         /// <exception cref="MissingMemberException">No valid formula is currently buffered.</exception>
-        private void PrintFullInfix()
+        private void PrintFullInfix(INode formula)
         {
-            if (_formula == null)
+            if (formula == null)
             {
-                throw new MissingMemberException();
+                throw new MissingMemberException("No valid formula specified");
             }
-            _formula.Accept(_fullInfixWriter);
+            formula.Accept(_fullInfixWriter);
+            Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Writes the buffered formula in infix notation, minimizing the number of parentheses written 
+        /// </summary>
+        /// <exception cref="MissingMemberException">No valid formula is currently buffered.</exception>
+        private void PrintSimpleInfix(INode formula)
+        {
+            if (formula == null)
+            {
+                throw new MissingMemberException("No valid formula specified");
+            }
+
+            formula.Accept(_minInfixWriter);
             Console.WriteLine();
         }
 
