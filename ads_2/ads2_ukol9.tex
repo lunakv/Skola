@@ -27,21 +27,19 @@ a konstanty
 
 S těmito proměnnými pak sestavíme tyto klauzule:
 \begin{enumerate}
-        \item $(x_{i,1}$ v $x_{i,2}$ v $...$ v $x_{i,k})$ $\forall i = 1..n$
-        \item $(\neg x_{i,j}$ v $\neg x_{i,m})$ $\forall i = 1..n$ $\forall j,m = 1..k$ 
-        \item $(\neg e_{i,j}$ v $\neg x_{i, m}$ v $\neg x_{j,m})$ $\forall i,j = 1..n$ $\forall m = 1..k$
+        \item $(x_{i,1} \lor x_{i,2} \lor ... \lor x_{i,k})$ $\forall i = 1..n$
+        \item $(\neg x_{i,j} \lor \neg x_{i,m})$ $\forall i = 1..n$ $\forall j,m = 1..k$ 
+        \item $(\neg e_{i,j} \lor \neg x_{i, m} \lor \neg x_{j,m})$ $\forall i,j = 1..n$ $\forall m = 1..k$
 \end{enumerate}
 
 Výsledná formule pak bude konjunkcí všech těchto klauzulí. Takováto formule je splnitelná právě tehdy, když bude původní graf obarvitelný pomocí $k$ barev, čímž je převod na $k$-SAT kompletní.
 
 \section{Důkaz správnosti}
-Aby byl graf obarvitelný pomocí $k$ barev, musí existovat takové obarvení, ve kterém je každý vrchol obarven právě jednou barvou a žádné dva sousední vrcholy nejsou obarveny barvou stejnou. Ukážeme, že když ... \\
+Aby byl graf obarvitelný pomocí $k$ barev, musí existovat takové obarvení, ve kterém je každý vrchol obarven právě jednou barvou a žádné dva sousední vrcholy nejsou obarveny barvou stejnou. Ukážeme ekvivalenci mezi existencí $k$-obarvení a splnitelností vytvořené formule.\\
 
-Pakliže existuje uspokojující obarvení grafu, nastavíme $x_{i,j} = 1$ právě pokud $i$-tý vrchol je obarvený $j$-tou barvou a $e_{i,j} = 1$ právě když mezi $i$-tým a $j$-tým vrcholem vede hrana. \\
+Pakliže existuje uspokojující obarvení grafu, nastavíme $x_{i,j} = 1$ právě pokud $i$-tý vrchol je obarvený $j$-tou barvou. Klauzule 1. jsou splněny triviálně, protože každý vrchol nějakou barvu má. Klauzule 2. jsou taktéž splněné, protože $i$-tý vrchol obarvený $j$-tou barvou nemůže být obarvený $m$-tou barvou. Splněné jsou i klauzule 3., protože dvojice vrcholů buď nesdílí hranu (tedy $\neg e_{i,j}$), nebo alespoň jeden z nich nemá $m$-tou barvu. Z existence obarvení tedy plyne splnitelnost formule.\\
 
-Klauzule 1. jsou splněny triviálně, protože každý vrchol nějakou barvu má. Klauzule 2. jsou taktéž splněné, protože $i$-tý vrchol obarvený $j$-tou barvou nemůže být obarvený $m$-tou barvou. Splněné jsou i klauzule 3., protože dvojice vrcholů buď nesdílí hranu (tedy $\neg e_{i,j}$), nebo alespoň jeden z nich nemá $m$-tou barvu. Z existence obarvení tedy plyne splnitelnost formule.\\
-
-Naopak pokud nalezneme splňující ohodnocení formule, obarvíme $i$-tý vrchol $j$-tou barvou, pokud $x_{i,j} = 1$. Klauzule 1. nám zaručují, že každý vrchol je obarvený nějakou barvou. Z klauzulí 2. pak vyplývá, že žádný vrchol nemůže být obarvem více barvami (protože pokud $x_{i,j} = 1$, ze splnitelnosti musí platit $x_{i,m} = 0$). Z klauzulí 3. dostáváme, že každá dvojice vrcholů buď nemá společnou hranu, nebo nejsou obarveny stejnou barvou.\\
+Naopak pokud nalezneme splňující ohodnocení formule, obarvíme $i$-tý vrchol $j$-tou barvou, pokud $x_{i,j} = 1$. Klauzule 1. nám zaručují, že každý vrchol je obarvený nějakou barvou. Z klauzulí 2. pak vyplývá, že žádný vrchol nemůže být obarvem více barvami (protože pokud $x_{i,j} = 1$, ze splnitelnosti musí platit $x_{i,m} = 0$). Z klauzulí 3. dostáváme, že každá dvojice vrcholů buď nemá společnou hranu, nebo není obarvena stejnou barvou.\\
 
 Ukázali jsme tedy, že se jedná o korektní obarvení a tím pádem i evivalenci mezi splnitelností formule a obarvitelností grafu. Každá klauzule má navíc délku nejvýše $k$. Jedná se tedy o korektní převod na $k$-SAT.
 
