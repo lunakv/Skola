@@ -1,5 +1,6 @@
 \documentclass{scrartcl}
 \usepackage{scrlayer-scrpage}
+\usepackage[utf8]{inputenc}
 \usepackage[czech]{babel}
 \usepackage{amsmath}
 
@@ -28,7 +29,7 @@ Zároveň platí i opačná implikace, tedy že z každého řezu neobsahující
 Z předchozího tedy dostáváme, že z minimálního řezu sítě jsme schopni dostat minimální vrcholové pokrytí. Z prvního ročníku pak víme, že velikost maximálního toku je rovna velikosti minimálního řezu a že tento minimální řez se dá z maximálního toku nalézt výše popsaným způsobem. Algoritmus tedy korektně nachází minimální vrcholová pokrytí.
 
 \section{Složitost}
-Nechť $N$ je počet vrcholů grafu a $M$ počet jeho hran. Doplnění grafu na síť zvládneme v čase $O(N + M)$. Na nalezení maximálního toku můžeme použít např. Dinitzův algoritmus, který spotřebuje čas $O(N^2 \cdot M)$. Hledání množiny elementárního řezu je modifikované BFS, tedy potrvá $O(N + M)$. Nalezení samotných hran řezu, jejich případnou výměnu a určení samotných vrcholů pokrytí zvládneme taktéž v čase $O(N + M)$. Celkově tedy algoritmus poběží v čase $O(N^2 \cdot M)$. \\
+Nechť $N$ je počet vrcholů grafu a $M$ počet jeho hran. Doplnění grafu na síť zvládneme v čase $O(N + M)$. Na nalezení maximálního toku můžeme použít např. Dinitzův algoritmus, který obecně spotřebuje čas $O(N^2 \cdot M)$, ovšem na jednotkovou síť mu stačí čas $O(N \cdot M)$. Hledání množiny elementárního řezu je modifikované BFS, tedy potrvá $O(N + M)$. Nalezení samotných hran řezu, jejich případnou výměnu a určení samotných vrcholů pokrytí zvládneme taktéž v čase $O(N + M)$. Celkově tedy algoritmus poběží v čase $O(N \cdot M)$. \\
 
 Ke každé hraně a vrcholu potřebujeme znát pouze konstantní množství informací. Celková prostorová složitost algoritmu tedy bude $O(N + M)$.
 
