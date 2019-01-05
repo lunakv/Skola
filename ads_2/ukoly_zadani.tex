@@ -1,0 +1,57 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\cohead[ADS 2]{ADS 2}
+\rohead[Václav Luňák (Vašek)]
+        {Václav Luňák (Vašek)}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+Zadání domácích úkolů ze cvičení Michala Oplera z ADS II roku 2018. \\
+K nalezení na \url{https://iuuk.mff.cuni.cz/~opler/vyuka/1819/ads2-st/}
+\section{Palindromický prefix (5b.)}
+Najděte nejdelší prefix slova $\alpha$, který je palindromem.
+
+\section{Speciální výskyty (4b.)}
+Navrhněte algoritmy, které dostanou na vstupu slova $J_{1},\dots,J_{k}$ a text $S$. Výstupem algoritmu pak je pro každou pozici,
+\begin{itemize}
+    \item index pozice a nejdelší slovo, které na ní končí,
+    \item index pozice a nejkratší slovo, které na ní končí,
+    \item index pozice a nejdelší slovo, které na ní začíná,
+    \item index pozice a nejkratší slovo, které na ní začíná.
+\end{itemize}
+
+\section{Podposloupnost (5b.)}
+Spočtěte, kolikrát se daná jehla vyskytne v daném seně jako podposloupnost: například \textbf{abcc} obsahuje celkem dva výskyty jehly \textbf{ac}.
+
+\section{Minimální vrcholové pokrytí (5b.)}
+Navrhněte algoritmus pro nalezení minimálního vrcholového pokrytí v bipartitním grafu. Pro graf $G = (V,E)$ řekneme, že $U \subseteq V$ je vrcholové pokrytí, pokud pro každou hranu $e \in E$ kde $e = (u,v)$ je alespoň jeden z vrcholů $u,v \in U$ (můžou být i oba).
+
+\section{Domino na šachovnici (5b.)}
+Mějme šachovnici $r \times s$ se seznamem zakázaných políček. Chceme na povolená políčka rozmístit kostky domina velikosti $1 \times 2$ políčka tak, aby každé povolené políčko bylo pokryto právě jednou kostkou. Kostky je povoleno otáčet.
+
+\section{Fourierovy obrazy (6b.)}
+Spočítejte Fourierovy obrazy následujících vektorů (každý za 2b.):
+\begin{itemize}
+    \item $( 1,0,1,0 , \dots , 1,0 )$,
+    \item $\left( \omega _ { n } ^ { 0 } , \omega _ { n } ^ { 1 } , \ldots , \omega _ { n } ^ { n - 1 } \right)$,
+    \item $\left( \omega _ { n } ^ { 0 } , \omega _ { n } ^ { 2 } , \ldots , \omega _ { n } ^ { 2 n - 2 } \right)$ kde $\omega _ { n } = e ^ { 2 \pi i / n }$
+\end{itemize}
+
+\section{Hardwired net (5b.)}
+K dispozici máte komparátor, tedy obvod, který na vstupu dostane dvojici $x,y \in \Sigma$ a výstupem je uspořádaná dvojice $(min(x,y),max(x,y))$. Na vstupu dostanete pevnou permutaci $\sigma$ na množině $x_1, \dots , x_n$. Postavte komparátorovou síť, která na výstupu vydá tuto síť setřízenou. (Řešení typu použiju třídící síť, která setřídí libovolnou permutaci není správné. Chceme co nejmenší komparátorovou síť pro konkrétní permutaci.) Navrhněte tuto síť, určete odhad počtu hradel a hloubku sítě (hloubka by měla být $O(\text{log }n)$).
+
+\section{Všemocný NAND (4b)}
+Ukažte, že můžeme booleovské obvody definovat pomocí jediného typu hradla NAND, kde NAND je NOT z AND (tj. NAND(1, 1) = 0, jinak 1). Každá část je za 2 body: 
+\begin{itemize}
+    \item Sestavte síť ze čtyř hradel NAND počítající XOR. XOR je buď nebo, tj. XOR(1, 0) = XOR(0, 1) = 1, jinak 0.
+    \item Ukažte, že pomocí hradel NAND lze reprezentovat libovolný booleovský obvod.
+\end{itemize}
+
+\section{$k$-barevnost (5b.)}
+Převeďte problém $k$-barevnosti na $k$-SAT pro $k \geq 2$. Správné řešení obsahuje popis redukce a důkaz její správnosti!
+\end{document} 
