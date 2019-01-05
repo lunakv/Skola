@@ -14,15 +14,17 @@
 \renewcommand{\thesubsection}{\thesection.\alph{subsection}}
 \begin{document}
     \section{}
-    Popsaný graf $G$ se dá vytvořit právě tak, že v 3-regulárním grafu rozdělíme jednu hranu. Podívejme se tedy nejprve na barevnost 3-regulárního grafu, ze kterého náš graf vznikl. Označme si tento graf jako $H$ a nový vrchol stupně 2 jako $d$. \\
+    Popsaný graf $G$ se dá vytvořit právě tak, že v 3-regulárním grafu rozdělíme jednu hranu. Podívejme se tedy nejprve na barevnost 3-regulárního grafu, ze kterého náš graf vznikl. Označme si tento graf jako $H$ a nový vrchol stupně 2 jako $d$ a jeho sousedy jako $v$ a $w$. \\
 
-    Z Vizingovy věty víme, že 3-regulární graf může mít hranovou barevnost buď 3, nebo 4. Pokud $\chi_e (H) = 4$, snadno ukážeme, že $\chi_e (G) = 4$. Po rozdělení hrany sice budou do $d$ vést 2 hrany stejné barvy, ovšem uvědomme si, že každý soused $d$ využívá pouze 3 z barev obarvení. Abychom tedy obarvení opravili, stačí nám vybrat si jednoho souseda $d$ (pojmenujme ho $v$), najít barvu, která do něj nevede, a obarvit hranu $(d,v)$ touto barvou. Hrany do $d$ jsou nyní obarveny korektně, hrany do $v$ také a žádné jiné vrcholy jsme nepoškodili. Dokážeme tedy pomocí 4 barev hranově obarvit $G$. \\
-
-    Uvažme tedy druhý případ, tedy $\chi_e (H) = 3$. Když rozdělíme hranu, opět narážíme na problém, že do $d$ vedou dvě hrany téže barvy (např 2). Podívejme se však, co se stane, když se hranu $(d,v)$ pokusíme přebarvit pomocí jedné ze dvou zbývajících barev (BÚNO pomocí 1). \\
+    Z Vizingovy věty víme, že 3-regulární graf může mít hranovou barevnost buď 3, nebo 4. Uvažme nejprve $\chi_e (H) = 3$. Když rozdělíme hranu,  narážíme na problém, že do $d$ vedou dvě hrany téže barvy (např 2). Podívejme se však, co se stane, když se hranu $(d,v)$ pokusíme přebarvit pomocí jedné ze dvou zbývajících barev (BÚNO pomocí 1). \\
 
     Jelikož $\text{deg} v = 3$, vedou do něj hrany všech tří barev. Po přebarvení $(d,v)$ tedy do $v$ vedou dvě hrany barvy 1. Musíme tedy přebarvit jednu hranu na barvu 2. Tím se však buď dostaneme do původního stavu, nebo způsobíme, že jeden soused $v$ má dvě hrany barvy 2 a žádnou hranu barvy 1. Opět tedy musíme jednu jeho hranu přebarvit na 2, čímž rozbijeme nějakého jeho souseda, atd. (Obarvením pomocí třetí barvy si nepomůžeme, jen změníme, která barva je ve vrcholu dvakrát.) \\
 
-    Každé přebarvení tedy způsobí, že buď vedou do vrcholu stupně 3 dvě hrany stejné barvy, nebo mají hrany $d$ stejnou barvu. Nemůžeme tedy nalézt korektní obarvení $G$ pomocí tří barev. K obarvení pomocí čtyř barev stačí přebarvit $(d,v)$ novou barvou. Libovolný takovýto graf $G$ má tedy hranovou barevnost 4.
+    Každé přebarvení tedy způsobí, že buď vedou do vrcholu stupně 3 dvě hrany stejné barvy, nebo mají hrany $d$ stejnou barvu. Nemůžeme tedy nalézt korektní obarvení $G$ pomocí tří barev. K obarvení pomocí čtyř barev stačí přebarvit $(d,v)$ novou barvou. Libovolný takovýto graf $G$ má tedy hranovou barevnost 4. \\
+
+    Uvažme nyní druhý případ, tedy $\chi _e (H) = 4$. Z předchozího úkolu víme, že takovýto graf musí obsahovat artikulaci, tudíž z 3-souvislosti i most (artikulace nenáležící mostu musí mít stupeň alespoň 4). Postupujme indukcí podle počtu mostů. Pro počátek indukce si uvědomme, že graf $H$ bez mostů má z minulého úkolu $\chi_e (H) = 3$, tudíž odpovídá předchozímu případu a musíme jeho $G$ obarvit čtyřmi barvami. Máme-li dále $H$, vybereme z něj libovolný most a odebereme ho. Vzniklé dvě komponenty jsou grafy $G$ odpovídající zadání, tudíž je z indukce musíme obarvit pomocí čtyř barev. \\
+    
+    Zpět přidaný most určitě dokážeme obarvit (isomorfismem dokážeme přebarvit jednu z komponent tak, že do vrcholů mostu vedou dohromady nejvýše 3 různé barvy). Stejně tak rozdělení hrany zvládneme pomocí čtyř barev (z vrcholu $v$ vedou hrany tří barev, tedy $(d,v)$ můžeme obarvit tou čtvrtou). I takovýto graf má tedy hranovou barevnost rovnu čtyřem, čímž je důkaz hotov.
 
     \section{}
     \section{}
@@ -34,5 +36,5 @@
     Z $T_G$ postavíme chromatický polynom dosazením $y = 0$. Jelikož chromatický polynom nám udává počet obarvení pomocí $x$ barev, barevnost $G$ je nejmenší $x$ takové, že chromatický polynom $G$ s argumentem $x$ je kladný.
 
     \subsection{}
-    Víme, že pokud $e$ je smyčka v $G$, pak $T_G = y \cdot T_{G-e}$. Zároveň z rekurentní formule $(T_G = T_{G-e} + T_{g\setminus e}$ pro $e$ nesmyčku a nemost) a z formule pro graf pouze s mosty a smyčkami ($T_G = x^iy^j$ pro $i$ mostů a $j$ smyček) plyne, že graf bez smyček bude vždy obsahovat nějaký člen nedělitelný $y$. Z těchto dvou faktů pak snadno vyvodíme, že počet smyček v $G$ je roven největšímu $k$ takovému, že $y^k$ je dělitelem $T_G$. 
+    Víme, že pokud $e$ je smyčka v $G$, pak $T_G = y \cdot T_{G-e}$. Zároveň z rekurentní formule $(T_G = T_{G-e} + T_{G\setminus e}$ pro $e$ nesmyčku a nemost) a z formule pro graf pouze s mosty a smyčkami ($T_G = x^iy^j$ pro $i$ mostů a $j$ smyček) plyne, že graf bez smyček bude vždy obsahovat nějaký člen nedělitelný $y$. Z těchto dvou faktů pak snadno vyvodíme, že počet smyček v $G$ je roven největšímu $k$ takovému, že $y^k$ je dělitelem $T_G$. 
     \end{document}
