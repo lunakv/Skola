@@ -1,0 +1,57 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{array}
+
+\cohead[Automaty a gramatiky]
+        {Automaty a gramatiky}
+\lohead[Úkol č. 2]
+        {Úkol č. 2}
+\rohead[Václav Luňák]
+        {Václav Luňák}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+    Mějme pro zadané $n$ následující automat pro jazyk s jedním symbolem $a$:
+    \begin{center}
+        \begin{tabular}{| c | c |}
+            \hline
+            Stav    & $a$ \\
+            \hline
+            \textbf{0}& $n-1$ \\
+            1       & 0       \\
+            2       & 1       \\
+            3       & 2       \\
+            4       & 3       \\
+            \multicolumn{2}{|c|}{$\vdots$}\\
+            $n-1$   & $n-2$   \\ \hline
+        \end{tabular} \\
+
+        (Stav 0 je přijímající)
+    \end{center}
+
+    Ekvivalence tohoto automatu budou vypadat následovně:
+    \begin{center}
+        \begin{tabular}{|c|c|>{\bfseries}l|l|>{\bfseries}l|l|>{\bfseries}l|l|>{\bfseries}l|l|>{\bfseries}l|}
+            \hline
+            Stav       & $a$ & $\sim_0$ & $a$ & $\sim_1$ & $a$ & $\sim_2$ & $\dots$ & $\sim_{n-3}$ & $a$ & $\sim_{n-2}=\sim$\\
+            \hline
+            \textbf{0} &$n-1$& A        & B   & A        & B   & A        &         & A            & B   & A\\      
+            1          & 0   & B        & A   & B$_1$    & A   & B$_1$    &         & B$_1$        & A   & B$_1$\\    
+            2          & 1   & B        & B   & B        &B$_1$& B$_2$    &         & B$_2$        &B$_1$& B$_2$\\    
+            3          & 2   & B        & B   & B        & B   & B        &         & B$_3$        &B$_2$& B$_3$\\
+            4          & 3   & B        & B   & B        & B   & B        &         & B$_4$        &B$_3$& B$_4$\\
+            \multicolumn{11}{|c|}{$\vdots$} \\
+            $n-3$      &$n-4$& B        & B   & B        & B   & B        &         & B$_{n-3}$    &B$_{n-4}$& B$_{n-3}$\\
+            $n-2$      &$n-3$& B        & B   & B        & B   & B        &         & B            &B$_{n-3}$& B$_{n-2}$\\
+            $n-1$      &$n-2$& B        & B   & B        & B   & B        &         & B            &B        & B\\   
+            \hline
+        \end{tabular}
+    \end{center}
+
+    Vidíme, že v $i$-tém kroku algoritmu jsou stavy od 0 do $i-1$ každý ve vlastní skupině a stavy od $i$ do $n-1$ všechny ve skupině B, přičemž z nich pouze $i$-tý stav nevede do stavu skupiny B, tím pádem se právě $i$-tý stav v $(i+1)$. kroku oddělí do samostatného stavu. Algoritmus se zastaví ve chvíli, kdy se od sebe oddělí poslední dva stavy, což nastane až během ekvivalence $n-2$. Tento počet iterací je tedy obecně nutný. \\
+
+    Pokud by měl jazyk automatu více symbolů, konstrukci upravíme tak, že všechny symboly kromě jednoho budou na všech stavech vytvářet smyčky.
+\end{document}
