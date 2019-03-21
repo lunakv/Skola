@@ -7,7 +7,7 @@ bstDelete(X, t(Y, X, Z), t(Y2, X2, Z)) :-
 
 
 findMax(t(nil, X, nil), X, []) :- !.
-findMax(t(L, X, R), Max, Rest)
+% TODO
 
 
 
