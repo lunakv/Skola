@@ -1,0 +1,96 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\cohead[Automaty a gramatiky]
+        {Automaty a gramatiky}
+\lohead[Úkol č. 6]
+        {Úkol č. 6}
+\rohead[Václav Luňák]
+        {Václav Luňák}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+    Neterminály gramatik jsou označeny velkými písmeny, terminály jsou malá písmena v daném jazyce.
+    \section{$L_1 = \{a^ib^ic^i, i \in N\}$}
+    Mějme kontextovou gramatiku se startovním neterminálem $N$ a odvozovacími pravidly
+    \begin{align*}
+        N &\rightarrow aTBc \vert abc \vert \lambda \\
+        T &\rightarrow aTBC \vert abC \\
+        CB &\rightarrow CX \\
+        CX &\rightarrow YX \\
+        YX &\rightarrow YC \\
+        YC &\rightarrow BC \\
+        Cc &\rightarrow cc \\
+        bB &\rightarrow bb
+    \end{align*}
+    Dokážeme, že $L_1$ je jazyk generovaný touto gramatikou.
+
+    \subsection{Každé slovo $L_1$ dokážeme vytvořit}
+    Pokud je $i \geq 2$ (jinak zřejmě), použijeme nejprve pravido $N \rightarrow aTBc$. Poté opakujeme následující. Nejprve použijeme pravidlo $T \rightarrow aTBC$ a poté čtveřici pravidel prohazující $C$ a $B$, dokud se nedostaneme na konec, kde použijeme $Cc \rightarrow cc$. Po $i-2$ iteracích tohoto nám vznikne řetězec 
+    \begin{align*}
+        a^{i-1}TB^{i-1}c^{i-1}.
+    \end{align*}
+    Nyní použitím pravidla $T \rightarrow abC$ vytvoříme řetězec $a^ibCB^{i-1}c^{i-1},$ který opětovným použitím čtveřice prohazovacích pravidel přeměníme na $a^ibB^{i-1}Cc^{i-1}.$ Poté už jednou substitucí $Cc \rightarrow cc$ a $i-1$ použitími pravidla $bB \rightarrow bb$ dostaneme požadované slovo.
+
+    \subsection{Každé generované slovo náleží $L_1$} (Níže neuvažujeme slova $abc$ a $\lambda$, pro která tvrzení platí triviálně)
+    Pro zjednodušení nejprve dokažme několik pomocných pozorování.
+
+    \paragraph{a) dvojice $CB$ se vždy musí změnit na $BC$}
+    Když se tato dvojice v řetězci objeví, musí se na ni použít přepisovací pravidlo $CB \rightarrow CX$, jelikož $C$ nemá žádné pravidlo bez pravého kontextu a $B$ nemá pravidlo bez levého kontextu. Nově vytvořená dvojice $CX$ se ze stejného důvodu musí transformovat na $YX$, tato dvojice pak z téhož důvodu na $YC$.
+    
+    Pokud by se za touto dvojicí nacházelo další $B$, mohli bychom začít používat výše uvedená pravidla na takto nově vytvořenou dvojici, ovšem tímto nám vznikne dvojice $YB$ (resp. $YY$, ze které ale může vzniknout opět jen $YB$), na kterou už se nedá použít žádné pravidlo a nemůže nám tedy vzniknout sentence. Abychom vytvořili slovo složené z terminálů, musíme tedy i v tomto případě použít pravidlo $YC \rightarrow BC$, čímž je výměna znaků dokončena (ve všech ostatních případech také, ze stejných důvodů jako dříve).
+
+    \paragraph{b) všechny znaky $a$ tvoří prefix vytvořeného slova, všechny znaky $c$ jeho suffix} Pro $a$ vidíme snadno, neboť se přidávají pouze před všechny ostatní znaky. Pro $c$ platí taktéž, protože $c$ začíná jako poslední znak a další mohou přibýt pouze jako přímý předchůdce prvního $c$. 
+
+    \paragraph{c) $B$ nebo $C$ obklopené neterminály nemůže být převedeno na terminál}
+    Vidíme snadno z pravidel, která přepisují tyto znaky na terminály.
+
+    \paragraph{d) všechna $C$ musí skončit před všemi $B$}
+    Mějme $C$ před $B$. Jelikož všechny znaky $X$ a $Y$ můžeme z pozorování \textbf{a)} zanedbat (musí nutně dokončit výměnu $C$ a $B$) a z \textbf{c)} nemohou být mezi $B$ a $C$ terminály, máme podřetězec obsahující jen $C$ a $B$, tedy musíme v tomto podřetězci najít dvojici $CB$. Tuto dvojici musíme z \textbf{a)} prohodit, čímž se zmenší počet $C$ před posledním $B$. Toto opakujeme, dokud se před poslední $B$ nedostanou všechna $C$.\\
+
+    Z \textbf{b)} a \textbf{d)} a faktu, že $B$ se mění z terminálů pouze na $b$ a $C$ pouze na $c$, tedy zjistíme, že písmena skončí ve správném pořadí. Jelikož pro každé $a$ generujeme jedno $B$ (resp. $b$) a jedno $C$ (resp. $c$), budou písmena ve správném poměru. Každé generované slovo tedy musí náležet $L$. Tímto jsme dokázali druhou implikaci a tudíž i tvrzení, že naše gramatika generuje právě jazyk $L$.
+    \begin{flushright}
+        $\square$
+    \end{flushright} 
+
+    \section{$L_2 = \{a^{2^i}, i \in N\}$}
+    Mějme gramatiku se startovním neterminálem $N$ a odvozovacími pravidly
+    \begin{align*}
+        N &\rightarrow a \vert aa \vert XFL \\
+        XF &\rightarrow XK & LY &\rightarrow DY\\
+        XK &\rightarrow FK & DY &\rightarrow DL\\
+        FK &\rightarrow FAX & DL &\rightarrow YAL\\
+        XA &\rightarrow XJ & AY &\rightarrow EY\\
+        XJ &\rightarrow AJ & EY &\rightarrow EA\\
+        AJ &\rightarrow AAX & EA &\rightarrow YAA\\
+        XL &\rightarrow XM & FY &\rightarrow CY\\
+        XM &\rightarrow ALM & CY &\rightarrow CF\\
+        LM &\rightarrow LY & CF &\rightarrow XFA\\
+        XF &\rightarrow aa & LY &\rightarrow aa\\
+        aA &\rightarrow aaa & Ba &\rightarrow aaa\\
+        aL &\rightarrow aaa & Fa &\rightarrow aaa
+    \end{align*}
+    Dokážeme, že tato gramatika generuje $L_2$.
+    \paragraph{Invariant} V řetězci se vyskytuje vždy nejvýše jeden znak $X$ nebo $Y$. Toto snadno nahlédneme z odvozovacích pravidel, kde $Y$ vzniká pouze přepsáním $X$ a naopak (vyjma dočasných neterminálů - viz níže).
+
+    \paragraph{Pozorování a)} Stejně jako v předchozí gramatice neterminály $J, K, M, C, D, E$ slouží pouze k prohození ostatních neterminálů. V tomto případě lze toto s pomocí invariantu nahlédnout ještě snáz, neboť po vzniku takovéto dočasné proměnné nezbývá než okamžitě použít zbylá dvě prohazovací pravidla.
+
+    \paragraph{Pozorování b)} $X$ musí přejít ze začátku řetězce až na konec, než se může změnit na $Y$. Totéž v opačném směru platí pro $Y$. Toto dostáváme snadno z \textbf{a)} a toho, že $X$ (resp. $Y$) se za svůj protějšek mění až za $L$ (resp. před $F$), které je vždy za všemi (resp. před všemi) ostatními neterminály. Navíc je na ně všude jinde aplikovatelné právě jedno prohazovací pravidlo, což vidíme z invariantu společně s tím, že každé pravidlo (mimo dočasných neterminálů) obsahuje $X/Y$ jako kontext.
+
+    \paragraph{Pozorování c)} Každý průchod $X/Y$ zdvojnásobí počet ostatních neterminálů. Důkaz tohoto tvrzení vyplývá zřejmě z faktu, že při každém prohození $X/Y$ přidáme na druhou stranu jeden neterminál navíc.
+
+    \subsection{Každý řetězec z $L_2$ dokážeme vygenerovat}
+    Nechť $i \geq 2$. Začneme pravidlem $N \rightarrow XFL$. Poté $i-2$ průchody $X/Y$ tam a zpět vytvoříme podle \textbf{c)} $2^{i-1}$ ostatních neterminálů. Následně aplikujeme jedno pravidlo $XF \rightarrow aa$, potažmo (podle sudosti $i$) $LY \rightarrow aa$, načež nám zbudou pouze pravidla vytvářející z neterminálu dvojici terminálů, čímž se dostaneme na kýžených $2^i$ znaků~$a$.
+
+    \subsection{Každý generovaný řetězec náleží $L_2$}
+    Nechť jsme začali pravidlem $N \rightarrow XFL$, jinak triviálně. Z pozorování \textbf{a)} a \textbf{b)} vidíme, že jakmile je neterminál $X/Y$ jinde než na kraji řetězce, je volba pravidla jednoznačná - nezbývá než se \uv{probublat} na kraj řetězce. Toto se může libovolněkrát opakovat a pokaždé tím zdvojnásobíme počet ostatních neterminálů - viz.~\textbf{c)}. Jelikož jsme začali se dvěma ostatními neterminály, bude tento počet mocninou 2. Jakmile se vybere pravidlo obsahující $a$, které je ekvivalentní smazání $X/Y$ a převedení $F/L$ na dvojici terminálů, opět deterministicky nezbývá než převést na $a$ všechny ostatní neterminály. Tento převod vždy změní jeden neterminál na dvě $a$, tedy délka výsledného slova bude opět mocninou $2$.\\
+    \begin{flushright}
+        $\square$
+    \end{flushright} 
+
+    \textit{Poznámka: obě tyto gramatiky jsou kontextové. Tyto jazyky nemohou být sestrojeny bezkontextovými gramatikami, jelikož nesplňují pumping lemma .}
+\end{document}

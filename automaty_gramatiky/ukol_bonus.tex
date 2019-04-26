@@ -1,0 +1,32 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+
+\cohead[Automaty a gramatiky]
+        {Automaty a gramatiky}
+\lohead[Bonusový úkol]
+        {Bonusový úkol}
+\rohead[Václav Luňák]
+        {Václav Luňák}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+    Máme jazyk $L = \{\omega \in  \{a,b\}^* \text{ tž. } \vert \omega \vert_a\ = 2\vert \omega \vert_b\}$ a gramatiku $A$ se substitucemi
+    \begin{align*}
+        S \rightarrow \text{\uv{libovolná permutace řetězce $aabS$}} \vert \lambda.
+    \end{align*} 
+    Chceme ukázat, že $A$ negeneruje $L$.\\
+
+    Mějme následující slovo
+    \begin{align*}
+        \omega = a^3b^3a^3.
+    \end{align*}
+    Ukážeme, že ačkoliv je toto slovo součástí jazyka $L$ (zjevně), nedá se generovat naší gramatikou.
+
+    \paragraph{Důkaz}
+    Předpokládejme pro spor, že máme nějakou posloupnost substitucí generující $\omega$. Vezměme první substituci této posloupnosti. Nechť se BÚNO v této substituci vyskytuje $b$ napravo od $S$ (v opačném případě postupuje důkaz symetricky). Napravo od tohoto $b$ mohou být po první substituci nejvýše dvě $a$. \\
+    
+    Zároveň vidíme, že v $\omega$ musí být napravo od posledního $b$ tři $a$. Jelikož se však jediný neterminál vyskytuje nalevo od $b$ a jsme v bezkontextové gramatice, nejsme schopni žádnou další substitucí přidat další znaky napravo od $b$. To nám dává spor s tím, že naše gramatika generuje $\omega$.
+\end{document}
