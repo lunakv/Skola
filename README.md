@@ -1,7 +1,7 @@
 Notes and homework from my studies.
 
 *Veškerý obsah tohoto repozitáře slouží pouze ke studijním účelům*   
-Úkoly opisujte od spolužáků, ne odsud!
+
 
 **Obsahuje tyto předměty:**  
 * První ročník
