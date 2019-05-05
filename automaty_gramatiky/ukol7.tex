@@ -1,0 +1,55 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\cohead[Automaty a gramatiky]
+        {Automaty a gramatiky}
+\lohead[Úkol č. 7]
+        {Úkol č. 7}
+\rohead[Václav Luňák]
+        {Václav Luňák}
+\pagestyle{plain.scrheadings}
+
+\begin{document} 
+\textit{Terminály jsou značeny malými písmeny, neterminály velkými písmeny.}\\
+
+Každá bezkontextová gramatika se dá převést na (až na $\lambda$) ekvivalentní gramatiku obsahující pouze pravidla typu
+\begin{align*}
+        A \rightarrow a \vert aB \vert aBC.
+\end{align*}
+
+\subsection*{Důkaz}
+Mějme gramatiku v Greibachové normální formě, tedy gramatiku obsahující pouze pravidla typu 
+\begin{align*}
+        A \rightarrow a\beta, \beta \in V^*.
+\end{align*}
+Vezměme si jedno konkrétní pravidlo,
+\begin{align*}
+        A_i \rightarrow a_iA_{i_1}A_{i_2}\dots A_{i_n}\\ i, i_1 \dots i_n \in N.
+\end{align*}
+Předpokládejme, že $n \geq 2$. Toto pravidlo odstraníme a přidáme místo něj následující pravidla (s odpovídajícími novými neterminály):
+\begin{align*}
+        A_i &\rightarrow a_iX_{i_1i_2\dots i_n}\\
+        X_{i_1i_2\dots i_n} &\rightarrow A_{i_1}X_{i_2i_3\dots i_n}\\
+        X_{i_2i_3\dots i_n} &\rightarrow A_{i_2}X_{i_3i_4\dots i_n}\\
+        &\vdots \\
+        X_{i_{n-1}i_n} &\rightarrow A_{i_{n-1}}A_{i_n}
+\end{align*}
+Snadno vidíme, že tato substituce generuje ekvivalentní gramatiku, neboť pouze rozkládáme jednu substituci na několik jednoznačných substitucí. Tento proces opakujeme pro všechna pravidla v gramatice. (Těch je konečně mnoho, tedy výsledek je konečný.) Pozorujme, že všechna pravidla v této gramatice mají tvar
+\begin{align*}
+        A_i &\rightarrow a \vert aN \\
+        X_\pi &\rightarrow A_iM
+\end{align*}
+Teď nám stačí pouze dosadit do pravidel pro $X$ za $A_i$ všechny jejich substituce, čímž ekvivalenci opět zachováme a navíc dostaneme pravidla ve tvaru
+\begin{align*}
+        A_i &\rightarrow a \vert aN \\
+        X_\pi &\rightarrow aM \vert aNM,
+\end{align*}
+tedy všechna pravidla gramatiky mají požadovaný tvar.
+\begin{flushright}
+        $\square$
+\end{flushright}
+\end{document}
