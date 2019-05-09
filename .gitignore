@@ -590,3 +590,7 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+# Haskell build files
+*.hi
+*.o
