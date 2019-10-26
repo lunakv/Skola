@@ -1,0 +1,47 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\cohead[Algebra I]
+        {Algebra I}
+\lohead[Úkol č. 1]
+        {Úkol č. 1}
+\rohead[Václav Luňák]
+        {Václav Luňák}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+\subsection*{Úloha č. 1}
+\paragraph{a)} Vlastnosti ekvivalence plynou z rovnosti v definici
+\begin{description}
+        \item[reflexivita] $L(\textbf{x}) = L(\textbf{x}) \implies (\textbf{x}, \textbf{x}) \in \text{ker } L $
+        \item[symetrie] $(\textbf{x}, \textbf{y}) \in \text{ker } L \implies L(\textbf{x}) = L(\textbf{y}) \implies L(\textbf{y}) = L(\textbf{x}) \implies (\textbf{y}, \textbf{x}) \in \text{ker } L$
+        \item[tranzitivita] $L(\textbf{x}) = L(\textbf{y}) \land L(\textbf{y}) = L(\textbf{z}) \implies L(\textbf{x}) = L(\textbf{z}) \implies (\textbf{x}, \textbf{z}) \in \text{ker } L$  
+\end{description}
+
+\paragraph{b)}
+Mějme bod $\textbf{x} = (x,y,z)$ splňující $x+y+z = n$. Potom $[\textbf{x}]$ je rovina obsahují všechny body splňující tuto rovnici. (Promítnutím této roviny do některé z kanonických rovin vznikne přímka s gradientem -1). Správnost tohoto rozkladu plyne přímo z definice $L$.
+\paragraph{c)}
+$T = \{(x,0,0) \vert x \in \mathbb{R}\}$.\\
+Že dva různé prvky $T$ jsou v různé třídě ekvivalence vidíme triviálně (mají jiné součty souřadnic). Vezmeme-li $n$ z rovnice pro nějakou třídu ekvivalence, bod $(n,0,0)$ náleží $T$ i této třídě. $T$ tedy pokrývá všechny třídy ekvivalence, čímž splňujeme i první podmínku.
+
+\subsection*{Úloha č. 2}
+\begin{align*}
+        & 34x + 21y = 8 \\
+        & \text{NSD}(34,21) = 1 \\
+        & 34 \\
+        & 21 \\
+        & 13 = 34 - 21 \\
+        & 8 = 21 - 13 = -34 + 2 \cdot 21
+\end{align*}
+Řešením je tedy množina $\{(-1,2) + k(21,-34) \vert k \in \mathbb{Z}\}$. Platnost postupu viz. cvičení.
+
+\subsection*{Úloha č. 3}
+Rovnice soustavy jsou nezávislé, tedy pro každý racionální parametr bude množina řešení neprázdná. Nechť má soustava pro nějaký racionální parametr $(a,b,c)$ řešení $(x_0,y_0,z_0)$. Aby byla množina řešení uzavřená na součty, musí obsahovat i vektor $2(x_0,y_0,z_0)$. \\
+
+Zároveň ovšem snadno vidíme, že po dosazení $2(x_0,y_0,z_0)$ do soustavy dostaneme pravou stranu rovnou $2(a,b,c)$. Protože je $2(x_0,y_0,z_0)$ řešením soustavy, musí platit $2(a,b,c) = (a,b,c) \implies (a,b,c) = 0$.
+
+\end{document}

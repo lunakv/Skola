@@ -1,0 +1,149 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{scrlayer-scrpage}
+
+\cohead[Algebra I]
+        {Algebra I}
+\lohead[Úkol č. 3]
+        {Úkol č. 3}
+\rohead[Václav Luňák]
+        {Václav Luňák}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+    \section*{Úloha č. 1}
+    \textit{Značení: } $(f \circ g)(x) = g(f(x))$
+    \subsection*{a)}
+    Mějme funkci $h: \mathbb{N}_0 \rightarrow \mathbb{N}_0$ definovanou jako $h(n) = \lfloor \frac{n}{2} \rfloor$. Zjevně $h$ je na.
+
+    \subsubsection*{Levé krácení}
+    Mějme funkce $f,g_1,g_2$, všechny na $M$. Pokud platí $(f \circ g_1) = (f \circ g_2)$, z definice pro všechna $m \in M$ platí $g_1(f(m)) = g_2(f(m))$. Jelikož je $f(m)$ na, z této rovnosti vyplývá, že $g_1(m) = g_2(m)$ pro všechna $m \in M$, z čehož nutně platí $g_1 = g_2$. Grupoid $(P,\circ)$ tedy \textbf{je} s levým krácením.
+
+    \subsubsection*{Pravé krácení} 
+    Mějme $f: \mathbb{N}_0 \rightarrow \mathbb{N}_0$ s předpisem
+    \begin{align*}
+        f(n) =
+        \begin{cases}
+            n+1 & n\text{ sudé} \\
+            n-1 & n\text{ liché}.
+        \end{cases} 
+    \end{align*}
+    Tato funkce je na. Dostáváme pro všechna $n \in \mathbb{N}_0$
+    \begin{align*}
+        (f \circ h)(n) &=
+        \begin{cases}
+            \lfloor \frac{n+1}{2} \rfloor & n \text{ sudé}\\
+            \lfloor \frac{n-1}{2} \rfloor & n \text{ liché}
+        \end{cases} \\
+        (f \circ h)(n) &= \left\lfloor \frac{n}{2} \right\rfloor \\
+        (f \circ h) &= h.
+    \end{align*}
+    Zároveň vidíme, že $(id \circ h) = h = (f \circ h)$, ovšem triviálně $f \neq id$. Grupoid tedy \textbf{není} s pravým krácením.
+
+    \subsubsection*{Levé dělení}
+    Uvažujme řešení $x$ rovnice $h \circ x = id$. Pro řešení musí platit $x(h(0))= 0$, tedy $x(0) = 0$. Zároveň musí platit $x(h(1)) = 1$, tedy $x(0) = 1$. Toto nám dává spor s tím, že $x$ je zobrazení. Grupoid tudíž \textbf{není} s levým dělením.
+
+    \subsubsection*{Pravé dělení}
+    Uvažujme řešení $x$ rovnice $x \circ h = id$. Pro řešení musí platit $x(0) = 0$ nebo $x(0) = 1$, aby $h(x(0)) = 0$. BÚNO $x(0) = 0$. Jelikož je $x$ na, musí existovat $m$ takové, že $x(m) = 1$. Z předchozího musí být takovéto $m \geq 1$. Pak ovšem dostáváme $h(x(m)) = h(1) = 0$, $m \neq 0$, z čehož jasně $h \circ x \neq id$, což je spor. Grupoid tudíž \textbf{není} s pravým dělením.
+
+    \subsection*{b)}
+    \subsubsection*{Levé krácení}
+    Mějme funkci $f:\mathbb{N} \rightarrow \mathbb{N}$ s předpisem $f(n) = 2n$ a funkci $g:\mathbb{N} \rightarrow \mathbb{N}$ s předpisem
+    \begin{align*}
+        g(n) =
+        \begin{cases}
+            2n & n \text{ sudé} \\
+            2n-1 & n \text{ liché}.
+        \end{cases}
+    \end{align*}
+    Snadno ověříme, že $f,g \in R$ a $f \neq g$. Pro všechna $n \in N$ pak platí 
+    \begin{align*}
+        (f \circ f)(n) &= f(2n) = 4n \\
+        (f \circ g)(n) &= g(2n) = 4n \\
+        (f \circ f) &= (f \circ g).
+    \end{align*}
+    Grupoid $(R, \circ)$ tedy \textbf{není} s levým krácením.
+
+    \subsubsection*{Pravé krácení}
+    Mějme funkce $f,g_1,g_2 \in R$ takové, že $(g_1 \circ f) = (g_2 \circ f)$. Poté pro každé $n \in \mathbb{N}$ platí $f(g_1(n)) = f(g_2(n))$. Jelikož $f$ je prostá, tato rovnost platí pouze když $g_1(n) = g_2(n)$. Z toho vyplývá, že $g_1 = g_2$ a grupoid \textbf{je} s pravým krácením.
+
+    \subsection*{Levé dělení}
+    Mějme funkce $f,g \in R$. Jako řešení rovnice $f \circ x = g$ zadefinujeme funkci $x$ následujícím způsobem:
+    \begin{itemize}
+        \item $\forall n \in \mathbb{N}: x(f(n)) = g(n)$
+        \item pro $m = \text{min}(\mathbb{N} \setminus f(\mathbb{N}))$ je $x(m) = \text{min}(\mathbb{N} \setminus g(\mathbb{N}))$.
+        \item pro jiné $m \in \mathbb{N} \setminus f(\mathbb{N})$ ať je $p$ předchůdce $m$ v $\mathbb{N} \setminus f(\mathbb{N})$. $x(m)$ pak položíme rovno libovolné hodnotě z $\mathbb{N} \setminus g(\mathbb{N})$, pro kterou existuje $r \in \mathbb{N} \setminus g(\mathbb{N})$ takové, že $x(p) < r < x(m)$ ($x(p)$ můžeme získat indukcí).
+    \end{itemize}
+    Jelikož je $\mathbb{N} \setminus g(\mathbb{N})$ nekonečná, prvky $r$ a $x(m)$ z třetího bodu vždy existují, tudíž definice je korektní. Z prvního bodu vidíme, že $f \circ x = g$ a tudíž i že $x(f(\mathbb{N})) = g(\mathbb{N})$.\\
+    
+    Jelikož $g$ je prostá, $x$ je na $f(\mathbb{N})$ také prostá. Z druhého a třetího bodu je snadno $x$ na $\mathbb{N} \setminus f(\mathbb{N})$ také prostá, navíc jsou $x(f(\mathbb{N}))$ a $x(\mathbb{N} \setminus f(\mathbb{N}))$ disjunktní, tudíž $x$ je prostá.\\
+
+    Protože je $\mathbb{N} \setminus f(\mathbb{N})$ nekonečná a $x$ prostá, je i $x(\mathbb{N} \setminus f(\mathbb{N}))$ nekonečná. Zároveň ke každému prvku z $x(\mathbb{N} \setminus f(\mathbb{N}))$ můžu najít alespoň jedno $r$ z třetího bodu. Z definice všechna tato $r$ náleží $\mathbb{N} \setminus x(\mathbb{N})$, z čehož vyplývá, že je i $\mathbb{N} \setminus x(\mathbb{N})$ nekonečná. Tedy $x$ náleží $R$ a je řešením rovnice, čímž jsme dokázali, že grupoid \textbf{je} s levým dělením.
+
+    \subsubsection*{Pravé dělení}
+    Mějme $f,g \in R$ s předpisy $f(n) = 2n$ a $g(n) = 3n$. Hledáme řešení rovnice $x \circ f = g$. Pro takové řešení musí platit $(x \circ f)(1) = f(x(1)) = g(1) = 3$. $f(\mathbb{N})$ však obsahuje pouze sudá čísla, tudíž pro žádnou přirozenou hodnotu $x(1)$ nemůže platit $f(x(1)) = 3$. $x$ tím pádem nemůže být řešením rovnice a grupoid \textbf{není} s pravým dělením.
+
+
+    \section*{Úloha č. 2}
+    \subsection*{Neutrální prvek}
+    Z pravého, resp. levého dělení mějme pro nějaký prvek $g$ pologrupy řešení rovnic $g \cdot i_1 = g$ a $i_2 \cdot g = g$. Ukážeme, že $i_1 = i_2 = i$ a že $i$ je řešením rovnic pro všechny prvky pologrupy. Poté je $i$ z definice neutrálním prvkem.\\
+
+    Nejprve ukážeme pomocí pravého a levého krácení rovnost $i_1$ a $i_2$.
+    \begin{align*}
+        g \cdot g &= g \cdot g \\
+        (g \cdot i_1) \cdot g &= g \cdot (i_2 \cdot g) \\
+        g \cdot (i_1 \cdot g) &= g \cdot (i_2 \cdot g)  \\
+        i_1 \cdot g &= i_2 \cdot g \\
+        i_1 &= i_2
+    \end{align*}
+
+    Mějme nyní libovolný prvek pologrupy $p$.
+    \begin{align*}
+        g \cdot i &= g  & i \cdot g &= g\\
+        g \cdot i \cdot p &= g \cdot p & p \cdot i \cdot g &= p \cdot g \\
+        i \cdot p &= p & p \cdot i &= p
+    \end{align*}
+
+    \subsection*{Inverzní prvek}
+    Pro prvek $p$ najdeme řešení rovnice $p \cdot q_1 = i$, resp. $q_2 \cdot p = i$ a ukážeme, že $q_1 = q_2 = p^{-1}$, což je z definice inverzní prvek k $p$.
+    \begin{align*}
+        p &= p \\
+        p \cdot i &= i \cdot p \\
+        p \cdot (q_2 \cdot p) &= (p \cdot q_1) \cdot p \\
+        (p \cdot q_2) \cdot p &= (p \cdot q_1) \cdot p \\
+        p \cdot q_2 &= p \cdot q_1 \\
+        q_2 &= q_1
+    \end{align*}
+
+    Tímto jsme ukázali, že pologrupa splňuje všechny axiomy grupy.
+
+
+    \section*{Úloha č. 3}
+    \subsection*{a)}
+    Aby $T$ byla podpologrupa $S$, musí být uzavřená na operaci $\cdot$.
+    \subsubsection*{Neutrální prvek}
+    Mějme libovolný prvek $t_1 \in T$. Z uzavřenosti dostáváme $t_1 \cdot t_1 = t_2 \in T$. Stejně tak $t_1 \cdot t_2 = t_3 \in T$, $t_1 \cdot t_2 \cdot t_3 = t_4 \in T$ a takto induktivně pokračujeme. Z konečnosti $T$ pak pro nějaké $k \leq n$ musíme dostat
+    \begin{align*}
+        t_1 \cdot t_2 \cdot t_3 \cdots t_n &= t_k \\
+        (t_1 \cdot t_2 \cdots t_{k-1}) \cdot t_k \cdots t_n &= t_1 \cdot t_2 \cdots t_{k-1} \\
+        t_k \cdot t_{k+1} \cdots t_n &= 1.
+    \end{align*}
+    Neutrální prvek tedy náleží $T$. Jednoznačnost a oboustrannost $1$ jakožto neutrálního prvku dostaneme z toho, že $S$ je grupa.
+    \subsubsection*{Inverzní prvek}
+    Mějme libovolný prvek $t_1 \in T$. Stejným postupem jako v předchozím případě dostaneme
+    \begin{align*}
+        t_k \cdot t_{k+1} \cdot t_{k+2} \cdots t_n &= 1 \\
+        (t_1 \cdot t_2 \cdots t_{k-1}) \cdot t_{k+1} \cdot t_{k+2} \cdots t_n &= 1 \\
+        t_1 \cdot (t_2 \cdots t_{k-1} \cdot t_{k+1} \cdot t_{k+2} \cdots t_n) &= 1 \\
+        t_2 \cdots t_{k-1} \cdot t_{k+1} \cdot t_{k+2} \cdots t_n &= t_1^{-1}.
+    \end{align*}
+    Jednoznačnost a oboustrannost $t_1^{-1}$ jako inverzního prvku k $t_1$ opět dostáváme z toho, že $S$ je grupa. \\
+    
+    Pologrupa $T$ tedy splňuje všechny axiomy grupy.
+
+    \subsection*{b)}
+    Mějme grupu $(\mathbb{Z},+)$ s neutrálním prvkem 0. Vezměme podpologrupu $(\mathbb{N}, +)$. Očividně $\mathbb{N} \subseteq \mathbb{Z}$, $+$ je asociativní a $(\forall n,m \in \mathbb{N})(n+m \in \mathbb{N})$. Je to tedy skutečně podpologrupa $(\mathbb{Z},+)$. Zároveň však $\mathbb{N}$ neobsahuje neutrální prvek, tudíž nemůže být grupou.
+\end{document}
