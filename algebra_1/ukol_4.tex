@@ -1,0 +1,62 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{scrlayer-scrpage}
+
+\cohead[Algebra I]
+        {Algebra I}
+\lohead[Úkol č. 4]
+        {Úkol č. 4}
+\rohead[Václav Luňák]
+        {Václav Luňák}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+    \section*{Úloha č. 1}
+    \subsection*{a)}
+    Z cvičení víme, že permutace konjugovaná s $\pi$ bude mít stejnou strukturu cyklů. Je 5! způsobů, jak umístit čísla do těchto dvou cyklů. Jelikož je počáteční prvek cyklu libovolný, máme 3 způsoby pro zápis libovolného tříprvkového cyklu a 2 pro zápis dvouprvkového.
+
+    Celkový počet permutací s touto strukturou je tedy $\frac{5!}{3\cdot 2} = 20$.
+    \subsection*{b)}
+    \begin{description}
+        \item[reflexivita] $\pi = \pi \cdot \pi \cdot \pi^{-1}$
+        \item[symetrie] $\tau = \rho \cdot \pi \cdot \rho^{-1} \implies \pi = \rho^{-1} \cdot \tau \cdot \rho$ 
+        \item[tranzitivita] $\tau = \rho \cdot \pi \cdot \rho^{-1}  \land \pi = \gamma \cdot \varphi \cdot \gamma^{-1} \implies \tau = \rho \cdot \gamma \cdot \varphi \cdot \gamma^{-1} \cdot \rho^{-1} = (\rho \cdot \gamma) \cdot \varphi \cdot (\rho \cdot \gamma)^{-1}$  
+    \end{description}
+
+    \subsection*{c)}
+    \subsubsection*{Asociativita}
+    Operace skládání zobrazení je asociativní.
+    \subsubsection*{Neutrální prvek}
+    Nechť $e$ je neutrální prvek $G$. Pro všechna $g,h \in G$ platí
+    \begin{align*}
+        (Con_e \circ Con_g)[h] &= Con_e(g\cdot h \cdot g^{-1}) & (Con_g \circ Con_e)[h] &= Con_g(e \cdot h \cdot e^{-1}) \\
+        (Con_e \circ Con_g)[h] &= e \cdot g \cdot h \cdot g^{-1} \cdot e & (Con_g \circ Con_e)[h] &= g \cdot e \cdot h \cdot e^{-1} \cdot g^{-1} \\
+        (Con_e \circ Con_g)[h] &= g \cdot h \cdot g^{-1} & (Con_g \circ Con_e)[h] &= g \cdot h \cdot g^{-1} \\
+        (Con_e \circ Con_g) &= Con_g & (Con_g \circ Con_e) &= Con_g,
+    \end{align*}
+    tudíž $Con_e$ je neutrální prvek $Con(G)$. Jeho jednoznačnost vychází z jednoznačnosti $e$.
+    \subsubsection*{Inverzní prvek}
+    Pro všechna $Con_g \in Con(G), h \in G$:
+    \begin{align*}
+        (Con_g \circ Con_{g^{-1}})[h] &= Con_g(g^{-1} \cdot h \cdot g) & (Con_{g^{-1}} \circ Con_g)[h] &= Con_{g^{-1}}(g \cdot h \cdot g^{-1}) \\
+        (Con_g \circ Con_{g^{-1}})[h] &= g \cdot g^{-1} \cdot h \cdot g \cdot g^{-1} & (Con_{g^{-1}} \circ Con_g)[h] &= g^{-1} \cdot g \cdot h \cdot g^{-1} \cdot g \\
+        (Con_g \circ Con_{g^{-1}})[h] &= e \cdot h \cdot e & (Con_{g^{-1}} \circ Con_g)[h] &= e \cdot h \cdot e \\
+        (Con_g \circ Con_{g^{-1}}) &= Con_e & (Con_{g^{-1}} \circ Con_g) &= Con_e,
+    \end{align*}
+    tudíž $Con_{g^{-1}}$ je inverzním prvkem k $Con_g$. Jelikož je $g^{-1}$ pro každé $g$ jednoznačné, je i $Con_{g^{-1}}$ jednoznačný inverz.
+
+    \subsection*{d)}
+    Vezměme $M$ množinu všech permutací se stejnou strukturou cyklů, např. permutace s jedním tříprvkovým a jedním dvouprvkovým cyklem. Jelikož konjugace nemění strukturu cyklů, pro $m \in M, g \in \mathbb{S}_5$ bude mít $Con_g(m)$ stejnou strukturu jako $m$, tudíž bude také náležet $M$. Z toho vyplývá $Con(\mathbb{S}_5)[M] \subseteq M$.
+    \section*{Úloha č. 2}
+    \begin{align*}
+        \varphi &= \begin{matrix}
+            (1 & 2 & 3)(4)(5 & 6)
+        \end{matrix}
+    \end{align*}
+    Je zřejmě vidět, že pro libovolné $n$ je $\varphi^n(4) = 4$. Snadno můžeme ukázat, že ve $\varphi^4$ je první cyklus stejný jako ve $\varphi$. Pro první cyklus tedy stačí počítat mocniny mod 3. Jelikož $2019 \text{ mod } 3 = 0$, Z prvního cyklu se stane $(1)(2)(3)$. Stejně tak pro třetí cyklus, 2019 mod 2 = 1, tudíž zůstane stejný. Výsledkem pak je $\varphi^{2019} = \begin{matrix}
+        (1)(2)(3)(4)(5 & 6)
+    \end{matrix}$.
+\end{document}
