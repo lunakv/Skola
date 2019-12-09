@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Test</title>
+    <style type="text/css">
+        /* TODO: Use positioning to align the navigation to the right side of #root. */
+        #root {
+            position: relative;
+        }
+        nav {
+            position: absolute;
+            right: 0;
+        }
+        
+        /* TODO: Animate #animated-button so that it appears to be pushed by 2px
+           when the mouse hovers over it. Use only positioning for the animation effect.
+
+           TODO: make button border round and draw a shadow beneath it.
+        */ 
+        #animated-button {
+            border-radius: 1em;
+            box-shadow: 2px 2px gray;
+        }
+
+        #animated-button:hover {
+            position: relative;
+            box-shadow: none;
+            left: 2px;
+            top: 2px;
+        }
+
+
+
+
+
+        #root {
+            max-width: 800px;
+            margin:auto;
+            border:1px solid black;
+            padding: 10px;
+        }
+        nav li {
+            display: inline;
+            margin: 5px;
+            border-bottom: 1px solid black;
+            max-width: 200px;
+            padding: 10px;
+            border: 1px dotted black;
+        }
+        #animated-button {     
+            background-color: #ccc;
+            padding: 4px 12px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<div id="root">
+    <nav>
+        <ul>
+            <li>Menu item 1
+            </li>
+            <li>Menu item 2
+            </li>
+            <li>Menu item 3
+            </li>
+        </ul>
+    </nav>
+    
+    <input type="button" id="animated-button" value="Animated button" />
+
+</div>
+
+
+</body>
+</html>

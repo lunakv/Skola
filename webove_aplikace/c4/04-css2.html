@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Test</title>
+    <style type="text/css">
+        /* TODO: Adjust styles of navigation li elements so that
+           submenu items only appear when the user hovers over their parent menu item.
+           Use display property.
+           Hint: you will probably need two CSS rules.
+        */
+        nav ul ul {
+            display: none;
+        }
+        
+        nav li:hover ul {
+            display: block;
+        }
+
+        /* TODO: Adjust styles of sections inside #content so that they are
+           displayed in a grid with three columns. Use the display property. */
+        #content section {
+            display: inline-block;
+            width: 30%;
+        }
+
+
+
+
+        #root {
+            max-width: 800px;
+            margin:auto;
+            border:1px solid black;
+            padding: 10px;
+        }
+        nav {
+            margin-bottom: 20px;
+            border-bottom: 1px solid black;
+        }
+        #content section {
+            height: 100px;
+            background: #ccc;
+            margin: 1%;
+            padding: 20px;
+            border-radius: 7pt;
+            box-sizing: border-box;
+        }
+        li {
+            max-width: 200px;
+        }
+        nav > ul > li {
+            padding: 10px;
+            border: 1px dotted black;
+        }
+    </style>
+</head>
+<body>
+
+<div id="root">
+    <nav>
+        <ul>
+            <li>Menu item 1
+                <ul>
+                    <li>Submenu item 1</li>
+                    <li>Submenu item 2</li>
+                </ul>
+            </li>
+            <li>Menu item 2
+                <ul>
+                    <li>Submenu item 1</li>
+                    <li>Submenu item 2</li>
+                </ul>
+            </li>
+            <li>Menu item 3
+                <ul>
+                    <li>Submenu item 1</li>
+                    <li>Submenu item 2</li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <section id="content">
+        <section>Philip Fry</section>
+        <section>Turanga Leela</section>
+        <section>Bender </section>
+        <section>Amy Wong</section>
+        <section>Hermes Conrad</section>
+        <section>Professor Farnsworth</section>
+        <section>Doctor John Zoidberg</section>
+        <section>Lord Nibbler</section>
+        <section>Zapp Brannigan</section>
+        <section>Kif Kroker</section>
+        <section>Mom</section>
+        <section>Boxy</section>
+        <section>Brain Slugs</section>
+        <section>Brain Spawn</section>
+        <section>Calculon</section>
+        <section>Antonio Calculon</section>
+        <section>The Crushinator</section>
+        <section>Chanukah Zombie</section>
+        <section>LaBarbara Conrad</section>
+        <section>Al Gore's Head</section>
+        <section>Stephen Hawking</section>
+        <section>Hedonismbot</section>
+        <section>Hyperchicken</section>
+        <section>Hypnotoad</section>
+    </section>
+</div>
+
+
+</body>
+</html>

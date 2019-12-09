@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Test</title>
+    <style type="text/css">
+        /* TODO: Use positioning to display #menu as the left column of width 20% */
+        #menu {
+            width: 20%;
+            position: absolute;
+            top: 0;
+        }
+        #content_wrapper {
+            position: relative;
+        }
+
+        /* TODO: Display #content as the right column filling the rest of space in #root*/
+        #content {
+            margin-left: 20%;
+        }
+
+        /* TODO: Display footer at the entire bottom of the page all the time, even when scrolling */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+
+        #root {
+            width: 800px;
+            margin:auto;
+        }
+        #menu, #ads {
+            background-color: #bbb;
+        }
+        #content * {
+            text-align:justify;
+            padding: 5px;
+        }
+        header, article, nav, aside {
+            border-radius: 7pt;
+        }
+        header {
+            background-color: #ffeebb;
+            text-align: center;
+       }
+       footer {
+            background-color:#333;
+            color:white;
+            text-align: center;
+       }
+       h1 {
+            margin:0;
+       }
+       li {
+            padding: 0 5px;
+       }
+
+    </style>
+</head>
+<body>
+
+<div id="root">
+    <header>
+        <h1>Position based layout</h1>
+    </header>
+
+    <div id="content_wrapper">
+        <article id="content">
+            <h1>Some content</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas justo neque, viverra eu nisi in, maximus hendrerit metus. Sed ut elit dignissim, dignissim ipsum in, faucibus arcu. Donec sagittis libero at quam imperdiet, sit amet elementum orci feugiat. Ut feugiat faucibus justo, id convallis neque tristique eget. Aliquam eget mollis ante, et sodales metus. Donec sit amet magna eu massa gravida elementum vitae quis nulla. Maecenas ut erat vel tortor suscipit eleifend.</p>
+            <p>Donec vulputate, urna quis venenatis dictum, neque lorem finibus lacus, a tincidunt turpis ipsum sed metus. Maecenas gravida consectetur libero sed pellentesque. Morbi id dictum augue. Etiam tincidunt ante risus, ac hendrerit odio mattis in. In placerat tempus ante in interdum. Nulla facilisi. Phasellus metus nibh, sollicitudin at mauris sed, rutrum gravida dolor. Aenean interdum, purus consequat ultrices vestibulum, tortor orci molestie neque, a auctor ante turpis sit amet leo. </p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas justo neque, viverra eu nisi in, maximus hendrerit metus. Sed ut elit dignissim, dignissim ipsum in, faucibus arcu. Donec sagittis libero at quam imperdiet, sit amet elementum orci feugiat. Ut feugiat faucibus justo, id convallis neque tristique eget. Aliquam eget mollis ante, et sodales metus. Donec sit amet magna eu massa gravida elementum vitae quis nulla. Maecenas ut erat vel tortor suscipit eleifend.</p>
+            <p>Donec vulputate, urna quis venenatis dictum, neque lorem finibus lacus, a tincidunt turpis ipsum sed metus. Maecenas gravida consectetur libero sed pellentesque. Morbi id dictum augue. Etiam tincidunt ante risus, ac hendrerit odio mattis in. In placerat tempus ante in interdum. Nulla facilisi. Phasellus metus nibh, sollicitudin at mauris sed, rutrum gravida dolor. Aenean interdum, purus consequat ultrices vestibulum, tortor orci molestie neque, a auctor ante turpis sit amet leo. </p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas justo neque, viverra eu nisi in, maximus hendrerit metus. Sed ut elit dignissim, dignissim ipsum in, faucibus arcu. Donec sagittis libero at quam imperdiet, sit amet elementum orci feugiat. Ut feugiat faucibus justo, id convallis neque tristique eget. Aliquam eget mollis ante, et sodales metus. Donec sit amet magna eu massa gravida elementum vitae quis nulla. Maecenas ut erat vel tortor suscipit eleifend.</p>
+            <p>Donec vulputate, urna quis venenatis dictum, neque lorem finibus lacus, a tincidunt turpis ipsum sed metus. Maecenas gravida consectetur libero sed pellentesque. Morbi id dictum augue. Etiam tincidunt ante risus, ac hendrerit odio mattis in. In placerat tempus ante in interdum. Nulla facilisi. Phasellus metus nibh, sollicitudin at mauris sed, rutrum gravida dolor. Aenean interdum, purus consequat ultrices vestibulum, tortor orci molestie neque, a auctor ante turpis sit amet leo. </p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas justo neque, viverra eu nisi in, maximus hendrerit metus. Sed ut elit dignissim, dignissim ipsum in, faucibus arcu. Donec sagittis libero at quam imperdiet, sit amet elementum orci feugiat. Ut feugiat faucibus justo, id convallis neque tristique eget. Aliquam eget mollis ante, et sodales metus. Donec sit amet magna eu massa gravida elementum vitae quis nulla. Maecenas ut erat vel tortor suscipit eleifend.</p>
+            <p>Donec vulputate, urna quis venenatis dictum, neque lorem finibus lacus, a tincidunt turpis ipsum sed metus. Maecenas gravida consectetur libero sed pellentesque. Morbi id dictum augue. Etiam tincidunt ante risus, ac hendrerit odio mattis in. In placerat tempus ante in interdum. Nulla facilisi. Phasellus metus nibh, sollicitudin at mauris sed, rutrum gravida dolor. Aenean interdum, purus consequat ultrices vestibulum, tortor orci molestie neque, a auctor ante turpis sit amet leo. </p>
+        </article>
+
+        <nav id="menu">
+            <ul>
+                <li><a href="#">Philip Fry</a></li>
+                <li><a href="#">Turanga Leela</a></li>
+                <li><a href="#">Bender </a></li>
+                <li><a href="#">Amy Wong</a></li>
+                <li><a href="#">Hermes Conrad</a></li>
+                <li><a href="#">Professor Farnsworth</a></li>
+                <li><a href="#">Doctor John Zoidberg</a></li>
+                <li><a href="#">Lord Nibbler</a></li>
+                <li><a href="#">Zapp Brannigan</a></li>
+                <li><a href="#">Kif Kroker</a></li>
+                <li><a href="#">Mom</a></li>
+                <li><a href="#">Boxy</a></li>
+                <li><a href="#">Brain Slugs</a></li>
+                <li><a href="#">Brain Spawn</a></li>
+                <li><a href="#">Calculon</a></li>
+                <li><a href="#">Antonio Calculon</a></li>
+                <li><a href="#">The Crushinator</a></li>
+                <li><a href="#">Chanukah Zombie</a></li>
+                <li><a href="#">LaBarbara Conrad</a></li>
+                <li><a href="#">Al Gore's Head</a></li>
+                <li><a href="#">Stephen Hawking</a></li>
+                <li><a href="#">Hedonismbot</a></li>
+                <li><a href="#">Hyperchicken</a></li>
+                <li><a href="#">Hypnotoad</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <footer>
+        (c) 2016 The Example company
+    </footer>
+</div>
+
+</body>
+</html>
