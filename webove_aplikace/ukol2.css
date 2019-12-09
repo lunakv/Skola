@@ -1,0 +1,35 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.2em;
+    line-height: 150%;
+    text-align: left;
+    background-color: lightgray;
+}
+
+h1, h2 {
+    color: green;
+}
+
+article section:first-of-type {
+    background-image: url("./rugby_union.png");
+    background-size: contain;
+}
+
+article #a .pool {
+    text-decoration: underline;  
+}
+
+section > ul {
+    list-style-type: upper-roman;
+}
+
+#title {
+    padding: 10px;
+    border: 2px solid black;
+    display: inline-block;
+    margin: 15px;
+}
+
+a[href="#"]:hover {
+    color: red;
+}

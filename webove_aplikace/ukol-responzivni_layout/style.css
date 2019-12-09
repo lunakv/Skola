@@ -1,0 +1,95 @@
+@font-face {
+    font-family: myCustomFont;
+    src: url(Roboto-Regular.ttf);
+}
+
+body {
+    background-color: #f6f6f6;
+    font-family: myCustomFont;
+}
+
+#sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    border: 2px solid black;
+    transition: background-color 1s ease-in-out;
+}
+
+#sidebar:hover {
+    background-color: lightcoral;
+}
+
+:target {
+    color: green;
+}
+
+#content {
+    margin-left: 200px;
+}
+
+#content > article, #content > footer {
+    width: 800px;
+    position: relative;
+    margin: 0 auto;
+}
+
+img {
+    max-width: 400px;
+    transform: rotate3d(10, -60, 0, 40deg);
+    perspective: 200px;
+}
+
+.floatright {
+    float: right;
+    padding-left: 10px;
+}
+
+.floatleft {
+    float: left;
+    padding-right: 10px;
+}
+
+@media screen and (max-width: 1000px) {
+    body {
+        min-width: 400px;
+    }
+
+    .floatleft, .floatright {
+        display: block;
+        float: none;
+        padding: 0;
+        margin: 0 auto;
+    }
+
+    #sidebar {
+        position: fixed;
+        width: 100%;
+        min-width: 400px;
+        height: 90px;
+        text-align: center;
+        z-index: 1;
+        background-color: #f6f6f6;
+    }
+
+    #sidebar ul {
+        padding: 0;
+    }
+
+    #sidebar li {
+        display: inline;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    #content {
+        margin: 90px auto 0 auto;
+        padding-top: 10px;
+    }
+
+    #content > article, #content > footer {
+        width: inherit;
+    }
+}
