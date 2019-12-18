@@ -1,0 +1,37 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{scrlayer-scrpage}
+
+\cohead[Algebra I]
+        {Algebra I}
+\lohead[Úkol č. 8]
+        {Úkol č. 8}
+\rohead[Václav Luňák]
+        {Václav Luňák}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+    \section*{Úloha č. 2}
+    \subsection*{a)}
+    Jelikož 7 je prvočíslo, víme, že každý nenulový prvek $\mathbb{Z}_7$ je generátor grupy $(\mathbb{Z}_7,+)$. Z toho vyplývá, že pokud je v nějaké podmnožině $\mathbb{Z}_7$ nenulový prvek a požadujeme uzavřenost na sčítání, musí množina obsahovat celou $\mathbb{Z}_7$.\\
+
+    Z předchozího tedy můžeme snadno nahlédnout, že podalgebry $\mathbb{Z}_7$ (+) jsou právě množiny $\emptyset$, $\{0\}$ a $\mathbb{Z}_7$.
+
+    \subsection*{b)}
+    Nejprve si uvědomme, že přítomnost 0 nemá vliv na uzavřenost množiny vzhledem k násobení ($0 \cdot x = 0$ pro všechna $x$). Vidíme tedy, že množina $P$ je podalgebrou $\mathbb{Z}_7$ ($\cdot$) právě tehdy, když je podalgebrou množina $P \cup \{0\}$, resp. $P \setminus \{0\}$. Dále tedy BÚNO nebudeme přítomnost nuly uvažovat.\\
+
+    Prvky 3 a 5 jsou generátory grupy $(\mathbb{Z}_7 \setminus \{0\}, \cdot)$. Stejně jako v předchozím případě tedy množiny obsahující 3 nebo 5 musí obsahovat celou $\mathbb{Z}_7 \setminus \{0\}$. 
+    Ostatní prvky generují následující množiny:
+    \begin{itemize}
+        \item $\langle 1 \rangle = \{1\}$
+        \item $\langle 2 \rangle = \langle 4 \rangle = \{2,4,1\}$
+        \item $\langle 6 \rangle = \{1,6\}$
+    \end{itemize}
+    Tyto množiny jsou triviálně podalgebry. Jelikož $2 \cdot 6 = 5$ a $4 \cdot 6 = 3$, množiny obsahující tyto dvojice prvků opět musí obsahovat celou množinu. Tím jsme ukázali, že žádné další podalgebry nemohou existovat. \\
+
+    Podalgebrami $\mathbb{Z}_7$ $(\cdot)$ jsou tedy množiny $\emptyset$, $\{1\}$, $\{1,2,4\}$, $\{1,6\}$, $\mathbb{Z}_7 \setminus \{0\}$ a jejich sjednocení s $\{0\}$
+
+\end{document}

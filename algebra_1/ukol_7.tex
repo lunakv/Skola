@@ -1,0 +1,94 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{scrlayer-scrpage}
+
+\cohead[Algebra I]
+        {Algebra I}
+\lohead[Úkol č. 7]
+        {Úkol č. 7}
+\rohead[Václav Luňák]
+        {Václav Luňák}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+    \section*{Úloha č. 1}
+    Snadno ukážeme, že $T(A)$ je grupa. Z komutativnosti $A$ je to pak triviálně normální podgrupa, tudíž můžeme definovat faktorovou grupu $A/T(A)$. Z definice je neutrální prvek této grupy $e \cdot T(A) = T(A)$ pro $e$ neutrální prvek $A$.\\
+
+    Předpokládejme, že pro nějaké $a \in A$ je $a \cdot T(A)$ konečného řádu. Potom musí platit pro nějaké přirozené $k,n$
+    \begin{align*}
+        (a\cdot T(A))^k = T(A) \implies
+        (a^k) \cdot T(A) = T(A) \implies
+        (\forall x \in T(A))(a^k \cdot x \in T(A)) \implies \\
+        a^k \cdot e \in T(A) \implies a^k \in T(A) \implies
+        {(a^k)}^n = e \implies a^{kn} = e \implies 
+        a \in T(A) \implies \\ a\cdot T(A) = T(A),
+    \end{align*}
+    kde poslední implikace plyne z uzavřenosti $T(A)$. Z tohoto pak vyplývá, že jediný prvek v $A/T(A)$ s konečným řádem je ten neutrální.
+    
+    \section*{Úloha č. 2}
+    Mějme prvočíslo $p$ a přirozené $k$. Vezměme z faktorové grupy prvek $\frac{1}{p^k} + \mathbb{Z}$. Pro tento prvek platí
+    \begin{align*}
+        p^k\left(\frac{1}{p^k} + \mathbb{Z}\right) = p^k\frac{1}{p^k} + \mathbb{Z} = 1 + \mathbb{Z} = \mathbb{Z},
+    \end{align*}
+    tudíž řád tohoto prvku je nejvýše $p^k$. Jelikož pro libovolné menší $n$ není $\frac{n}{p^k}$ celé číslo, je jeho řád roven $p^k$.
+
+    \section*{Úloha č. 3}
+    \subsection*{a)}
+    Využijeme vlastností homomorfismu.
+    \subsubsection*{Uzavřenost}
+    \begin{align*}
+        f_0(g_1)(x) = x \land f_0(g_2)(x) = x \implies f_0(g_1 \cdot g_2)(x) = (f_0(g_1) \circ f_0(g_2))(x) = x,
+    \end{align*}.
+    \subsubsection*{Neutrální prvek}
+    Pro neutrální prvek $e \in G$ musí platit $f_0(e) = id$, tudíž $e$ je stabilizátor $x$. 
+    \subsubsection*{Inverzní prvek}
+    Pokud $f_0(g)(x) = x$, pak $f_0(g^{-1})(x) = f_0^{-1}(g)(x) = x$.
+
+    \subsection*{b)}
+    Nechť $h = \begin{pmatrix}
+        1 & 2 \\
+        0 & 2
+    \end{pmatrix}$.
+    \subsubsection*{Stabilizátor translace}
+    Hledáme množinu matic $g$ takových, že $trans_g(h) = h \Leftrightarrow  g\cdot h = h$. 
+    \begin{align*}
+        \begin{pmatrix}
+            a & b \\
+            c & d
+        \end{pmatrix} \cdot h &= 
+        \begin{pmatrix}
+            a & 2a+2b \\
+            c & 2c+2d
+        \end{pmatrix} = h \\
+        a &= 1 \\
+        c &= 0 \\
+        2a+2b &= 2 \implies b = 0 \\
+        2c+2d &= 2 \implies d = 1,
+    \end{align*}
+    z čehož vyplývá, že stabilizátorem $h$ při translaci je množina 
+    \begin{align*}
+        \left\{
+            \begin{pmatrix}
+                1 & 0 \\
+                0 & 1
+            \end{pmatrix}
+        \right\}.
+    \end{align*}
+    \subsubsection*{Orbita transpozice}
+    Matice náležící orbitě $h$ při transpozici jsou regulární matice vyjádřitelné jako 
+    \begin{align*}
+        \begin{pmatrix}
+            a & b \\
+            c & d \\
+        \end{pmatrix} 
+        \cdot h =
+        \begin{pmatrix}
+            a & 2a+2b \\
+            c & 2c+2d
+        \end{pmatrix}.
+    \end{align*}
+    Když vezmeme matice tohoto tvaru pro všechna $a,b,c,d \in \mathbb{Z}_3$, zjistíme, že dostáváme celou $GL_2(\mathbb{Z}_3)$.
+\end{document}
