@@ -1,0 +1,140 @@
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    src: url('Roboto-Regular.ttf');
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+td, th {
+    border: 1px solid gray;
+    padding: 10px;
+    height: max-content;
+}
+
+td.name {
+    width: 100%;
+}
+
+td.amount p {
+    display: inline;
+}
+
+td.amount p[hidden] {
+    display: none;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+section {
+    width: 70%;
+    margin: auto;
+}
+
+table.striped tbody tr:nth-child(2n+1) {
+    background-color: #f2f2f2;
+}
+
+.item:first-child button.up {
+    display: none;
+}
+
+button {
+    padding: 10px 10px;
+    border-radius: 5px;
+    box-shadow: none;
+    border: none;
+}
+
+td.amount input {
+    display: block;
+    width: 70%;
+}
+
+.edit-buttons, .confirm-buttons {
+    column-count: 2;
+    column-gap: 0;
+}
+
+#error {
+    background: red;
+    border-radius: 25px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+#error:empty {
+    display: none;
+}
+
+.up-column {
+    position: relative;
+    padding: 0;
+}
+
+.up-placeholder {
+    visibility: hidden;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.up {
+    height: 2em;
+    position: absolute;
+    top: -1em;
+    left: 5px;
+    vertical-align: text-top;
+    padding: 0 10px;
+}
+
+#add-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#add-form-input {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+input {
+    height: 1.5em;
+}
+
+#submit-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.yellow {
+    background-color: hsl(54, 100%, 57%);
+}
+
+.red {
+    background-color: hsl(348, 86%, 61%);
+}
+
+.green {
+    background-color: hsl(141, 53%, 53%);
+}
+
+.blue {
+    background-color: hsl(204, 71%, 53%);
+}
+
+@media screen and (max-width: 800px) {
+    section {
+        width: 100%;
+        margin: 0;
+    }
+
+    button {
+        font-size: 110%;
+    }
+}
