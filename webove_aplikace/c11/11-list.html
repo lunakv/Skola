@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+    <title>JavaScript example</title>
+    <script>
+        var employees = [
+            "Philip Fry",
+            "Turanga Leela",
+            "Bender ",
+            "Amy Wong",
+            "Hermes Conrad",
+            "Professor Farnsworth",
+            "Doctor John Zoidberg",
+            "Lord Nibbler",
+            "Zapp Brannigan"
+        ];
+    </script>
+</head>
+<body>
+
+
+<h1>Employees</h1>
+<ul id="content">
+</ul>
+
+<h1>Random link</h1>
+<p><a href="https://github.com/tkohout/OSTRAJava">Ostrajava</a></p>
+
+<h1>Delivery plan</h1>
+
+<table id="plan-table" style="border-spacing:0px; border-collapse:collapse;">
+    <tr><td>Plan: ___________________</td><td>Package: ___________________</td><td>From: ___________________</td><td>To: ___________________</td></tr>
+</table>
+
+<script>
+    var ul = document.getElementById('content');
+
+    for (var i = 0; i < employees.length; i++) {
+        var node = document.createElement('li');
+        node.innerHTML = employees[i];
+        ul.appendChild(node);    
+    }
+
+    var headings = document.getElementsByTagName('h1');
+    for (var i = 0; i < headings.length; i++) {
+        headings[i].innerText = (i+1) + '. ' + headings[i].innerText;
+    }
+
+    var plan = document.getElementById('plan-table');
+    var tr = plan.getElementsByTagName('tr')[0];
+    for (var i = 0; i < 5; i++)
+    {
+        plan.appendChild(tr.cloneNode(true));
+    }
+
+</script>
+
+</body>
+</html>
