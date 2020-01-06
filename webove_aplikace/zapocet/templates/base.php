@@ -19,7 +19,7 @@
                     <td class="name"><?= $row['name']?></td>
                     <td class="amount">
                         <p class="amount-label"><?= $row['amount']?></p>
-                        <input type="hidden" class="amount-input">
+                        <input type="hidden" class="amount-input" min="1">
                     </td>     
                     <td class="up-column">
                         <button class="blue up" value="<?= $row['name']?>">&#8645;</button>
@@ -51,7 +51,7 @@
             </div>
             <div id="amount-container">
                 <label>Amount:</label><br>
-                <input type="number" name="amount" required>
+                <input type="number" name="amount" required min="1">
             </div>
         </fieldset>
         <div id="submit-container">

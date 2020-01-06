@@ -24,7 +24,7 @@ else if ($_GET['action'] == 'add')
     } else {
         // 303 redirect to prevent resubmitting form
         $db->close();
-        header("Location: " . $_SERVER['PATH_INFO'], true);
+        header("Location: " . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), true);
         http_response_code(303);
         exit;
     }
@@ -72,6 +72,8 @@ function addItem($db)
         error(400, "No amount specified");
     if (!is_numeric($_POST['amount']))
         error(400, "Item amount is not a number");
+    if ($_POST['amount'] <= 0)
+        error(400, "Item amount must be positive");
     
     $db->add($_POST['name'], $_POST['amount']);
 	return [ "status" => "added", "name" => $_POST['name'], "amount" => $_POST['amount'] ];
@@ -96,6 +98,8 @@ function editItem($db)
         error(400, "No amount specified");
     if (!is_numeric($_POST['amount']))
         error(400, "Item amount is not a number");
+    if ($_POST['amount'] <= 0)
+        error(400, "Item amount must be positive");
     
     $db->update($_POST['name'], $_POST['amount']);
     return [ "status" => "updated", "name" => $_POST['name'], "amount" => $_POST['amount'] ]; 
