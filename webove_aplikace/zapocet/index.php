@@ -15,7 +15,8 @@ else if ($_GET['action'] == 'add')
     try {
         addItem($db);
     } catch (Exception $e) {
-        $error = $e->getMessage();
+        $error = $e->message;
+        http_response_code($e->code ? $e->code : 500);
     }
 
     if ($error !== null) {
@@ -67,13 +68,13 @@ function api()
 function addItem($db)
 {
     if (!isset($_POST['name']))
-        error(400, "No name specified");
+        throw new Exception("No name specified.", 400);
     if (!isset($_POST['amount']))
-        error(400, "No amount specified");
+        throw new Exception("No amount specified.", 400);
     if (!is_numeric($_POST['amount']))
-        error(400, "Item amount is not a number");
+        throw new Exception("Item amount is not a number.", 400);
     if ($_POST['amount'] <= 0)
-        error(400, "Item amount must be positive");
+        throw new Exception("Item amount must be positive", 400);
     
     $db->add($_POST['name'], $_POST['amount']);
 	return [ "status" => "added", "name" => $_POST['name'], "amount" => $_POST['amount'] ];
