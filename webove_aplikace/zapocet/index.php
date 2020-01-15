@@ -15,8 +15,8 @@ else if ($_GET['action'] == 'add')
     try {
         addItem($db);
     } catch (Exception $e) {
-        $error = $e->message;
-        http_response_code($e->code ? $e->code : 500);
+        $error = $e->getMessage();
+        http_response_code($e->getCode() ? $e->getCode() : 500);
     }
 
     if ($error !== null) {
