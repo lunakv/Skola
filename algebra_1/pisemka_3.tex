@@ -1,0 +1,97 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{scrlayer-scrpage}
+
+\cohead[Algebra I]{}
+\lohead[Třetí písemka]{}
+\rohead[Václav Luňák]{}
+\pagestyle{plain.scrheadings}
+
+\DeclareMathOperator{\Z}{\mathbb{Z}}
+
+\begin{document}
+    \section*{Cvičení č. 1}
+    \subsection*{a)}
+    Nechť je $M$ spočetná množina. Pokud je $M$ konečná a $\vert M \vert = n$, mějme bijekci $h:\Z_n \rightarrow M$, jinak mějme bijekci $h: \Z \rightarrow M$. Operaci $\oplus$ zadefinujeme tak, že 
+    \begin{align*}
+        \forall a,b \in M: h(a)\oplus h(b)=h(a+b).
+    \end{align*}
+    Snadno ověříme, že $(M,\oplus,h(0))$ je monoid:
+    \begin{itemize}
+        \item $(h(a)\oplus h(b))\oplus h(c) = h(a+b+c) = h(a) \oplus (h(b)\oplus h(c))$
+        \item $h(a) + h(0) = h(a+0) = h(a) = h(0) + h(a)$,
+    \end{itemize}
+    kde využíváme toho, že $(\Z,+,0)$ a $(\Z_n,+,0)$ jsou monoidy a $h$ je bijekce. \textit{(Stejný argument se dá použít i pro množiny s kardinalitou rovnou $\mathbb{R}$.)}
+
+    \subsection*{b)}
+    Podgrupa je normální, pokud přežije konjugaci s prvky grupy. Konjugace permutace nezmění její strukturu, pouze přejmenuje prvky. Množina $\{id,(123),(132)\}$ je tedy příklad netriviální normální podgrupy $\mathbb{S}_3$.
+
+    \subsection*{c)}
+    Z Lagrangeovy věty pro $H < G$ platí $p = \vert G\vert = [G:H] \cdot \vert H\vert$. Když je $p$ prvočíslo, musí platit $\vert H\vert = 1$ nebo $\vert H\vert = p$. Jediné podgrupy jsou tedy ty triviální.
+    \subsection*{d)}
+    \begin{align*}
+        2015 &= 5\cdot 13\cdot 31 & 2035 &= 5\cdot 11\cdot 37 \\
+        \varphi(2015) &= 4\cdot 12\cdot 30 = 1440 & \varphi(2035) &= 4\cdot 10\cdot 36 = 1440
+    \end{align*}
+    Protože víme, že Eulerova funkce odpovídá počtu generátorů cyklické grupy, vidíme, že cyklická grupa řádu 2035 má $\varphi(2015)$ generátorů.
+    \subsection*{e)}
+    Uvažujme $h$ isomorfismus ($\vert \Z_6 \vert = \vert \mathbb{S}_3 \vert)$. Nechť $h(m) = (12)$ a $h(n) = (13)$. 
+    \begin{align*}
+        h(m+m) = (12)(12) = id \implies m+m = 0 &\implies m = 3\\
+        h(n+n) = (13)(13) = id \implies n+n = 0 &\implies n = 3,
+    \end{align*}
+    čímž dostáváme spor s tím, že $h$ je zobrazení.
+    \subsection*{f)}
+    Z přednášky víme, že velikost tělesa musí být mocninou prvočísla. $10 = 2 \cdot 5$. Spor.
+
+    \section*{Cvičení č. 2}
+    Nechť je $c$ počet použitých barev a $X$ množina všech obarvení odznáčku. $\vert X \vert = c^{12}$. Grupa $G$ všech pootočení  odznáčku má 12 prvků. Uvažujme přirozenou akci $G$ na $X$. Pro každý $g \in G$ určíme počet jím nezměněných prvků $X$.
+    \begin{description}
+        \item[0] Všech $c^{12}$ obarvení je nezměněno.
+        \item[1,5,7,11] Nezměněné prvky jsou ty obarvené celé jednou barvou. Těch je $c$.
+        \item[2,10] Sudé a liché prvky musí být každé stejnou barvou. Takových obarvení je $c^2$.
+        \item[3,9] Obdobně jako v předchozím případě je nezměněných $c^3$ obarvení. 
+        \item[4,8] Stejně jako výše je nezměněných $c^4$ obarvení.
+        \item[6] Protější díly musí mít stejnou barvu. Najdeme $c^6$ nezměněných obarvení.
+    \end{description} 
+
+    Počet rozlišitelných obarvení je roven $\vert X/G\vert = 1/\vert G\vert \cdot \sum_{g \in G} \vert X^g \vert$, kde $X^g$ je množina prvků z $x$ nezměněných akcí $g$.
+    \begin{align*}
+        \vert X/G\vert = \frac{1}{\vert G\vert}\sum_{g \in G} \vert X^g \vert = \frac{1}{12}(c^{12} + c^6 + 2c^4 + 2c^3 + 2c^2 + 4c) &\geq 506 \\
+        c &\geq 3
+    \end{align*}
+
+    Anička bude potřebovat alespoň 3 barvy.
+    \section*{Cvičení č. 3}
+    \subsection*{a)}
+    Z cvičení víme, že obrazem homomorfismu je podgrupa, jejíž řád je dělitelný NSD($p,q$). Pokud $p \neq q$, existuje tedy jediný homomorfismus zobrazující celé $\Z_p$ na nulu.
+
+    Pokud $p = q$, existuje navíc ještě $p-1$ dalších homomorfismů určených obrazem 1 (každý nenulový prvek $\Z_p$ je generátor a homomorfismus je určen zobrazením 1 na generátor).
+    \subsection*{b)}
+    Grupa $\Z_2 \times \Z_3$ je cyklická řádu 6 a generovaná $(1,1)$. Opět víme, že obrazem bude podgrupa řádu dělícím NSD(42,6), tedy 1, 2, 3 nebo 6. Homomorfismus je jednoznačně určen obrazem $(1,1)$. Jelikož $(1,1)$ se musí zobrazit na generátor podgrupy, dostáváme následující homomorfismy:
+    \begin{description}
+        \item[řád 1:] $(1,1) \rightarrow 0$
+        \item[řád 2:] $(1,1) \rightarrow 21$
+        \item[řád 3:] $(1,1) \rightarrow 14$, $(1,1) \rightarrow 28$
+        \item[řád 6:] $(1,1) \rightarrow 7$, $(1,1) \rightarrow 35$   
+    \end{description}
+
+    \section*{Cvičení č. 4}
+    Obraz homomorfismu z $\mathbb{S}_3$ musí mít velikost 1, 2, 3, nebo 6. Triviálně může být obrazem homomorfismu $\{0\}$ a $\mathbb{S}_3$. 
+
+    Jediná grupa velikosti 2 je $\Z_2$. Na $\Z_2$ se můžeme zobrazit například jako 
+    \begin{align*}
+        h((12)) = h((13)) = h((23)) = h(id) = 0 && h((123)) = h((132)) = 1
+    \end{align*}.
+
+    Jediná grupa velikosti 3 je $\Z_3$. Na $\Z_3$ homomorfismus nemůže existovat, protože všechny prvky řádu 2 by musely být zobrazeny na nulu, čímž bychom ovšem dostali spor např.
+    \begin{align*}
+        0 = h((12))\circ h((13)) = h((132)) \neq 0,
+    \end{align*}
+    kde poslední nerovnost musí platit, aby obraz byl řádu 3.
+
+    Grupy velikosti 6 jsou $\Z_6$ a $\mathbb{S}_3$. Neexistenci isomorfismu mezi $\mathbb{S}_3$ a $\Z_6$ jsme ukázali v první úloze. Množiny, které můžou být obrazem $\mathbb{S}_3$, jsou tedy $\{0\}$, $\Z_2$ a $\mathbb{S}_3$.
+\end{document}
