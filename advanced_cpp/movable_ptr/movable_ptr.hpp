@@ -7,8 +7,8 @@ template<typename T> class movable_ptr; // forward declaration
 // Pointers are tracked as a cyclic doubly linked list
 template<typename T>
 class enable_movable_ptr {
-friend class movable_ptr<T>;
 
+friend class movable_ptr<T>;
 private:
     movable_ptr<T> *first;  // first in list of pointers to this item
 
@@ -27,46 +27,48 @@ private:
 
     // reset all movable_ptrs pointing to this object
     void resetMovables() {
-       auto i = first;
-       if (!i) return;
-       // save the reference to next, then reset current. repeat for each node.
-       do {
-           auto next = i->next;
-           i->trg = nullptr;    // we don't use the reset() function for performance reasons
-           i->prev = i;         // it would unnecessarily redirect the temporarily wrong links
-           i->next = i;
-           i = next;
-       } while (i != first);
+        auto i = first;
+        if (!i) return;
+        // save the reference to next, then reset current. repeat for each node.
+        do {
+            auto next = i->next;
+            i->trg = nullptr;    // we don't use the reset() function for performance reasons
+            i->prev = i;         // it would unnecessarily redirect the temporarily wrong links
+            i->next = i;
+            i = next;
+        } while (i != first);
 
-       first = nullptr;
+        first = nullptr;
     }
 
 protected:      // this class isn't intended for direct instantiation
     enable_movable_ptr() noexcept : first(nullptr) {};
-    enable_movable_ptr(const enable_movable_ptr<T> &e) noexcept : first(nullptr) {}
+
+    // pointers aren't interested in copies
+    enable_movable_ptr(const enable_movable_ptr<T> &) noexcept : first(nullptr) {}
+
     enable_movable_ptr(enable_movable_ptr<T> &&e) noexcept {
         redirectToThis(std::move(e));
     }
 
 public:
     // since assignment removes the current object, we reset all pointers to it.
-    enable_movable_ptr<T> & operator =(const enable_movable_ptr<T> &obj) {
+    enable_movable_ptr<T> &operator=(const enable_movable_ptr<T> &obj) {
         if (&obj != this)
             resetMovables();
         return *this;
     }
 
-     enable_movable_ptr<T> & operator =(enable_movable_ptr<T> &&obj) noexcept {
-         if (&obj != this)
+    enable_movable_ptr<T> &operator=(enable_movable_ptr<T> &&obj) noexcept {
+        if (&obj != this)
             resetMovables();
-         redirectToThis(std::move(obj));
-         return *this;
-     }
+        redirectToThis(std::move(obj));
+        return *this;
+    }
 
-     virtual ~enable_movable_ptr() {
-         resetMovables();
-     }
-
+    virtual ~enable_movable_ptr() {
+        resetMovables();
+    }
 };
 
 // Pointer tracking movements of target object
@@ -76,6 +78,7 @@ class movable_ptr {
 friend class enable_movable_ptr<T>; // we assume T inherits from enable_movable_ptr<T>
 private:
     // we track all pointers to the same object as a cyclic doubly linked list.
+    // the list is doubly linked to allow for constant-time removal of pointers
     // if this is the only pointer to an object (or trg == nullptr), prev == next == this.
     movable_ptr<T> *prev;
     movable_ptr<T> *next;
@@ -94,13 +97,14 @@ private:
     }
 
 public:
-    movable_ptr() : trg(nullptr) {
+    movable_ptr() {
+        trg = nullptr;
         prev = next = this;
     }
 
-    explicit movable_ptr(T* ptr) {
+    explicit movable_ptr(T *ptr) {
         prev = next = this;
-        trg = dynamic_cast<enable_movable_ptr<T>*>(ptr);
+        trg = dynamic_cast<enable_movable_ptr<T> *>(ptr);
         registerMovable();
     }
 
@@ -122,12 +126,12 @@ public:
         ptr.reset();
     }
 
-    movable_ptr<T> & operator =(movable_ptr<T> &ptr) {
-        reset(dynamic_cast<T*>(ptr.trg));
+    movable_ptr<T> &operator=(const movable_ptr<T> &ptr) {
+        reset(dynamic_cast<T *>(ptr.trg));
         return *this;
     }
 
-    movable_ptr<T> & operator =(movable_ptr<T> &&ptr) noexcept {
+    movable_ptr<T> &operator=(movable_ptr<T> &&ptr) noexcept {
         if (&ptr != this) {
             reset(dynamic_cast<T *>(ptr.trg));
             ptr.reset();
@@ -143,7 +147,7 @@ public:
 
     void reset() {
         if (trg == nullptr) return;
-
+        // clear trg->first if this is the last pointer to it
         trg->first = (next == this) ? nullptr : next;
         next->prev = prev;
         prev->next = next;
@@ -153,19 +157,21 @@ public:
 
     void reset(T *ptr) {
         reset();
-        trg = dynamic_cast<enable_movable_ptr<T>*>(ptr);
+        trg = dynamic_cast<enable_movable_ptr<T> *>(ptr);
         registerMovable();
     }
 
-    T & operator *() const { return *get(); }
+    /** OPERATORS **/
 
-    T * operator ->() const { return get(); }
+    T &operator*() const { return *get(); }
 
-    bool operator !() const { return !trg; }
+    T *operator->() const { return get(); }
+
+    bool operator!() const { return !trg; }
 
     explicit operator bool() const { return trg != nullptr; }
 
-    bool operator ==(const movable_ptr<T> &other) const {
+    bool operator==(const movable_ptr<T> &other) const {
         return trg == other.trg;
     }
 
@@ -173,16 +179,17 @@ public:
         return !(*this == other);
     }
 
-    bool operator ==(T* ptr) const {
+    bool operator==(T *ptr) const {
         return ptr == trg;
     }
 
-    bool operator !=(T* ptr) const {
+    bool operator!=(T *ptr) const {
         return !(*this == ptr);
     }
 
 };
 
+// create a movable_ptr from object
 template<typename T>
 movable_ptr<T> get_movable(enable_movable_ptr<T> &trg) {
     return movable_ptr<T>(trg);
