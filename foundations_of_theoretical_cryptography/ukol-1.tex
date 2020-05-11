@@ -1,0 +1,45 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+
+\cohead{Foundations of Theoretical Cryptography}
+\lohead{Úkol č. 1}
+\rohead{Václav Luňák}
+
+\DeclareMathOperator{\Prob}{\text{Pr}}
+
+\begin{document}
+    \subsection*{Úloha č. 1}
+    \paragraph{1.}
+    Mějme zprávu $m \in M$ a ciphertext $c \in C$ délky 1. Pro substituční šifru s klíčem $k$ nahlédneme, že
+    \begin{align*}
+        \Prob[E_k(m) = c] = \Prob[k(m) = c] = \frac{1}{n},
+    \end{align*}
+    kde $n$ je velikost abecedy. Šifra tedy pro tyto zprávy splňuje perfect indistinguishability.
+
+    \paragraph{2.}
+    Pro Caesarovu šifru se zprávou délky 1 platí
+    \begin{align*}
+        \Prob[E_k(m) = c] = \Prob[m+k \equiv c] = \Prob[k \equiv c-m] = \frac{1}{n}.
+    \end{align*}
+    Tato šifra tudíž také splňuje p.i. pro tyto zprávy.
+
+    \paragraph{3.} Substituční šifra má časově efektivní šifrovací funkci (vyhledání zprávy v tabulce může být konstantí operace), ovšem generování klíče je jak časově, tak paměťově velice náročné - musí se pro každou zprávu postavit a udržovat v paměti permutace na $2^{1000}$ prvcích.
+
+    Caesarova šifra a one-time pad naproti tomu generují klíče snáze jako náhodné 1000bitové číslo a liší se pouze v (de)šifrovací operaci. Jelikož XOR je jednodušší operace než modulární sčítání, snáze se paralelizuje a umožňuje použít stejnou funkci pro šifrování i dešifrování, one-time pad se zdá být nejlepší volbou schématu. 
+
+    \subsection*{Úloha č. 2}
+    Mějme zprávu $m$, ciphertext $c$, klíč $k$ a šifrovací funkci $E$. Potom pro schéma platí
+    \begingroup
+    \addtolength{\jot}{0.7em}
+    \begin{align*}
+        \Prob[E_k(m) = c] &= \Prob[E_k(M) = c\ \vert\ M = m] \\
+        &= \frac{\Prob[M = m \ |\ E_k(M) = c] \cdot \Prob[E_k(M) = c]}{\Prob[M = m]} & \text{(Bayes)} \\
+        &= \frac{\Prob[M = m] \cdot \Prob[E_k(M) = c]}{\Prob[M = m]} & \text{(Shannon secrecy)} \\
+        &= \Prob[E_k(M) = c].
+    \end{align*}
+    \endgroup
+    Tato hodnota nezávisí na $m$ a je tím pádem shodná pro všechny zprávy, z čehož vyplývá, že schéma splňuje perfect indistinguishability.
+\end{document}

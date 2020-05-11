@@ -1,0 +1,22 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\cohead{Foundations of Theoretical Cryptography}
+\lohead{Úkol č. 2}
+\rohead{Václav Luňák}
+
+\DeclareMathOperator{\Prob}{\text{Pr}}
+\DeclareMathOperator{\A}{\mathbb{A}}
+\begin{document}
+    \subsection*{Úloha č. 1}
+    Mějme $q(n)$ polynomiální horní hranici na délku ciphertextu pro zprávy délky 1. Adversary $\A$ zvolí zprávy $m_0$ délky 1 a $m_1$ délky $q(n) + n$. Pokud má obdržený ciphertext $c$ délku větší než $q(n)$, ví $\A$, že $c = E(m_1)$, jinak hádá náhodně. Pravděpodobnost, že $\A$ uhádne zprávu, potom je
+    \begin{align*}
+        \Prob[b' = b] &= \Prob[b' = b\ \&\ |c| > q(n)] + \Prob[b' = b\ \&\ |c| \leq q(n)] \\
+        &= \Prob[|c| > q(n)] + 1/2 \cdot (1 - \Prob[|c| > q(n)]) \\
+        &= 1/2 + 1/2 \cdot \Prob[|c| > q(n)]
+    \end{align*}
+\end{document}

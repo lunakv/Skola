@@ -1,0 +1,45 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{fontspec}
+
+\setmainfont[Ligatures=TeX]{Linux Libertine O}
+\setsansfont[Ligatures=TeX]{Linux Biolinum O}
+
+\cohead{Foundations of Theoretical Cryptography}
+\lohead{Úkol č. 4}
+\rohead{Václav Luňák}
+
+\DeclareMathOperator{\Prob}{\text{Pr}}
+\DeclareMathOperator{\xor}{\oplus}
+
+\begin{document}
+\subsection*{Úloha č. 2}
+Adversary se nejprve pošle šifrovacímu orákulu zprávu $(0^n||0^n)$. Feistelova síť se třemi rundami vrátí ciphertext
+\begin{align*}
+    E_k(0^n||0^n) &= (a||b), \begin{cases}
+        a = F_2(F_1(0)), \\
+        b = F_1(0) \xor F_3(a).
+    \end{cases} 
+\end{align*} 
+
+Následně se adversary zeptá dešifrovacího orákula na inverz ciphertextu $(a||0^n)$. Pro Feistelovu síť obdrží
+\begin{align*}
+    D_k(a||0^n) &= (c||d), \begin{cases}
+        c = F_3(a) \xor F_1(d), \\
+        d = a \xor F_2(F_3(a)).
+    \end{cases}
+\end{align*}
+
+Všimněme si, že $x := b \xor c = F_1(d) \xor F_1(0)$. Nakonec se adversary dotáže šifrovacího orákula na ciphertext zprávy $(x||d)$.
+\begin{align*}
+    E_k(x||d) &= (e||f), \begin{cases}
+        e = d \xor F_2(x\xor F_1(d)) = d \xor F_2(F_1(0)) = d\xor a, \\
+        f = x \xor F_1(d) \xor F_3(e).
+    \end{cases}
+\end{align*}
+
+Vidíme tedy, že pro Feistelovu síť o třech rundách bude vždy platit $e = d\xor a$. Jelikož pro náhodnou permutaci toto bude platit s pravděpodobností $1/2^n$, máme účinného distinguishera těchto Feistelových sítí, což nám dává spor s tím, že jsou silně pseudonáhodné.
+\end{document}
