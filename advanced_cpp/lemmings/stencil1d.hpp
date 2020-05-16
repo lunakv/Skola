@@ -173,7 +173,7 @@ class circle {
         return i % n;
     }
 public:
-    explicit circle(size_t size) : n(size), data(size) {}
+    explicit circle(size_t size) : data(size), n(size) {}
 
     [[nodiscard]] size_t size() const { return n; }
 
