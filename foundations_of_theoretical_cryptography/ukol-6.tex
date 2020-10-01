@@ -24,9 +24,7 @@
     \begin{align*}
         m'_i \xor F_k(IV+1+i) = c_{i+1} = {m_b}_{(i+1)} \xor F_k(IV+i+1)
     \end{align*}
-    pro $i \in \{1,\dots,l-1\}$. Pokud je naopak $(IV,c)$ ciphertextem $m_1$, stejným argumentem bude prvních $l-1$ bloků $m'$ zaplněno jedničkami.
-
-    Sestrojili jsme tedy adversaryho úspěšného v CCA experimentu s pravděpodobností 1, tudíž CTR mód není CCA-secure.
+    pro $i \in \{1,\dots,l-1\}$. Pokud je naopak $(IV,c)$ ciphertextem $m_1$, stejným argumentem bude prvních $l-1$ bloků $m'$ zaplněno jedničkami. Sestrojili jsme tedy adversaryho úspěšného v CCA experimentu s pravděpodobností 1, tudíž CTR mód není CCA-secure.
 
     \subsection*{OFB mód}
     Mějme zprávy a ciphertext stejně jako v předchozím případě. Po obdržení challenge ciphertextu se dotážeme dešifrovacího orákula na ciphertext $(IV,c')$, kde $c' = c_1c_2\dots c_{l-1}d$ pro nějaké $d \neq c_l$ a obdržíme zprávu $m'$. Jelikož šifrování a dešifrování zprávy v OFB módu můžeme zapsat jako
