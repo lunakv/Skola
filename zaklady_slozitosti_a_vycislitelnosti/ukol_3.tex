@@ -1,0 +1,60 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage{scrlayer-scrpage}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{microtype}
+\usepackage{libertinus}
+
+\cohead[Základy složitosti a vyčíslitelnosti]{}
+\lohead[Úkol č. 3]{}
+\rohead[Václav Luňák]{}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+    \section*{Úloha č. 1}
+    Uvažme jazyk $S' = \{\langle M_1,M_2 \rangle \vert L(M_1) \cap L(M_2) \neq \emptyset \}$. Zjevně $S' \subseteq \bar{S}$. Ze cvičení víme, že $L_{\mathcal{U}} \preceq_m S'$. Jelikož $L_{\mathcal{U}}$ není rozhodnutelný, není ani $S'$ rozhodnutelný, tudíž nemůže být rozhodnutelný ani $\bar{S}$ jakožto nadmnožina $S'$. Z uzavřenosti rozhodnutelných jazyků na doplněk potom nemůže být rozhodnutelný ani $S$.
+
+    Ukážeme částečnou rozhodnutelnost $\bar{S}$. Nejprve si uvědomme, že $\bar{S} \setminus S'$ obsahuje právě řetězce, které nejsou validním kódem pro dvojici Turingových strojů, protože každá dvojice TS patří buď do $S$, nebo do $S'$. Jelikož ověření, zda řetězec kóduje dvojici TS, je rozhodnutelná podmínka, dostáváme $\bar{S} \preceq_m S'$. Dále tedy budeme předpokládat pouze validní kódy dvojic TS a ukážeme, že $S' \preceq_m NE$, kde $NE = \{\langle M\rangle \vert L(M) \neq \emptyset\}$.
+
+    Pro danou dvojici $\langle M_1, M_2\rangle$ sestrojíme Turingův stroj $M'$. Stroj $M'$ pro vstup $y$ spustí nejprve $M_1$ a poté $M_2$ se vstupem $y$ (potažmo oba paralelně). Pokud oba skončí a přijmou, $M'$ přijme. V opačném případě $M'$ odmítne (případně se zacyklí, pokud se zacyklí alespoň jeden z dvojice). Vidíme, že $M'$ přijme právě ty vstupy, které přijímá jak $M_1$, tak $M_2$, čili $L(M') = L(M_1) \cap L(M_2)$. Jazyk $L(M')$ je tedy speciálně neprázdný právě tehdy, když je neprázdný průnik $L(M_1) \cap L(M_2)$, neboli $\langle M_1, M_2\rangle \in S' \Leftrightarrow L(M') \in NE$.
+
+    Převodní funkce z $S'$ do $NE$ tedy bude mít tvar
+    \begin{align*}
+        f(\langle M_1, M_2\rangle) = \langle M'\rangle,
+    \end{align*}
+    což je algoritmicky vyčíslitelná funkce definovaná na všech řetězcích kódujících dvojice TS. Provedli jsme tedy převod $S'$ na $NE$ a z tranzitivity $m$-převoditelnosti tak ukázali, že $\bar{S} \preceq_m NE$. Protože z přednášky víme, že $NE$ je částečně rozhodnutelný, je i $\bar{S}$ částečně rozhodnutelný.
+
+    Jelikož $\bar{S}$ je částečně rozhodnutelný, $S$ nemůže být částečně rozhodnutelný, protože potom by z Postovy věty byl i rozhodnutelný, což by byl spor s předchozím důkazem.
+
+    \section*{Úloha č. 2}
+    \subsection*{a) $L_{\mathcal{U}} \preceq_m S$}
+    Mějme dvojici $\langle M,x\rangle$. Vytvoříme pro ni Turingův stroj $M'$, který bude pro vstup $y$ pracovat následujícím způsobem
+    \begin{enumerate}
+        \item Pokud $y = 10$, přijmi.
+        \item Jinak simuluj $M(x)$.
+        \item Pokud $M(x)$ přijme, přijmi.
+        \item Jinak odmítni.
+    \end{enumerate}
+
+    Vidíme, že pokud $M$ přijímá $x$, $L(M') = \Sigma^*$, což je jazyk uzavřený na otočení. Pokud naopak $M$ nepřijímá $x$ (tedy $M$ odmítá $x$ nebo se na něm zacyklí), $L(M') = \{10\}$, což není jazyk uzavřený na otočení. Dostáváme tak
+    \begin{align*}
+        \langle M,x\rangle \in L_{\mathcal{U}} \Leftrightarrow M(x)\,\text{přijme} \Leftrightarrow L(M')\,\text{je uzavřený na otočení} \Leftrightarrow \langle M'\rangle \in S,
+    \end{align*}
+    čímž jsme dokončili převod $L_{\mathcal{U}}$ na $S$ (algoritmicky vyčíslitelnou funkcí $f(\langle M,x\rangle) = \langle M'\rangle$).
+
+    \subsection*{b) $L_{\mathcal{U}} \preceq_m \bar{S}$}
+    Mějme dvojici $\langle M,x\rangle$. Vytvoříme pro ni Turingův stroj $M''$, který bude pro vstup $y$ pracovat následujícím způsobem
+    \begin{enumerate}
+        \item Simuluj $M(x)$.
+        \item Pokud $M(x)$ přijme \emph{a zároveň} $y = 10$, přijmi.
+        \item Jinak odmítni.
+    \end{enumerate}
+    
+    Vidíme, že pokud $M$ přijímá $x$, $L(M'') = \{10\}$. Pokud $M(x)$ odmítne nebo se zacyklí, $L(M'') = \emptyset$. Prázdný jazyk splňuje podmínku $S$, tedy pro nepřijímající $M(x)$ platí $\langle M'' \rangle \in S$. Naopak jazyk \{10\} podmínku $S$ nesplňuje, tudíž pro přijímající $M(x)$ platí $\langle M'' \rangle \notin S$. Dostáváme tedy
+    \begin{align*}
+        \langle M,x\rangle \in L_{\mathcal{U}} \Leftrightarrow M(x)\,\text{přijme} \Leftrightarrow L(M'')\,\text{nesplňuje podmínku}\,S \Leftrightarrow \langle M'' \rangle \notin S \Leftrightarrow \langle M'' \rangle \in \bar{S},
+    \end{align*}
+    čímž jsme dokončili převod z $L_{\mathcal{U}}$ na $\bar{S}$.
+\end{document}
