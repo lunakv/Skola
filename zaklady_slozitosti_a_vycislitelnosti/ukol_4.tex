@@ -1,0 +1,57 @@
+\documentclass{scrartcl}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{libertinus}
+\usepackage{bm}
+\usepackage{microtype}
+\usepackage{scrlayer-scrpage}
+
+\cohead[Základy složitosti a vyčíslitelnosti]{}
+\lohead[Úkol č. 4]{}
+\rohead[Václav Luňák]{}
+\pagestyle{plain.scrheadings}
+
+\DeclareMathOperator{\tm}{\text{TIME}}
+\DeclareMathOperator{\s}{\text{SPACE}}
+\DeclareMathOperator{\ntm}{\text{NTIME}}
+\DeclareMathOperator{\ns}{\text{NSPACE}}
+
+\begin{document}
+    \begin{enumerate}
+        \item $\s(n)\,?\,\tm(2^{\log^3 n})$. Žádný známý vztah nelze pro tento případ použít. Speciálně nemůžeme použít důsledek 1.3, jelikož $n \notin o(\log^3 n)$.
+        \item $\tm(2^{\log^3 n}) \supset \ns(\log^2 n)$. 
+        \begin{align*}
+            \ns(\log^2 n) \subseteq \tm(2^{(\log n)^{5/2}}) \subset \tm(2^{\log^3 n}), 
+        \end{align*}
+        kde první inkluze plyne z důsledku 1.3 ($\log^2 n \in o((\log n)^{5/2}))$ a druhá z věty 1.6, jelikož $2^{\log^{5/2} n} \in o(2^{\log^3 n}/\log^{5/2} n)$.
+        \item $\ns(\log^2 n) \subset \ntm(2^{\log^3 n})$. 
+        \begin{align*}
+            \ns(\log^2 n) \subset \tm(2^{\log^3 n}) \subseteq \ntm(2^{\log^3 n}).
+        \end{align*}
+        Předchozí příklad nám dává první inkluzi a druhá plyne z věty 1.1($ii$).
+        \item $\ntm(2^{\log^3 n}) \subset \ntm(2^{n\log n})$ dostáváme z věty o nedeterministické časové hierarchii.
+        \item $\ntm(2^{n\log n}) \supset \s(n)$.
+        \begin{align*}
+            \s(n) \subseteq \ns(n) \subseteq \tm(2^{n\log^{1/2} n}) \subset \tm(2^{n\log n}). 
+        \end{align*}
+        První inkluze plyne z věty 1.1($iii$), druhá z důsledku 1.3 a poslední z věty 1.6.
+        \item $\s(n) \supset \ns(\log^2 n)$.
+        \begin{align*}
+            \ns(\log^2 n) \subseteq \s(\log^4 n) \subset \s(n),
+        \end{align*}
+        kde první inkluze plyne ze Savičovy věty a druhá z věty 1.5 ($\log^4 n \in o(n)$).
+        \item $\tm(2^{\log^3 n}) \subseteq \ntm(2^{\log^3 n})$. Plyne přímo z věty 1.1($ii$).
+        \item $\ns(\log^2 n) \subset \ntm(2^{n\log n})$.
+        \begin{align*}
+            \ns(\log^2 n) \subseteq \tm(2^{\log^3 n}) \subset \tm(2^{n\log n}) \subseteq \ntm(2^{n\log n}),
+        \end{align*}
+        což jsme získali použitím důsledku 1.3, věty 1.6 a věty 1.1($ii$).
+        \item $\ntm(2^{\log^3 n})\, ?\, \s(n)$. Žádný známý vztah nelze použít, jelikož $2^{\log^3 n} \notin o(n)$, ale zároveň $2^n \notin o(2^{\log^3 n}/n)$.
+        \item $\ntm(2^{n\log n}) \supset \tm(2^{\log^3 n})$.
+        \begin{align*}
+            \tm(2^{\log^3 n}) \subseteq \ntm(2^{\log^3 n}) \subset \ntm(2^{n\log n}),
+        \end{align*}
+        přičemž první inkluze vyplývá z věty 1.1($ii$) a druhou jsme ukázali ve čtvrtém příkladu.
+    \end{enumerate}
+\end{document}
+
