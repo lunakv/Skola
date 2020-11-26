@@ -594,3 +594,5 @@ ASALocalRun/
 # Haskell build files
 *.hi
 *.o
+dist/
+dist-newstyle/

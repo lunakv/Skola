@@ -5,7 +5,8 @@ import Data.Char (isAlpha)
 main :: IO ()
 main = do
   input <- getContents
-  putStrLn . (++ "%") . show $ 100 * vowelCount input `div` alphaCount input
+  let percent = 100 * (vowelCount input) `div` (alphaCount input)
+  putStrLn $ show percent ++ "%"
 
 alphaCount :: String -> Int
 alphaCount = length . filter isAlpha
