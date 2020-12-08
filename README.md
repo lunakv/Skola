@@ -20,6 +20,7 @@ Notes and homework from my studies.
     * Programování v C++ - domácí úkoly a poznámky ze cvičení
     * Algebra I - domácí úkoly
     * Webové aplikace - domácí úkoly a poznámky ze cvičení
+  * III. ročník - LS
     * Pokročilé programování v C++ - domácí úkoly
     * Základy teoretické kryptografie - domácí úkoly
 - Magisterské studium
