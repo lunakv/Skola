@@ -1,0 +1,35 @@
+\documentclass{scrartcl}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{libertinus}
+\usepackage{microtype}
+\usepackage{scrlayer-scrpage}
+
+\cohead[Základy složitosti a vyčíslitelnosti]{}
+\lohead[Úkol č. 5]{}
+\rohead[Václav Luňák]{}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+\section*{Úloha č. 1}
+\subsection*{Problém patří do NP}
+Nalézt všechny orientované cykly v grafu dokážeme v polynomiálním čase. Cyklus v orientovaném grafu uzavírají právě zpětné hrany v DFS. Každý orientovaný cyklus je přitom jednoznačně určen zpětnou hranou, která ho uzavírá. Množinu cyklů grafu tak můžeme zjistit spuštěním DFS, detekcí zpětných hran a vypsání všech vrcholů ohraničených každou zpětnou hranou.
+
+K ověření pokrytí nám stačí postupně projít všechny nalezené cykly a ověřit, že v každém existuje alespoň jeden vrchol z nalezené množiny. Jelikož toto ověření i naše modifikované DFS dokážeme provést v polynomiálním čase, jsme schopni sestrojit polynomiální verifikátor problému pokrytí orientovaných cyklů, který tedy náleží do NP.
+
+\subsection*{Převod z \textsc{Vrcholového pokrytí}}
+Mějme graf $G=(V,E)$ a $k \geq 0$ z instance problému vrcholového pokrytí. Sestrojíme z~$G$ orientovaný graf, kde každou hranu nahradíme orientovanými hranami v obou směrech. Formálně vytvoříme graf $G'=(V,E')$, kde $E'=\bigcup_{\{u,v\}\in E}\ \{(u,v),(v,u)\}$. Dvojice $(G', k)$ je instancí problému pokrytí orientovaných cyklů. Tento převod jsme schopni provést polynomiálně.
+
+Můžeme vidět, že každá hrana v $G$ tvoří orientovaný cyklus délky 2 v $G'$. Pokud tedy v $G'$ existuje množina $S \subseteq V$ velikosti nejvýš $k$ obsahující vrchol z každého orientovaného cyklu $G'$, musí speciálně obsahovat vrchol z každého z těchto dvojcyklů, tedy vrchol z každé hrany $G$. $S$ je tedy zároveň vrcholovým pokrytím $G$ velikosti nejvýš $k$.
+
+Pokud naopak $G'$ nemá pokrytí orientovaných cyklů velikosti nejvýš $k$, existuje pro každou $S \subseteq V,\,\vert S\vert \leq k$ orientovaný cyklus $C$ v $G'$, který neobsahuje žádný vrchol z $S$. Vezmeme-li si libovolnou hranu z $C$, tato hrana je součástí právě jednoho dvojcyklu. Z definice $C$ nepatří žádný vrchol tohoto dvojcyklu do $S$. Jelikož každý dvojcyklus v $G'$ odpovídá  hraně v $G$, existuje hrana v $G$, která má prázdný průnik s $S$, což tím pádem nemůže být vrcholové pokrytí $G$. V grafu $G$ tak neexistuje žádné vrcholové pokrytí velikosti nejvýše $k$.
+
+Ukázali jsme polynomiální algoritmus, který ekvivalentně převádí instance problému vrcholového pokrytí na instance problému pokrytí orientovaných cyklů. Protože ze cvičení víme, že problém vrcholového pokrytí je NP-úplný a dokázali jsme, že problém pokrytí orientovaných cyklů náleží NP, je i tento problém NP-úplný.
+
+\section*{Úloha č. 2}
+\subsection*{\textsc{Loupežníci \rightarrow Batoh}}
+Mějme množinu $A$ a seznam asociovaných cen $s$. Vytvoříme instanci problému batohu s $A$, kde váhy i ceny $a \in A$ jsou rovny $s(a)$ a zvolíme $B = K = \left(\sum_{a \in A} s(a)\right)/2$. Tato instance problému batohu se ptá na existenci podmnožiny $A' \subseteq A$ takové, že $\sum_{a\in A'} s(a) \leq B$ a zároveň $\sum_{a\in A'}s(a) \geq K$, což nám dohromady dává podmínku $\sum_{a\in A'} s(a) = \left(\sum_{a \in A} s(a)\right)/2$. Tato podmínka je ekvivalentní podmínce pro problém loupežníků na $(A,s)$, čímž jsme dokončili převod. Sečtení všech cen jsme schopni v polynomiálním čase, celý převod je tedy polynomiální. Zbývá si uvědomit, že pokud je součet všech cen v $A$ lichý, $B$ a $K$ nejsou přirozená čísla, ovšem v takovém případě nemůže mít problém loupežníků řešení, tudíž instanci můžeme rovnou zamítnout.
+
+\subsection*{\textsc{Loupežníci \rightarrow Rozvrhování}}
+Vytvoříme instanci se dvěma procesory, množinou úloh $\mathcal{U} = A$, časovací funkcí $d = s$ a~omezením $D = \left(\sum_{a\in A} s(a)\right)/2$. Jelikož máme pouze dva procesory, z Dirichletova principu musí alespoň jedna podmnožina mít součet časů alespoň $D$. Aby tak byla instance splnitelná, musí existovat dvě podmnožiny takové, že součet časů v každé z nich je přesně roven $D$. Tato podmínka je ekvivalentní podmínce v problému loupežníků. Pokud $D$ není přirozené číslo, můžeme stejně jako v předchozím případě instanci zamítnout.
+\end{document}
