@@ -1,0 +1,61 @@
+\documentclass{scrartcl}
+\usepackage[czech]{babel}
+\usepackage{amsmath}
+\usepackage{libertine}
+\usepackage{microtype}
+\usepackage{scrlayer-scrpage}
+
+\cohead[Základy složitosti a vyčíslitelnosti]{}
+\lohead[Úkol č. 6]{}
+\rohead[Václav Luňák]{}
+\pagestyle{plain.scrheadings}
+
+\begin{document}
+\section*{Úloha č. 1}
+Mějme formuli $\varphi$ v KNF. Nechť $a$ je libovolná proměnná vyskytující se v zápisu $\varphi$. Nejprve z $\varphi$ vytvoříme formuli $\psi$ předpokladem, že $a$ je ohodnoceno 1 (tj. odstraníme z~$\varphi$ všechny klauzule obsahující term $a$ a ze zbývajících klauzulí odebereme všechny výskyty termu $\neg a$). Obdobně vytvoříme formuli $\rho$ předpokladem, že $a$ je ohodnoceno 0.
+
+Následně zjistíme hodnotu \texttt{sat($\psi$)}. Pokud je $\psi$ splnitelná, existuje ohodnocení $\varphi$, ve kterém je $a$ ohodnoceno 1. V opačném případě zjistíme hodnotu \texttt{sat($\rho$)}. Pokud je $\rho$ splnitelná, existuje ohodnocení $\varphi$, ve kterém je $a$ ohodnoceno 0. Pokud $\psi$ ani $\rho$ nejsou splnitelné, $\varphi$ nemá žádné splňující ohodnocení.
+
+Pokud je alespoň jedna z dvojice $(\rho, \psi)$ splnitelná, použijeme ji jako výchozí formuli a proces opakujeme. V následujících iteracích už přitom víme, že jedna z dvojice nových formulí bude vždy splnitelná, protože opak by znamenal nesplnitelnost výchozí formule, ovšem v takovém případě by algoritmus skončil již v předchozí iteraci.
+
+Postupným iterováním se tak musíme dostat do stavu, kdy výchozí formulí je prázdná konjunkce (každá iterace ostře snižuje počet proměnných). V takovém případě jsme schopni určit splňující ohodnocení $\varphi$ induktivně podle toho, kterou z dvojice upravených formulí jsme v každé iteraci algoritmu zvolili. Proměnné ve $\varphi$, přes které jsme při dosažení prázdné konjunkce dosud neiterovali, přitom mohou být ohodnoceny libovolně.
+
+Protože počet iterací je menší nebo roven počtu proměnných ve $\varphi$ (který je polynomiální) a každá iterace trvá lineární čas vzhledem k velikosti formule (která je také polynomiální), operuje tento algoritmus v polynomiálním čase.
+
+\section*{Úloha č. 2}
+\subsection*{Převodní algoritmus}
+Nejprve převedeme danou instanci \textsc{3-SAT} na instanci $\varphi$ problému \textsc{NAE-SAT} pomocí postupu ze cvičení. Pro instanci \textsc{Dělení množiny} zvolíme množinu $S = L \cup \{x, \neg x, y\}$, kde $L$ je množina všech literálů vyskytujících se ve $\varphi$ a $x, y$ jsou libovolné proměnné nevyskytující se ve $\varphi$. Jako kolekci podmnožin $S$ zvolíme $\mathcal{C} = \mathcal{C}_1 \cup \mathcal{C}_2 \cup \{x, \neg x, y\}$, přičemž 
+\begin{align*}
+    \mathcal{C}_1 &= \{\{a, b, c\}\,\vert\,(a\lor b\lor c)\text{ je klauzule ve }\varphi\} \\
+    \mathcal{C}_2 &= \{\{a,\neg a,x\},\{a,\neg a, \neg x\},\{a, \neg a, y\}\,\vert\, a \in L \land\neg a \in L\}.
+\end{align*}
+
+\subsection*{Důkaz správnosti}
+Nejprve si uvědomme, že takto vytvořená instance problému \textsc{Dělení množiny} je korektně definovaná. $S$ je dobře definovaná množina, protože $\varphi$ obsahuje pouze konečné množství literálů. Z definic $\mathcal{C}_1$ a $\mathcal{C}_2$ vidíme, že jsou to soubory podmnožin $S$, tudíž je souborem podmnožin $S$ i $\mathcal{C}$. Zbývá nám tedy dokázat ekvisplnitelnost obou instancí.
+
+Budeme-li předpokládat, že existuje splňující NAE ohodnocení $\varphi$, nalezneme dělení $S$ tak, že $S_1$ budou tvořit $x$ a $y$ spolu s pravdivě ohodnocenými literály a $S_2$ budou tvořit nepravdivé literály a $\neg x$. Že $S_1$ a $S_2$ tvoří disjunktní rozklad $S$ je zřejmé. Neprázdný průnik s množinami z~$\mathcal{C}_1$ je dán tím, že se jedná o NAE ohodnocení, a neprázdný průnik s množinami z $\mathcal{C}_2$ plyne z faktu, že $a$ a $\neg a$ musí být ohodnoceny různě. Každá množina z $\mathcal{C}$ tak má neprázdný průnik s těmito $S_1$ i $S_2$, tudíž instance \textsc{Dělení množiny} má řešení.
+
+Nyní předpokládejme, že existuje splňující rozklad $S$ na $S_1$ a $S_2$. Ukážeme, že když literály obsažené v $S_1$ ohodnotíme jako pravdivé a literály obsažené v $S_2$ jako nepravdivé, dostaneme splňující NAE ohodnocení $\varphi$. To vyplývá přímo z toho, že $S_1$ i $S_2$ mají neprázdný průnik se všemi množinami z $\mathcal{C}_1$, tudíž každá klauzule $\varphi$ obsahuje kladně i záporně ohodnocený literál. Potřebujeme ještě ověřit, že se jedná o dobře definované ohodnocení.
+
+Aby takto vytvořené ohodnocení nebylo dobře definované, musely by se pro nějakou proměnnou $a$ z $\varphi$ v jedné z množin rozkladu nacházet jak $a$, tak $\neg a$. To však není možné. Budeme-li bez újmy na obecnosti předpokládat, že $\{a, \neg a\} \subseteq S_1$, musí platit $\{x, \neg x, y\} \subseteq S_2$, aby množiny z $\mathcal{C}_2$ měly s~$S_2$ neprázdný průnik. Toto je však spor s $\{x, \neg x, y\} \cap S_1 \neq \emptyset$, tudíž \{$S_1$, $S_2$\} není splňujícím rozkladem $S$.
+
+\subsection*{Důkaz NP-úplnosti}
+Máme-li rozklad množiny $S$ na $S_1$ a $S_2$ a kolekci jejích podmnožin, dokážeme postupným projitím této kolekce snadno polynomiálně zjistit, zda mají tyto podmnožiny neprázdný průnik s $S_1$ i $S_2$. Problém \textsc{Dělení množiny} tedy náleží NP.
+
+Zároveň jsme provedli převod z \textsc{3-SAT} na \textsc{Dělení množiny}. Protože je počet literálů ve $\varphi$ a tudíž i počet klauzulí ve $\varphi$ polynomiální, jsme schopni tento převod vykonat v polynomiálním čase. Protože \textsc{3-SAT} je NP-těžký, je i \textsc{Dělení množiny} NP-těžké, a z předchozího tedy i NP-úplné.
+
+\section*{Úloha č. 3}
+Je snadno vidět, že \textsc{Poloviční klika} $\in$ NP. Dostaneme-li ke grafu množinu vrcholů, dokážeme v kvadratickém čase ověřit, že tyto vrcholy tvoří kliku (a triviálně ověříme, zda velikost množiny je alespoň $n/2$), což nám stačí jako polynomiální verifikátor problému. 
+
+NP-úplnost ukážeme převodem \textsc{Klika} $\rightarrow$ \textsc{Poloviční klika}. Pro instanci problému \textsc{Klika} $(G = (V,E), k)$ uvažme $n = \left\lceil \frac{\vert V\vert}{2}\right\rceil$. Můžeme rozlišit tři případy.
+
+Pokud $k = n$, oba problémy jsou ekvivalentní a graf není potřeba modifikovat. Jako důkaz si stačí uvědomit, že graf $G$ obsahuje kliku velikosti alespoň $\frac{\vert V\vert}{2}$ právě tehdy, když obsahuje kliku velikosti alespoň $n$.
+
+Pokud $k > n$, přidáme do grafu $2(k - n)$ izolovaných vrcholů. Izolované vrcholy nemohou změnit velikost maximální kliky a jejich přidáním jsme problém převedli na předchozí případ. Takto upravený graf totiž obsahuje $\vert V\vert + 2(k-n)$ vrcholů, tudíž instance bude hledat kliku velikosti alespoň $\left\lceil\frac{\vert V\vert}{2}\right\rceil + k - n = n + k - n = k$.
+
+Pokud $k < n$, vytvoříme graf $G' = (V', E')$ tak, že přidáme do $G$ kliku $K$ velikosti $2(n - k)$ a všechny vrcholy této kliky propojíme se všemi vrcholy původního grafu. Velikost $V'$ je rovna $\vert V\vert + 2(n - k)$. Instance problému \textsc{Poloviční klika} nad $G'$ tedy bude hledat kliku velikosti alespoň $\frac{\vert V\vert}{2} + n - k$, což je z předchozího ekvivalentní hledání kliky velikosti alespoň $n' = n + n - k = 2n - k$.
+
+Každá maximální klika v $G'$ musí obsahovat všechny vrcholy z $K$. Kdyby existovala maximální klika, která by některý z těchto vrcholů neobsahovala, mohli bychom ji o tento vrchol rozšířit (vrcholy $K$ jsou propojeny s celým grafem), což by byl spor s její maximalitou.
+
+V $G'$ tedy existuje maximální klika $M'$ velikosti $m \geq n'$ právě tehdy, když v $G$ existuje maximální klika $M$ velikosti $m - 2(n - k) \geq n' - 2(n - k) = 2n - k - 2(n - k) = k$, kde převod mezi $M$ a $M'$ zajistíme přidáním, respektive odebráním vrcholů $K$.
+\end{document}
