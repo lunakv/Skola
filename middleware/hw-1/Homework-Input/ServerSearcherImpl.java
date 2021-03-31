@@ -1,10 +1,10 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class RemoteSearcherImpl extends UnicastRemoteObject implements Searcher {
+public class ServerSearcherImpl extends UnicastRemoteObject implements Searcher {
     private static final Searcher searcherImpl = new SearcherImpl();
 
-    protected RemoteSearcherImpl() throws RemoteException { }
+    protected ServerSearcherImpl() throws RemoteException { }
 
     @Override
     public int getDistance(Node from, Node to) throws RemoteException {

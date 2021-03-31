@@ -4,8 +4,8 @@ import java.rmi.RemoteException;
 
 public class Server {
     public static void main(String[] args) throws RemoteException, MalformedURLException {
-        RemoteSearcherImpl searcher = new RemoteSearcherImpl();
-        RemoteNodeFactoryImpl factory = new RemoteNodeFactoryImpl();
+        Searcher searcher = new ServerSearcherImpl();
+        NodeFactory factory = new ServerNodeFactoryImpl();
         Naming.rebind("//localhost/RemoteSearcher", searcher);
         Naming.rebind("//localhost/RemoteNodeFactory", factory);
     }

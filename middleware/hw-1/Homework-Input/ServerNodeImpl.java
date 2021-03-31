@@ -3,9 +3,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 import java.util.Set;
 
-public class RemoteNodeImpl extends UnicastRemoteObject implements Node {
+public class ServerNodeImpl extends UnicastRemoteObject implements Node {
     private final NodeImpl nodeImpl = new NodeImpl();
-    protected RemoteNodeImpl() throws RemoteException {}
+    protected ServerNodeImpl() throws RemoteException {}
 
     @Override
     public Set<Node> getNeighbors() {

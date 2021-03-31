@@ -1,0 +1,30 @@
+\documentclass{scrartcl}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage[english]{babel}
+
+\begin{document}
+    \section*{Tasks}
+    \subsection*{1) Local measurement}
+    The measurements for this section were run using graphs with 1000 nodes with density ranging from $1\%$ to $100\%$ of possible edges added. Note that overlaps aren't checked when adding edges to the graph, so a graph generated with $100\%$ of possible edges may not necessarily be a full graph.
+    % obrázek
+    % vysvětlení
+    \subsection*{2) Remoter Searcher}
+    \subsubsection*{Question} \
+    The first time the remote serializer is passed a Node object as a parameter, That object needs to be serialized and sent over the network to the server. Because the node includes references to its neighbors, those also have to be serialized, as well as their neighbors and so on. The result is that all nodes reachable from the passed node are sent at once during the start of the search. The serializer then accesses those local copies during its search.
+
+    \subsubsection*{Measurements}
+    The measurements for this section were run using the same parameters as the previous task.
+    % obrázek
+    \subsection*{3) Remote Nodes}
+    \subsubsection*{Question}
+    When a remote factory creates a new node, it passes a stub to the local caller. When the local searcher then calls methods of that node, they are proxied to the remote instance. Accessing neighbors of a node then also returns the corresponding stubs. This means that there isn't a big serialized object sent at the beginning of the search, but every call to get neighbors of a node results in a separate network request.
+
+    \subsubsection*{Measurements}
+    \subsection*{4) Remote Nodes and Searcher}
+    \subsubsection*{Question}
+    As in the previous task, the local process only receives stubs of the created nodes. When it then passes those nodes to the remote searcher, only a reference to those stubs is sent. The searcher then matches them with the corresponding remote object and all searching forward is done purely using server-side objects without any need for network communication. The only data sent to the server (once all nodes are created) is therefore the stubs of the original start and destination node.
+
+
+
+\end{document}
