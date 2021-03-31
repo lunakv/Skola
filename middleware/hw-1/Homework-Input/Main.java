@@ -5,25 +5,22 @@ import java.rmi.RemoteException;
 import java.util.Random;
 
 public class Main {
-	// How many nodes and how many edges to create.
-	private static int GRAPH_NODES;
-	private static int GRAPH_EDGES;
 
 	// How many searches to perform
 	private static final int SEARCHES = 50;
 
-	private static final Random random = new Random();
+	private static Random random = new Random();
 
 	/**
 	 * Creates nodes of a graph.
 	 * 
 	 * @param howMany number of nodes
 	 */
-	public static Node[] createNodes(int howMany) {
+	public static Node[] createNodes(int howMany, NodeFactory factory) throws RemoteException {
 		Node[] nodes = new Node[howMany];
 
 		for (int i = 0; i < howMany; i++) {
-			nodes[i] = new NodeImpl();
+			nodes[i] = factory.createNode();
 		}
 
 		return nodes;
@@ -32,7 +29,7 @@ public class Main {
 	/**
 	 * Creates a fully connected graph.
 	 */
-	public static void connectAllNodes(Node[] nodes) {
+	public static void connectAllNodes(Node[] nodes) throws RemoteException {
 		for (int idxFrom = 0; idxFrom < nodes.length; idxFrom++) {
 			for (int idxTo = idxFrom + 1; idxTo < nodes.length; idxTo++) {
 				nodes[idxFrom].addNeighbor(nodes[idxTo]);
@@ -46,7 +43,7 @@ public class Main {
 	 * 
 	 * @param howMany number of edges
 	 */
-	public static void connectSomeNodes(int howMany, Node[] nodes) {
+	public static void connectSomeNodes(int howMany, Node[] nodes) throws RemoteException {
 		for (int i = 0; i < howMany; i++) {
 			final int idxFrom = random.nextInt(nodes.length);
 			final int idxTo = random.nextInt(nodes.length);
@@ -103,20 +100,45 @@ public class Main {
 			System.out.println("Number of nodes and edges expected as arguments");
 			return;
 		}
-		GRAPH_NODES = Integer.parseInt(args[0]);
-		GRAPH_EDGES = Integer.parseInt(args[1]);
+		// How many nodes and how many edges to create.
+		int GRAPH_NODES = Integer.parseInt(args[0]);
+		int GRAPH_EDGES = Integer.parseInt(args[1]);
 		Searcher local = new SearcherImpl();
 		Searcher remote = null;
+		NodeFactory localNF = new NodeFactoryImpl();
+		NodeFactory remoteNF = null;
+		int mode = 0;
 
 		for (int i = 2; i < args.length; i++) {
 			if (args[i].equals("remote-searcher")) {
 				remote = (Searcher) Naming.lookup("//localhost/RemoteSearcher");
 			}
+			else if (args[i].equals("remote-nodes")) {
+				remoteNF = (NodeFactory) Naming.lookup("//localhost/RemoteNodeFactory");
+				mode = 2;
+			}
+			else if (args[i].equals("both-nodes")) {
+				remoteNF = (NodeFactory) Naming.lookup("//localhost/RemoteNodeFactory");
+				mode = 1;
+			}
 
 		}
 
-		Node[] nodes = createNodes(GRAPH_NODES);
-		connectSomeNodes(GRAPH_EDGES, nodes);
-		searchBenchmark(SEARCHES, nodes, local, remote);
+		int seed = random.nextInt();
+		if (mode <= 1) {
+			random = new Random(seed);
+			Node[] nodes = createNodes(GRAPH_NODES, localNF);
+			connectSomeNodes(GRAPH_EDGES, nodes);
+			searchBenchmark(SEARCHES, nodes, local, remote);
+		}
+		if (mode == 1) {
+			System.out.println();
+		}
+		if (mode >= 1) {
+			random = new Random(seed);
+			Node[] nodes = createNodes(GRAPH_NODES, remoteNF);
+			connectSomeNodes(GRAPH_EDGES, nodes);
+			searchBenchmark(SEARCHES, nodes, local, remote);
+		}
 	}
 }
