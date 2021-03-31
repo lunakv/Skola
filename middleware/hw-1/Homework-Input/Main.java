@@ -108,17 +108,20 @@ public class Main {
 		NodeFactory localNF = new NodeFactoryImpl();
 		NodeFactory remoteNF = null;
 		int mode = 0;
-
+		String ip = "localhost";
 		for (int i = 2; i < args.length; i++) {
+			if (args[i].startsWith("ip=")) {
+				ip = args[i].split("=")[1];
+			}
 			if (args[i].equals("remote-searcher")) {
-				remote = (Searcher) Naming.lookup("//localhost/RemoteSearcher");
+				remote = (Searcher) Naming.lookup("//"+ip+"/RemoteSearcher");
 			}
 			else if (args[i].equals("remote-nodes")) {
-				remoteNF = (NodeFactory) Naming.lookup("//localhost/RemoteNodeFactory");
+				remoteNF = (NodeFactory) Naming.lookup("//"+ip+"/RemoteNodeFactory");
 				mode = 2;
 			}
 			else if (args[i].equals("both-nodes")) {
-				remoteNF = (NodeFactory) Naming.lookup("//localhost/RemoteNodeFactory");
+				remoteNF = (NodeFactory) Naming.lookup("//"+ip+"/RemoteNodeFactory");
 				mode = 1;
 			}
 
