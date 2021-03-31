@@ -1,4 +1,4 @@
 #!/bin/sh
 
 CLASSPATH=.
-java -Djava.rmi.server.hostname=localhost Server "$@"
+java -Xss10m -Djava.rmi.server.hostname=localhost Server "$@"

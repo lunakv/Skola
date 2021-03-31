@@ -1,7 +1,7 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface Searcher {
+public interface Searcher extends Remote {
 	/**
 	 * Value returned from getDistance when there is no path between the two nodes.
 	 */

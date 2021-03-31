@@ -1,4 +1,4 @@
 #!/bin/sh
 
 export CLASSPATH=.
-java Main "$@"
+java -Xss10m Main "$@"
