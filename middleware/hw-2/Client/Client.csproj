@@ -6,6 +6,10 @@
         <Nullable>disable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <NoWarn>1701;1702;0114</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
       <PackageReference Include="ApacheThrift" Version="0.14.1" />
     </ItemGroup>
