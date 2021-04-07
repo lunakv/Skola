@@ -50,6 +50,11 @@ namespace Client
             {
                 AddItemC(result.ItemC, report);
             }
+            // UPDATE: Add reporting support for ItemD
+            if (result.__isset.itemD)
+            {
+                AddItemD(result.ItemD, report);
+            }
         }
 
         private void AddItemA(ItemA result, Dictionary<string, THashSet<string>> report)
@@ -79,8 +84,19 @@ namespace Client
         {
             if (result.__isset.fieldA)
             {
-                AddField("fieldA", result.FieldA.ToString(), report);
+                // server expects "true" and not "True"
+                AddField("fieldA", result.FieldA.ToString().ToLower(), report);
             }
+        }
+
+        private void AddItemD(ItemD result, Dictionary<string, THashSet<string>> report)
+        {
+            AddField("fieldA", result.FieldA.ToString(), report);
+            if (result.__isset.fieldB)
+            {
+                AddField("fieldB", result.FieldB?.Select(x => x.ToString().ToLower()), report);
+            }
+            AddField("fieldC", result.FieldC, report);
         }
 
         private void AddField(string key, string value, Dictionary<string, THashSet<string>> report)

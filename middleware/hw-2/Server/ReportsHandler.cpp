@@ -1,4 +1,5 @@
 #include "ReportsHandler.h"
+#include <iostream>
 
 /* string utility functions */
 template<class T>
@@ -10,6 +11,9 @@ std::string toString(const std::string& str) {
 }
 std::string toString(short val) {
     return std::to_string(int(val));
+}
+std::string toString(bool val) {
+    return val ? "true" : "false";
 }
 template<class T>
 std::string stringify(const T& val) {
@@ -35,9 +39,9 @@ Report ReportsHandler::generateReport(const std::vector<Item>& results) const {
     for (const Item& item : results) {
         if (item.__isset.itemA) {
             const ItemA& a(item.itemA);
-            addField("fieldA", std::to_string(a.fieldA), report);
+            addField("fieldA", toString(a.fieldA), report);
             addField("fieldB", stringify(a.fieldB), report);
-            addField("fieldC", std::to_string(a.fieldC), report);
+            addField("fieldC", toString(a.fieldC), report);
         } else if (item.__isset.itemB) {
             const ItemB& b(item.itemB);
             addField("fieldA", b.fieldA, report);
@@ -45,7 +49,14 @@ Report ReportsHandler::generateReport(const std::vector<Item>& results) const {
             if (b.__isset.fieldC)
                 addField("fieldC", stringify(b.fieldC), report);
         } else if (item.__isset.itemC) {
-            addField("fieldA", std::to_string(item.itemC.fieldA), report);
+            addField("fieldA", toString(item.itemC.fieldA), report);
+        } else if (item.__isset.itemD) {
+            // UPDATE: add report generation for ItemD
+            const ItemD& d(item.itemD);
+            addField("fieldA", toString(d.fieldA), report);
+            if (d.__isset.fieldB)
+                addField("fieldB", stringify(d.fieldB), report);
+            addField("fieldC", d.fieldC, report);
         }
     }
     return report;

@@ -8,18 +8,23 @@ vector<string> splitQuery(const string& query) {
     istringstream iss(query);
     string item;
     while (getline(iss, item, ',')) {
-        if (item == "ItemA" || item == "ItemB" || item == "ItemC") {
+        // UPDATE: allow ItemD as a query type
+        if (item == "ItemA" || item == "ItemB" || item == "ItemC" || item == "ItemD") {
             ret.push_back(item);
         } else {
-            auto ex = ProtocolException();
-            ex.message = "Invalid type in query: " + item;
-            throw ex;
+            return vector<string>();
         }
     }
     return ret;
 }
 
 void SearchHandler::generateResults(int32_t count) {
+    if (!queryTypes.size()) {
+        // invalid query type encountered. return empty result
+        queryResults = vector<Item>();
+        return;
+    }
+
     for (size_t i = 0; i < count; ++i) {
         std::string &type = queryTypes.at(i % queryTypes.size());
         Item item = Item();
@@ -29,6 +34,9 @@ void SearchHandler::generateResults(int32_t count) {
             item.__set_itemB(AddItemB());
         } else if (type == "ItemC") {
             item.__set_itemC(AddItemC());
+        } else if (type == "ItemD") {
+            // UPDATE: add ItemD result generation
+            item.__set_itemD(AddItemD());
         }
         queryResults.emplace_back(item);
     }
@@ -49,16 +57,17 @@ ItemA SearchHandler::AddItemA() {
 
 ItemB SearchHandler::AddItemB() {
     ItemB itemB;
-    itemB.__set_fieldA("itemBfieldAstring");
+    itemB.__set_fieldA("itemBfieldAstring_"+ std::to_string(rand.getRandom<short>()));
     std::set<std::string> fieldB;
-    fieldB.insert("itemBfieldBfirstString");
-    fieldB.insert("itemBfieldBsecondString");
+    size_t count = rand.getRandom(1, 10);
+    for (size_t i = 0; i < count; ++i)
+        fieldB.insert("itemBfieldBstring_"+std::to_string(rand.getRandom<short>()));
     itemB.__set_fieldB(fieldB);
     if (rand.getRandom(0, 1)) {
         std::vector<std::string> fieldC;
-        itemB.fieldC.emplace_back("itemBfieldCstring");
-        itemB.fieldC.emplace_back("itemBfieldCstring2");
-        itemB.fieldC.emplace_back("itemBfieldCstring3");
+        count = rand.getRandom(1, 10);
+        for (size_t i = 0; i < count; ++i)
+            itemB.fieldC.emplace_back("itemBfieldCstring_"+std::to_string(rand.getRandom<short>()));
         itemB.__set_fieldC(fieldC);
     }
     return itemB;
@@ -70,14 +79,30 @@ ItemC SearchHandler::AddItemC() {
     return itemC;
 }
 
+ItemD SearchHandler::AddItemD() {
+    ItemD itemD;
+    itemD.__set_fieldA(rand.getRandom<int32_t>());
+    if (rand.getRandom(0, 2)) {
+        vector<bool> fieldB;
+        size_t count = rand.getRandom(1, 10);
+        for (size_t i = 0; i < count; ++i)
+            fieldB.emplace_back(static_cast<bool>(rand.getRandom(0,1)));
+        itemD.__set_fieldB(fieldB);
+    }
+    itemD.__set_fieldC("itemDFieldC_" + to_string(rand.getRandom<short>()));
+    return itemD;
+}
+
 void SearchHandler::search(SearchState& _return, const std::string& query, const int32_t limit) {
     loginHandler->loginGuard();
     queryTypes = splitQuery(query);
-    int32_t count = std::min(limit, 20);
+    int32_t count = std::min(limit, 50);
     generateResults(count);
 
     _return.__set_countEstimate(count);
     _return.__set_fetchedItems(0);
+    // UPDATE: notify client about support for ITEMLIST
+    _return.__set_itemListSupported(true);
     searchInProgress = true;
 }
 
@@ -96,6 +121,7 @@ void SearchHandler::fetch(FetchResult& _return, const SearchState& state) {
         return;
     }
 
+    // end fetch cycle if all items were returned
     if (state.fetchedItems >= queryResults.size()) {
         _return.__set_state(FetchState::ENDED);
         _return.__set_nextSearchState(state);
@@ -103,10 +129,22 @@ void SearchHandler::fetch(FetchResult& _return, const SearchState& state) {
         return;
     }
 
+
     int32_t i = state.fetchedItems;
-    _return.__set_state(FetchState::ITEMS);
-    _return.__set_item(queryResults[i]);
+    // UPDATE: sometimes send ITEMLIST if supported by client
+    if (state.__isset.itemListSupported && state.itemListSupported && !rand.getRandom(0, 5)) {
+        vector<Item> itemList;
+        size_t end = i + rand.getRandom<size_t>(1, queryResults.size() - i);
+        for (; i < end; ++i)
+            itemList.push_back(queryResults[i]);
+        _return.__set_itemList(itemList);
+        _return.__set_state(FetchState::ITEMLIST);
+    } else {
+        _return.__set_item(queryResults[i++]);
+        _return.__set_state(FetchState::ITEMS);
+    }
+
     SearchState newState(state);
-    newState.__set_fetchedItems(i+1);
+    newState.__set_fetchedItems(i);
     _return.__set_nextSearchState(newState);
 }

@@ -44,7 +44,7 @@ namespace Client
         {
             var config = new Config();
             ParseArgs(args, config);
-            ValidateQuery(config.Query);
+            // ValidateQuery(config.Query);
 			
 			if (config.Debug) {
 				Console.WriteLine("Config:");
@@ -65,8 +65,12 @@ namespace Client
             }
 
 			Console.WriteLine("Sending query...");
-            var searchService = new SearchService(protocol);
-            SearchState initial = await searchService.SearchAsync(config.Query, 10, token);
+            var searchService = new SearchService(protocol, config);
+            SearchState initial = await searchService.SearchAsync(config.Query, config.Limit, token);
+            if (config.Debug)
+            {
+                Console.WriteLine($"Initial search state obtained. Estimated result count: {initial.CountEstimate}");
+            }
 			Console.WriteLine("Fetching query results...");
             List<Item> results = await searchService.FetchAllAsync(initial, token);
             if (config.Debug)
@@ -101,12 +105,13 @@ namespace Client
                 throw new ArgumentException("Query not specified.");
             }
             
-            string[] validTypes = {nameof(ItemA), nameof(ItemB), nameof(ItemC)};
+            // UPDATE: added ItemD to query validation
+            string[] validTypes = {nameof(ItemA), nameof(ItemB), nameof(ItemC), nameof(ItemD)};
             foreach (string type in query.Split(','))
             {
                 if (validTypes.All(x => x != type))
                 {
-                    throw new ArgumentOutOfRangeException($"Type \"{type}\" is not valid in search query.");
+                    throw new ArgumentException($"Type \"{type}\" is not valid in search query.");
                 }
             }
         }
@@ -136,6 +141,17 @@ namespace Client
                         else
                         {
                             throw new ArgumentException($"Key must be a number. Entered {args[i]}.");
+                        }
+                        break;
+                    case "--limit":
+                    case "-n":
+                        if (int.TryParse(args[++i], out int lim))
+                        {
+                            config.Limit = lim;
+                        }
+                        else
+                        {
+                            throw new ArgumentException($"Limit must be a number. Entered {args[i]}.");
                         }
                         break;
                     case "--host":
@@ -182,10 +198,12 @@ QUERY SPECIFICATION:
     ItemA
     ItemB
     ItemC
+    ItemD
 
 OPTIONS:
   -l, --login <name>     specify login name (default: lunakv-mw2-client)
   -k, --key <pwd>        specify login key (default: 0)
+  -n, --limit <num>      max. number of results to request (default: 10)
   -h, --host <hostname>  hostname to connect to (deafult: localhost)
   -p, --port <port>      port to connect to (default: 5000)
   -d, --debug            print additional debugging info

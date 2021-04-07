@@ -18,6 +18,7 @@ class SearchHandler : public SearchIf {
     ItemA AddItemA();
     ItemB AddItemB();
     ItemC AddItemC();
+    ItemD AddItemD();
 
 public:
     explicit SearchHandler(std::shared_ptr<LoginHandler> loginHandler):

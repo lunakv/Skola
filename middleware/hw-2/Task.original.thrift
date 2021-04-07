@@ -25,7 +25,6 @@ service Login{
 }
 
 // 3 types of items that the application works with
-// UPDATE: 4* types of items
 struct ItemA{
   1: required i16 fieldA
   2: required list<i16> fieldB
@@ -42,20 +41,12 @@ struct ItemC{
   1: bool fieldA
 }
 
-// UPDATE: Added 4th item type
-struct ItemD{
-  1: i32 fieldA
-  2: optional list<bool> fieldB
-  3: string fieldC
-}
-  
-
 // A type which can contain any of the item types
 union Item{
   1: ItemA itemA
   2: ItemB itemB
   3: ItemC itemC
-  4: ItemD itemD
+  // TODO: add another type of item
 }
 
 // State of fetching results of a search
@@ -67,8 +58,6 @@ enum FetchState{
     ITEMS = 2
     // All items were fetched
     ENDED = 3
-	// UPDATE: multiple items at once possible
-	ITEMLIST = 4
 }
 
 // Represents a state of a search
@@ -77,8 +66,6 @@ struct SearchState{
     1: i32 countEstimate
     // Number of items fetched so far
     2: i32 fetchedItems
-	// UPDATE: notify of ITEMLIST capability
-	3: optional bool itemListSupported
 }
 
 // Result of a call to fetch
@@ -89,8 +76,6 @@ struct FetchResult{
     2: optional Item item
     // SearchState that should be passed to next call of fetch
     3: SearchState nextSearchState
-	// UPDATE: If state is ITEMLIST, contains multiple items sent at once
-	4: optional list<Item> itemList
 }
 
 // Type of a report
@@ -109,6 +94,7 @@ service Search{
 
     // Fetches a part of the search result.
     // state is the result returned from search, or from the previous call to fetch
+    // TODO: modify SearchState and FetchResult so that it can return multiple items at once
     // Throws ProtocolException if no search was performed, or if the index does not match the number 
     FetchResult fetch(1: required SearchState state) throws (1: ProtocolException protocolException);
 }
