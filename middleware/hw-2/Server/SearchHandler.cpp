@@ -12,21 +12,17 @@ vector<string> splitQuery(const string& query) {
         if (item == "ItemA" || item == "ItemB" || item == "ItemC" || item == "ItemD") {
             ret.push_back(item);
         } else {
-            return vector<string>();
+            ProtocolException ex;
+            ex.__set_message("Unsupported query item: " + item);
+            throw ex;
         }
     }
     return ret;
 }
 
-void SearchHandler::generateResults(int32_t count) {
-    if (!queryTypes.size()) {
-        // invalid query type encountered. return empty result
-        queryResults = vector<Item>();
-        return;
-    }
-
+void SearchHandler::generateResults(int32_t count, const vector<string>& queryTypes) {
     for (size_t i = 0; i < count; ++i) {
-        std::string &type = queryTypes.at(i % queryTypes.size());
+        const std::string &type = queryTypes.at(i % queryTypes.size());
         Item item = Item();
         if (type == "ItemA") {
             item.__set_itemA(AddItemA());
@@ -95,27 +91,37 @@ ItemD SearchHandler::AddItemD() {
 
 void SearchHandler::search(SearchState& _return, const std::string& query, const int32_t limit) {
     loginHandler->loginGuard();
-    queryTypes = splitQuery(query);
+    if (limit <= 0) {
+        ProtocolException ex;
+        ex.__set_message("Limit must be positive.");
+        throw ex;
+    }
+    vector<string> queryTypes = splitQuery(query);
     int32_t count = std::min(limit, 50);
-    generateResults(count);
+    generateResults(count, queryTypes);
 
     _return.__set_countEstimate(count);
     _return.__set_fetchedItems(0);
     // UPDATE: notify client about support for ITEMLIST
     _return.__set_itemListSupported(true);
-    searchInProgress = true;
+    searchIndex = 0;
 }
 
 void SearchHandler::fetch(FetchResult& _return, const SearchState& state) {
     loginHandler->loginGuard();
-    if (!searchInProgress) {
+    if (searchIndex == -1) {
         ProtocolException ex;
         ex.__set_message("Cannot call fetch() before search().");
         throw ex;
     }
+    if (searchIndex != state.fetchedItems) {
+        ProtocolException ex;
+        ex.__set_message("Sent state is different from expected value.");:
+        throw ex;
+    }
 
     // simulate long computation
-    if (!rand.getRandom(0, 30)) {
+    if (!rand.getRandom(0, 10)) {
         _return.__set_state(FetchState::PENDING);
         _return.__set_nextSearchState(state);
         return;
@@ -125,7 +131,6 @@ void SearchHandler::fetch(FetchResult& _return, const SearchState& state) {
     if (state.fetchedItems >= queryResults.size()) {
         _return.__set_state(FetchState::ENDED);
         _return.__set_nextSearchState(state);
-        searchInProgress = false;
         return;
     }
 
@@ -147,4 +152,5 @@ void SearchHandler::fetch(FetchResult& _return, const SearchState& state) {
     SearchState newState(state);
     newState.__set_fetchedItems(i);
     _return.__set_nextSearchState(newState);
+    searchIndex = i;
 }

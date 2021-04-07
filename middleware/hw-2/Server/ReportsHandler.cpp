@@ -64,6 +64,11 @@ Report ReportsHandler::generateReport(const std::vector<Item>& results) const {
 
 bool ReportsHandler::saveReport(const Report& report) {
     loginHandler->loginGuard();
+    if (!searchHandler->startedSearch()) {
+        ProtocolException ex;
+        ex.__set_message("Cannot save report before initiating search.");
+        throw ex;
+    }
     Report expected = generateReport(searchHandler->getQueryResults());
     return expected == report;
 }

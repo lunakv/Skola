@@ -10,11 +10,10 @@
 class SearchHandler : public SearchIf {
     std::shared_ptr<LoginHandler> loginHandler;
     std::vector<Item> queryResults;
-    std::vector<std::string> queryTypes;
     RandomGenerator rand;
-    bool searchInProgress;
+    int searchIndex; // -1 if no search was performed
 
-    void generateResults(int32_t count);
+    void generateResults(int32_t count, const std::vector<std::string>& queryTypes);
     ItemA AddItemA();
     ItemB AddItemB();
     ItemC AddItemC();
@@ -22,12 +21,14 @@ class SearchHandler : public SearchIf {
 
 public:
     explicit SearchHandler(std::shared_ptr<LoginHandler> loginHandler):
-        loginHandler(std::move(loginHandler))
+        loginHandler(std::move(loginHandler)), searchIndex(-1)
     {}
 
     void search(SearchState& _return, const std::string& query, const int32_t limit) override;
     void fetch(FetchResult& _return, const SearchState& state) override;
     std::vector<Item> getQueryResults() const { return queryResults; }
+    bool startedSearch() const { return searchIndex != -1; }
+    bool finishedSearch() const { return searchIndex >= queryResults.size(); }
 };
 
 #endif
