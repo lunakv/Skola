@@ -15,12 +15,12 @@ namespace Client
             _client = new Login.Client(multiplex);
         }
 
-        public async Task LogInAsync(string name, int key, CancellationToken cancellationToken)
+        public async Task<int> LogInAsync(string name, int key, CancellationToken cancellationToken)
         {
             try
             {
                 await _client.logInAsync(name, key, cancellationToken);
-                return;
+                return key;
             }
             catch (InvalidKeyException e)
             {
@@ -35,6 +35,7 @@ namespace Client
             }
 
             await _client.logInAsync(name, key, cancellationToken);
+            return key;
         }
 
         public Task LogOutAsync(CancellationToken cancellationToken)
