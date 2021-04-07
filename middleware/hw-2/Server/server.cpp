@@ -62,10 +62,15 @@ public:
     }
 };
 
-int main(){
+int main(int argc, char *argv[]){
+	int port = 5000;
+	if (argv[1]) {
+		port = stoi(argv[1]);
+	}
+
     try{
         // Accept connections on a TCP socket
-        shared_ptr<TServerTransport> serverTransport(new TServerSocket(5000));
+        shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
         // Use buffering
         shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
         // Use a binary protocol to serialize data

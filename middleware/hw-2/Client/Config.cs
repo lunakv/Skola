@@ -3,9 +3,10 @@ namespace Client
     public class Config
     {
         public string Login { get; set; } = "lunakv-mw2-client";
-        public string Query { get; set; } = "ItemA,ItemB";
+        public int Key { get; set; }
+        public string Query { get; set; }
         public string Hostname { get; set; } = "localhost";
         public int Port { get; set; } = 5000;
-        public bool Debug { get; set; } = false;
+        public bool Debug { get; set; }
     }
 }

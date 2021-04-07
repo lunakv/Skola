@@ -15,8 +15,29 @@ namespace Client
     {
         static void Main(string[] args)
         {
-            using var source = new CancellationTokenSource();
-            RunClientAsync(args, source.Token).Wait(source.Token);
+            if (args.Contains("--help") || args.Length == 0) {
+                PrintUsage();
+                return;
+            }
+
+            try
+            {
+                using var source = new CancellationTokenSource();
+                RunClientAsync(args, source.Token).Wait(source.Token);
+            }
+            catch (AggregateException e)
+            {
+                Console.WriteLine("ERROR:");
+                foreach (Exception inner in e.InnerExceptions)
+                {
+                    Console.WriteLine(inner.Message);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR:");
+                Console.WriteLine(e.Message);
+            }
         }
         
         private static async Task RunClientAsync(string[] args, CancellationToken token)
@@ -34,7 +55,7 @@ namespace Client
             using TProtocol protocol = MakeProtocol(config);
 			Console.WriteLine("Logging in...");
             var loginService = new LoginService(protocol);
-            int key = await loginService.LogInAsync(config.Login, 0, token);
+            int key = await loginService.LogInAsync(config.Login, config.Key, token);
             if (config.Debug)
             {
                 Console.WriteLine("Login credentials:");
@@ -75,6 +96,11 @@ namespace Client
         
         private static void ValidateQuery(string query)
         {
+            if (query is null)
+            {
+                throw new ArgumentException("Query not specified.");
+            }
+            
             string[] validTypes = {nameof(ItemA), nameof(ItemB), nameof(ItemC)};
             foreach (string type in query.Split(','))
             {
@@ -101,9 +127,16 @@ namespace Client
                     case "-l":
                         config.Login = args[++i];
                         break;
-                    case "--query":
-                    case "-q":
-                        config.Query = args[++i];
+                    case "--key":
+                    case "-k":
+                        if (int.TryParse(args[++i], out int key))
+                        {
+                            config.Key = key;
+                        }
+                        else
+                        {
+                            throw new ArgumentException($"Key must be a number. Entered {args[i]}.");
+                        }
                         break;
                     case "--host":
                     case "-h":
@@ -121,10 +154,14 @@ namespace Client
                         }
                         break;
                     case "--debug":
+                    case "-d":
                         config.Debug = true;
                         break;
+                    case {} when i == args.Length - 1:
+                        config.Query = args[i];
+                        break;
                     default:
-                        throw new ArgumentException($"Unrecognized argument: {args[i]}");
+                        throw new ArgumentException($"Unrecognized option: {args[i]}");
                 }
             }
         }
@@ -133,6 +170,26 @@ namespace Client
         {
             Console.WriteLine(JsonSerializer.Serialize(value,
                 new JsonSerializerOptions {WriteIndented = true, IgnoreNullValues = true}));
+        }
+
+        private static void PrintUsage() {
+            Console.WriteLine(
+@"Usage: run-client [options] {query}
+QUERY SPECIFICATION:
+  {query} is a comma-separated list of item types.
+  Types in query can repeat.
+  Supported item types:
+    ItemA
+    ItemB
+    ItemC
+
+OPTIONS:
+  -l, --login <name>     specify login name (default: lunakv-mw2-client)
+  -k, --key <pwd>        specify login key (default: 0)
+  -h, --host <hostname>  hostname to connect to (deafult: localhost)
+  -p, --port <port>      port to connect to (default: 5000)
+  -d, --debug            print additional debugging info
+  --help                 display this help and exit");
         }
     }
 }
