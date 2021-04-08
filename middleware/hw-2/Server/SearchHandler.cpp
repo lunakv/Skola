@@ -97,7 +97,7 @@ void SearchHandler::search(SearchState& _return, const string& query, const int3
         throw ex;
     }
     vector<string> queryTypes = splitQuery(query);
-    int32_t count = min(limit, 50);
+    int32_t count = rand.getRandom(min(limit, 10), min(limit, 100));
     generateResults(count, queryTypes);
 
     _return.__set_countEstimate(count);

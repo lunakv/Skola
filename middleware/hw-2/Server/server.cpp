@@ -1,8 +1,6 @@
 // Standard library headers
 #include <memory>
 #include <iostream>
-#include <string>
-#include <sstream>
 #include <mutex>
 
 // Thrift headers
@@ -16,9 +14,8 @@
 #include <thrift/processor/TMultiplexedProcessor.h>
 #include <thrift/TProcessor.h>
 #include <thrift/Thrift.h>
-#include <random>
-#include <utility>
 
+// Service handler headers
 #include "LoginHandler.h"
 #include "SearchHandler.h"
 #include "ReportsHandler.h"

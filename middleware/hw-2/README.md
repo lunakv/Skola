@@ -24,6 +24,6 @@ The thrift interface was extended in the following ways:
 - The `FetchResult` struct introduced a new optional field `itemList`
 - The `SearchState` struct was extended with an optional bool `itemListSupported`
 
-If the server supports returning multiple items, it will set the `itemListSupported` value of the initial `SearchState`. If the client also supports it, it will pass that value on during calls to `fetch`. When the server receives a `fetch` call with a set `itemListSupported` value, it can safely set the `FetchState` to `ITEMLIST` and return a list of results in the `itemList` field.
+If the server supports returning multiple items in an `itemList`, it will set the `itemListSupported` value of the initial `SearchState`. If the client also supports it, it will pass that value on during calls to `fetch`. When the server receives a `fetch` call with a set `itemListSupported` value, it can safely set the `FetchState` to `ITEMLIST` and return a list of results in the `itemList` field.
 
 Changes that are related to the interface update are marked in code with comments containing the word "UPDATE".

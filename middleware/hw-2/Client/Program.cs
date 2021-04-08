@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Thrift;
 using Thrift.Protocol;
 using Thrift.Transport;
 using Thrift.Transport.Client;
@@ -30,10 +31,20 @@ namespace Client
                 Console.WriteLine("ERROR:");
                 foreach (Exception inner in e.InnerExceptions)
                 {
-                    Console.WriteLine(inner.Message);
+                    // print overridden Message props on thrift exceptions, rethrow others
+                    if (inner is ProtocolException pe)
+                        Console.WriteLine(pe.Message);
+                    else if (inner is InvalidKeyException ke)
+                        Console.WriteLine(ke.Message);
+                    else if (inner is TException te)
+                        Console.WriteLine(te.Message);
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
-            catch (Exception e)
+            catch (TException e)
             {
                 Console.WriteLine("ERROR:");
                 Console.WriteLine(e.Message);
@@ -44,7 +55,7 @@ namespace Client
         {
             var config = new Config();
             ParseArgs(args, config);
-            // ValidateQuery(config.Query);
+            ValidateQuery(config.Query);
 			
 			if (config.Debug) {
 				Console.WriteLine("Config:");

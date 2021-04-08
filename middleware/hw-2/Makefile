@@ -29,5 +29,5 @@ run-server: thriftserver
 
 clean:
 	@echo Removing all generated files...
-	-@rm -rf $(CLIENT_GEN) run-client $(CLIENT_ROOT)/bin $(SERVER_GEN) run-server
+	-@rm -rf $(CLIENT_GEN) $(SERVER_GEN) run-client run-server $(addprefix $(CLIENT_ROOT)/,bin obj)
 .PHONY: clean
