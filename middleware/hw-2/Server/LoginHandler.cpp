@@ -1,6 +1,8 @@
 #include "LoginHandler.h"
 
-int32_t LoginHandler::getKey(const std::string& username) const {
+using namespace std;
+
+int32_t LoginHandler::getKey(const string& username) const {
     int32_t key{};
     for (char i : username) {
         key += int32_t(i);
@@ -17,7 +19,7 @@ void LoginHandler::loginGuard() const {
     }
 }
 
-void LoginHandler::logIn(const std::string& username, const int32_t key) {
+void LoginHandler::logIn(const string& username, const int32_t key) {
     if (loggedIn) {
         ProtocolException ex;
         ex.__set_message("Connection already logged in.");

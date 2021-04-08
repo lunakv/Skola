@@ -1,23 +1,24 @@
 #include "ReportsHandler.h"
-#include <iostream>
+
+using namespace std;
 
 /* string utility functions */
 template<class T>
-std::string toString(const T& val) {
-    return std::to_string(val);
+string toString(const T& val) {
+    return to_string(val);
 }
-std::string toString(const std::string& str) {
+string toString(const string& str) {
     return str;
 }
-std::string toString(short val) {
-    return std::to_string(int(val));
+string toString(short val) {
+    return to_string(int(val));
 }
-std::string toString(bool val) {
+string toString(bool val) {
     return val ? "true" : "false";
 }
 template<class T>
-std::string stringify(const T& val) {
-    std::string s;
+string stringify(const T& val) {
+    string s;
     for (const auto& i : val) {
         if (!s.empty())
             s += ",";
@@ -27,14 +28,14 @@ std::string stringify(const T& val) {
 }
 /* string utility functions */
 
-void ReportsHandler::addField(const std::string& key, const std::string& field, Report& report) const {
+void ReportsHandler::addField(const string& key, const string& field, Report& report) const {
     if (!report.count(key)) {
-        report.emplace(key, std::set<std::string>());
+        report.emplace(key, set<string>());
     }
     report[key].insert(field);
 }
 
-Report ReportsHandler::generateReport(const std::vector<Item>& results) const {
+Report ReportsHandler::generateReport(const vector<Item>& results) const {
     Report report;
     for (const Item& item : results) {
         if (item.__isset.itemA) {

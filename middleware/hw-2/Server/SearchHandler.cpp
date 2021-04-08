@@ -22,7 +22,7 @@ vector<string> splitQuery(const string& query) {
 
 void SearchHandler::generateResults(int32_t count, const vector<string>& queryTypes) {
     for (size_t i = 0; i < count; ++i) {
-        const std::string &type = queryTypes.at(i % queryTypes.size());
+        const string &type = queryTypes.at(i % queryTypes.size());
         Item item = Item();
         if (type == "ItemA") {
             item.__set_itemA(AddItemA());
@@ -41,7 +41,7 @@ void SearchHandler::generateResults(int32_t count, const vector<string>& queryTy
 ItemA SearchHandler::AddItemA() {
     ItemA itemA;
     itemA.__set_fieldA(rand.getRandom<int16_t>());
-    std::vector<int16_t> fieldB;
+    vector<int16_t> fieldB;
     int16_t bSize = rand.getRandom(0, 20);
     for (size_t i = 0; i < bSize; ++i) {
         itemA.fieldB.push_back(rand.getRandom<int16_t>());
@@ -53,17 +53,17 @@ ItemA SearchHandler::AddItemA() {
 
 ItemB SearchHandler::AddItemB() {
     ItemB itemB;
-    itemB.__set_fieldA("itemBfieldAstring_"+ std::to_string(rand.getRandom<short>()));
-    std::set<std::string> fieldB;
+    itemB.__set_fieldA("itemBfieldAstring_"+ to_string(rand.getRandom<short>()));
+    set<string> fieldB;
     size_t count = rand.getRandom(1, 10);
     for (size_t i = 0; i < count; ++i)
-        fieldB.insert("itemBfieldBstring_"+std::to_string(rand.getRandom<short>()));
+        fieldB.insert("itemBfieldBstring_"+to_string(rand.getRandom<short>()));
     itemB.__set_fieldB(fieldB);
     if (rand.getRandom(0, 1)) {
-        std::vector<std::string> fieldC;
+        vector<string> fieldC;
         count = rand.getRandom(1, 10);
         for (size_t i = 0; i < count; ++i)
-            itemB.fieldC.emplace_back("itemBfieldCstring_"+std::to_string(rand.getRandom<short>()));
+            itemB.fieldC.emplace_back("itemBfieldCstring_"+to_string(rand.getRandom<short>()));
         itemB.__set_fieldC(fieldC);
     }
     return itemB;
@@ -89,7 +89,7 @@ ItemD SearchHandler::AddItemD() {
     return itemD;
 }
 
-void SearchHandler::search(SearchState& _return, const std::string& query, const int32_t limit) {
+void SearchHandler::search(SearchState& _return, const string& query, const int32_t limit) {
     loginHandler->loginGuard();
     if (limit <= 0) {
         ProtocolException ex;
@@ -97,7 +97,7 @@ void SearchHandler::search(SearchState& _return, const std::string& query, const
         throw ex;
     }
     vector<string> queryTypes = splitQuery(query);
-    int32_t count = std::min(limit, 50);
+    int32_t count = min(limit, 50);
     generateResults(count, queryTypes);
 
     _return.__set_countEstimate(count);
@@ -116,7 +116,7 @@ void SearchHandler::fetch(FetchResult& _return, const SearchState& state) {
     }
     if (searchIndex != state.fetchedItems) {
         ProtocolException ex;
-        ex.__set_message("Sent state is different from expected value.");:
+        ex.__set_message("Sent state is different from expected value.");
         throw ex;
     }
 
