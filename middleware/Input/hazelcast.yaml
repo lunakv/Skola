@@ -1,0 +1,28 @@
+hazelcast:
+  network:
+    interfaces:
+      enabled: true
+      interfaces: [127.0.0.1]
+    join:
+      multicast:
+        enabled: false
+      tcp-ip:
+        enabled: true
+        members:
+          localhost:5701
+
+  map:
+    Documents: 
+      eviction:
+        eviction-policy: LRU
+        max-size-policy: FREE_HEAP_PERCENTAGE
+        size: 20
+      backup-count: 0
+
+    SelectedDocuments: {}
+
+    FavoriteLists: {}
+
+    AccessCounts: {}
+
+    Comments: {}
