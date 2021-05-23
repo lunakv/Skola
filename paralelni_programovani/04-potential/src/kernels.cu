@@ -26,6 +26,7 @@ __global__ void calculate_positions(
 		real_t r_2 = dx*dx + dy*dy;
 		r_2 = max(r_2, 0.0001);
 		real_t f = params.vertexRepulsion / r_2;
+		f /= sqrt(r_2);
 		fX += dx * f;
 		fY += dy * f;
 	}
@@ -39,7 +40,7 @@ __global__ void calculate_positions(
 		real_t dx = thisPoint.x - other.x;
 		real_t dy = thisPoint.y - other.y;
 		real_t r_2 = dx*dx + dy*dy;
-		real_t f = params.edgeCompulsion * r_2 / (real_t)length;
+		real_t f = params.edgeCompulsion * sqrt(r_2) / (real_t)length;
 		fX -= dx * f;
 		fY -= dy * f;
 	}

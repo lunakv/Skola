@@ -48,7 +48,7 @@ private:
 		real_t dx = (real_t)points[p1].x - (real_t)points[p2].x;
 		real_t dy = (real_t)points[p1].y - (real_t)points[p2].y;
 		real_t sqLen = std::max<real_t>(dx*dx + dy*dy, (real_t)0.0001);
-		real_t fact = mParams.vertexRepulsion / (sqLen /* (real_t)std::sqrt(sqLen) */);	// mul factor
+		real_t fact = mParams.vertexRepulsion / (sqLen * (real_t)std::sqrt(sqLen));	// mul factor
 		dx *= fact;
 		dy *= fact;
 		forces[p1].x += dx;
@@ -72,7 +72,7 @@ private:
 		real_t dx = (real_t)points[p2].x - (real_t)points[p1].x;
 		real_t dy = (real_t)points[p2].y - (real_t)points[p1].y;
 		real_t sqLen = dx*dx + dy*dy;
-		real_t fact = /*(real_t)std::sqrt(sqLen)*/ sqLen * mParams.edgeCompulsion / (real_t)(length);
+		real_t fact = (real_t)std::sqrt(sqLen) * mParams.edgeCompulsion / (real_t)(length);
 		dx *= fact;
 		dy *= fact;
 		forces[p1].x += dx;
